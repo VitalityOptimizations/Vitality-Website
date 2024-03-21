@@ -122,9 +122,9 @@ nav .fa{
     }
 }
 
-/*---------- purchase --------*/
+/*---------- course --------*/
 
-.purchase{
+.course{
     width: 80%;
     margin: auto;
     text-align: center;
@@ -148,9 +148,9 @@ p{
     justify-content: space-between;  
 }
   
-.purchase-col{
+.course-col{
     flex-basis: 31%;
-    background: #ffffff;
+    background: #fff3f3;
     border-radius: 10px;
     margin-bottom: 5%;
     padding: 20px 12px;
@@ -162,7 +162,7 @@ h3{
     font-weight: 600;
     margin: 10px 0;
 }
-.purchase-col:hover{
+.course-col:hover{
     box-shadow: 0 0 20px 0px rgba(0, 0, 0);
 }
 
@@ -267,7 +267,7 @@ h3{
     border-radius: 10px;
     margin-bottom: 5%;
     text-align: left;
-    background: #4b0082;
+    background: #fff3f3;
     padding: 25px;
     cursor: pointer;
     display: flex;
@@ -459,7 +459,7 @@ h3{
     box-sizing: border-box;
     border: none;
     outline: none;
-    background: #4b0082;
+    background: #f0f0f0;
 }
 .comment-form button{
     margin: 10px 0;
