@@ -10,7 +10,7 @@
     background-position: center;
     background-size: cover;
     position: relative;
-    overflow: hidden;
+    overflow: ;
 }
 
 nav{
@@ -74,19 +74,36 @@ nav .fa{
     display: inline-block;
     text-decoration: none;
     color: #fff;
-    border: 1px solid #fff;
     padding: 12px 34px;
     font-size: 13px;
-    background: transparent;
+    background: black; /* Background color of the button */
+    border-radius: 30px; /* Rounded corners */
     position: relative;
     cursor: pointer;
-    transition: 1s;
+    text-align: center;
+    transition: background 0.3s ease;
+    overflow: ; /* Ensure the gradient border follows the rounded corners */
 }
 
-.hero-btn:hover{
-    border: 1px solid #4B0082;
-    background: #4B0082;
+.hero-btn::before {
+    content: '';
+    position: absolute;
+    top: -3px; /* Increase to make the gradient border thicker */
+    left: -3px; /* Increase to make the gradient border thicker */
+    right: -3px; /* Increase to make the gradient border thicker */
+    bottom: -3px; /* Increase to make the gradient border thicker */
+    border-radius: inherit; /* Ensure the gradient border follows the button's border radius */
+    background: linear-gradient(45deg, blue, purple); /* Gradient border */
+    z-index: -1; /* Place behind the button content */
 }
+
+.hero-btn:hover {
+    background: #454545; /* Darker background on hover */
+}
+
+
+
+
 
 
 @media(max-width: 700px)
@@ -191,7 +208,7 @@ h3{
     border-radius: 10px;
     margin-bottom: 30px;
     position: relative;
-    overflow: hidden;
+    overflow: ;
 }
 .campus-col img{
     width: 100%;
@@ -351,7 +368,7 @@ h3{
 .sub-header{
     height: 50vh;
     width: 100%;
-    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(images/background.jpg);
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(images/tool.png);
     background-position: center;
     background-size: cover;
     text-align: center;
@@ -378,22 +395,52 @@ h3{
     padding: 15px 0 25px;
 }
 
-.hero-btn.red-btn{
-    border: 1px solid #4B0082;
-    background: transparent;
-    color: #4B0082;
+.hero-btn.red-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    padding: 12px 34px;
+    font-size: 13px;
+    background: black;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease;
+    overflow: ;
+    border: 2px solid transparent;
 }
-.hero-btn.red-btn:hover{
-    border: 1px solid #4B0082;
-    background: #4B0082;
+
+.hero-btn.red-btn::before {
+    content: '';
+    position: absolute;
+    top: -4px; /* Increased gradient border thickness */
+    left: -4px; /* Increased gradient border thickness */
+    right: -4px; /* Increased gradient border thickness */
+    bottom: -4px; /* Increased gradient border thickness */
+    border-radius: inherit;
+    background: linear-gradient(45deg, blue, purple);
+    z-index: -1;
+}
+
+.hero-btn.red-btn:hover {
+    background: black;
     color: #fff;
 }
-.hero-btn.red-btn::after{
-    background: #4B0082;
+
+.hero-btn.red-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: black;
+    z-index: -2;
 }
-.hero-btn.red-btn::before{
-    background: #4B0082;
-}
+
+
 .content-image{
     flex-basis: 50%;
 }
