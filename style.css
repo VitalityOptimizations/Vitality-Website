@@ -123,11 +123,11 @@ nav .fa{
     }
     .nav-links ul {
         padding: 50px 20px; /* More padding for better spacing */
+        user-select: none; /* Prevent text selection */
     }
     .nav-links ul li {
         display: block;
         margin: 20px 0; /* Add margin for spacing between items */
-        user-select: none; /* Prevent text selection */
     }
     .nav-links ul li a {
         color: #fff;
@@ -135,10 +135,13 @@ nav .fa{
         font-size: 18px; /* Larger font size for better readability */
         transition: color 0.3s; /* Smooth transition for hover effect */
         user-select: none; /* Prevent text selection */
-        pointer-events: none; /* Prevent text interactions */
+        outline: none; /* Remove blue outline on focus */
+    }
+    .nav-links ul li a:focus {
+        outline: none; /* Ensure blue outline is removed on focus */
     }
     .nav-links ul li a:hover {
-        color: #ff4c4c; /* Modern hover color */
+        color: #fff; /* Modern hover color */
     }
     nav .fa {
         display: block;
@@ -147,6 +150,10 @@ nav .fa{
         font-size: 22px;
         cursor: pointer; 
         user-select: none; /* Prevent text selection */
+        outline: none; /* Remove blue outline on focus */
+    }
+    nav .fa:focus {
+        outline: none; /* Ensure blue outline is removed on focus */
     }
     .nav-links.active {
         right: 0; /* Make the sidebar visible */
@@ -159,8 +166,14 @@ nav .fa{
         cursor: pointer;
         color: #fff;
         user-select: none; /* Prevent text selection */
+        outline: none; /* Remove blue outline on focus */
+    }
+    .close-btn:focus {
+        outline: none; /* Ensure blue outline is removed on focus */
     }
 }
+
+
 
 
 
