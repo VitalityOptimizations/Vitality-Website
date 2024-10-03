@@ -1,0 +1,69 @@
+/* Existing styles... */
+
+/* Hide Pricing Section by Default */
+.hidden {
+  display: none; /* This fully hides the section */
+}
+
+/* Pricing Section */
+.pricing-section {
+  background-color: #0f0f0f;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.pricing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricing-toggle {
+  margin-bottom: 20px;
+}
+
+.pricing-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.pricing-card {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+}
+
+.pricing-card h3 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.pricing-card p {
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  color: #aaa;
+}
+
+.pricing-card ul li {
+  margin-bottom: 10px;
+}
+
+.cta-button {
+  padding: 10px 20px;
+  background-color: #7534b3;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.premium-button {
+  background-color: #f77f00;
+}
