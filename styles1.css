@@ -1,0 +1,78 @@
+/* Performance Comparison Section */
+.performance-section {
+  padding: 50px 0;
+  background-color: #0f0f0f;
+  color: #fff;
+  text-align: center;
+}
+
+.performance-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 30px;
+}
+
+.performance-image img {
+  max-width: 550px; /* Adjusted the size to make the image larger */
+}
+
+.performance-stats {
+  max-width: 500px;
+}
+
+.game-selection {
+  margin-bottom: 20px;
+}
+
+.game-selection select {
+  padding: 10px;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.performance-boost {
+  font-size: 1.2rem;
+}
+
+.boost-percentage {
+  color: #ffae00;
+}
+
+.fps-comparison {
+  margin: 20px 0;
+}
+
+.fps-bar {
+  position: relative;
+  background-color: #ddd;
+  height: 30px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.fps-bar .with-vitality, .fps-bar .without-vitality {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  line-height: 30px;
+  color: #fff;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.with-vitality {
+  background-color: #28a745;
+}
+
+.without-vitality {
+  background-color: #ff6347;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #aaa;
+}

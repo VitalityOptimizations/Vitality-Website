@@ -10,6 +10,7 @@
     <meta property="og:url" content="https://vitalityoptimization.com">
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="styles1.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="icon" href="https://raw.githubusercontent.com/VitalityOptimizations/Vitality-Website/main/images/logo2.png" type="image/png">
@@ -31,7 +32,7 @@
       "contactPoint": {
         "@type": "ContactPoint",
         "Discord": "https://discord.gg/vitalityoptimizations",
-		"Email": "VitalityOptimizations@gmail.com",
+        "Email": "VitalityOptimizations@gmail.com",
         "contactType": "Customer Service"
       }
     }
@@ -48,20 +49,19 @@
       </a>
     </div>
     <ul>
-      <li><a href="/">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="/purchase">Purchase</a></li>
-      <li><a href="/faq">FAQ</a></li> <!-- Corrected href -->
+      <li><a href="purchase.html">Purchase</a></li>
+      <li><a href="faq.html">FAQ</a></li>
     </ul>
   </nav>
     <div class="main-content">
       <div class="content-center">
         <h1>Vitality Optimization</h1>
-        <a href="https://github.com/VitalityOptimizations/VitalityUtilUpdates/releases/download/AutoUpdater/Vitality.Util.exe" class="cta-button">Download</a>
+        <a href="#download" class="cta-button">Download</a>
       </div>
     </div>
   </header>
-  </nav>
 
   <!-- About Section -->
   <section id="about" class="about">
@@ -69,8 +69,6 @@
     <p></p>
   </section>
   
-  
-
   <!-- Features Section -->
   <section id="features" class="features">
     <h2>Key Features for Unlimited Gameplay</h2>
@@ -148,15 +146,40 @@
       </div>
     </div>
   </section>
-  
-  
 
-</body>
-</html>
+  <!-- Performance Comparison Section -->
+  <section id="performance-comparison" class="performance-section">
+    <h2>World class tool. Proven to max performance.</h2>
+    <div class="performance-content">
+      <div class="performance-image">
+        <img src="fortnite-character.png" alt="Fortnite Character" />
+      </div>
+      <div class="performance-stats">
+        <div class="game-selection">
+          <h3>Performance comparison</h3>
+          <select name="games" id="games">
+            <option value="fortnite">Fortnite</option>
+          </select>
+        </div>
+        <div class="performance-boost">
+          <h3>Performance boost <span class="boost-percentage">55.36%</span></h3></h3>
+		  <div class="fps-comparison">
+            <div class="fps-bar">
+              <div class="with-vitality" style="width: 80%;">WITH VITALITY 710 Average</div>
+            </div>
+            <div class="fps-bar without-vitality">
+              <div class="without-vitality" style="width: 60%;">WITHOUT VITALITY 457 Average</div>
+            </div>
+          </div>
+          <p class="disclaimer">Tested using AMD RYZEN 97900X3D, RTX 4080 SUPER, 32GB DDR5 RAM. Results may vary.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">
-    <p>By using Vitality, you agree to our Privacy Policy. 	<b>&copy; 2024 VitalityOptimization.</p>
+    <p>By using Vitality, you agree to our Privacy Policy.  <b>&copy; 2024 VitalityOptimization.</b></p>
     <ul class="footer-links">
       <li><a href="Affiliate.html">Affiliate</a></li>
       <li><a href="tos.html">Terms of Service</a></li>
@@ -167,4 +190,17 @@
 </body>
 </html>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get the current URL path
+    var url = window.location.pathname;
 
+    // Remove .html from the URL if it's there
+    if (url.endsWith('.html')) {
+      var newUrl = url.replace('.html', '');
+      
+      // Change the browser's address bar URL
+      window.history.replaceState(null, '', newUrl);
+    }
+  });
+</script>
