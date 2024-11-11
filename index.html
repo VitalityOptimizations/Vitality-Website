@@ -270,16 +270,12 @@
   <script src="main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Get the current URL path
-      var url = window.location.pathname;
-
-      // Remove .html from the URL if it's there
-      if (url.endsWith('.html')) {
-        var newUrl = url.replace('.html', '');
-        // Change the browser's address bar URL
-        window.history.replaceState(null, '', newUrl);
-      }
-    });
+  var url = window.location.pathname;
+  if (url.endsWith('.html')) {
+    var newUrl = url.replace('.html', '');
+    window.history.replaceState(null, '', newUrl);
+  }
+});
   </script>
 </body>
 </html>
