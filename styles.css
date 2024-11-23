@@ -528,3 +528,658 @@ nav {
 }
 
   
+
+
+/* Performance Comparison Section */
+.performance-section {
+  padding: 50px 0;
+  background-color: #0f0f0f;
+  color: #fff;
+  text-align: center;
+}
+
+.performance-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 30px;
+}
+
+.performance-image img {
+  max-width: 550px; /* Adjusted the size to make the image larger */
+}
+
+.performance-stats {
+  max-width: 500px;
+}
+
+.game-selection {
+  margin-bottom: 20px;
+}
+
+.game-selection select {
+  padding: 10px;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.performance-boost {
+  font-size: 1.2rem;
+}
+
+.boost-percentage {
+  color: #ffae00;
+}
+
+.fps-comparison {
+  margin: 20px 0;
+}
+
+.fps-bar {
+  position: relative;
+  background-color: #ddd;
+  height: 30px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.fps-bar .with-vitality, .fps-bar .without-vitality {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  line-height: 30px;
+  color: #fff;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.with-vitality {
+  background-color: #28a745;
+}
+
+.without-vitality {
+  background-color: #ff6347;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+
+/* Existing styles... */
+
+/* Hide Pricing Section by Default */
+.hidden {
+  display: none; /* This fully hides the section */
+}
+
+/* Pricing Section */
+.pricing-section {
+  background-color: #0f0f0f;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.pricing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricing-toggle {
+  margin-bottom: 20px;
+}
+
+.pricing-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.pricing-card {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+}
+
+.pricing-card h3 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.pricing-card p {
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  color: #aaa;
+}
+
+.pricing-card ul li {
+  margin-bottom: 10px;
+}
+
+.cta-button {
+  padding: 10px 20px;
+  background-color: #7534b3;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.premium-button {
+  background-color: #f77f00;
+}
+
+
+/* FAQ Section */
+.faq-section {
+  margin-top: -900px;
+  padding: 10px 20px;
+  background-color: #0f0f0f;
+  color: #fff;
+  text-align: center;
+}
+
+.faq-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+
+.faq-item {
+  margin-bottom: 30px;
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.faq-item h3 {
+  color: #7534b3;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.faq-item p {
+  color: #aaa;
+  font-size: 1rem;
+}
+
+.faq-item:hover {
+  background-color: #333;
+}
+
+  
+
+
+/* General styling for the TOS page */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #111; /* Dark background */
+  color: #fff; /* Light text */
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.tos-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #1a1a1a; /* Slightly lighter dark for the container */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for elevation */
+}
+
+.tos-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.tos-header p {
+  color: #b3b3b3; /* Light grey for subtext */
+}
+
+.tos-section {
+  margin-top: 30px;
+}
+
+.tos-section h2 {
+  font-size: 1.8rem;
+  color: #e6e6e6; /* Slightly lighter headings */
+  border-bottom: 1px solid #444; /* Underline section title */
+  padding-bottom: 10px;
+}
+
+.tos-section p {
+  font-size: 1.1rem;
+  color: #d9d9d9; /* Main text color */
+  margin-top: 10px;
+}
+
+.tos-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.tos-footer p {
+  color: #b3b3b3;
+}
+
+.tos-footer a {
+  color: #4e9df5;
+  text-decoration: none;
+}
+
+.tos-footer a:hover {
+  text-decoration: underline;
+}
+
+
+/* General body styling */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #111; /* Dark background */
+  color: #fff; /* Light text */
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.affiliate-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #1a1a1a; /* Slightly lighter dark for the container */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for elevation */
+}
+
+.affiliate-header {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.affiliate-header h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.affiliate-header p {
+  color: #b3b3b3;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.cta-button {
+  padding: 15px 40px;
+  background: linear-gradient(90deg, #4e9df5, #8b1cfb); /* Gradient effect */
+  color: #fff;
+  border: none;
+  border-radius: 30px; /* Rounded corners */
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(142, 45, 226, 0.6), 0 0 40px rgba(142, 45, 226, 0.4); /* Glow effect */
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.cta-button:hover {
+  box-shadow: 0 0 30px rgba(142, 45, 226, 1), 0 0 60px rgba(142, 45, 226, 0.8); /* Stronger glow on hover */
+  transform: scale(1.05); /* Slightly bigger on hover */
+}
+
+.affiliate-section {
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.affiliate-section h2 {
+  font-size: 2rem;
+  color: #e6e6e6;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.affiliate-section p {
+  font-size: 1.1rem;
+  color: #d9d9d9;
+}
+
+.benefits-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 10px;
+  color: #d9d9d9;
+}
+
+.benefits-list li {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.affiliate-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.affiliate-footer p {
+  color: #b3b3b3;
+}
+
+.affiliate-footer a {
+  color: #4e9df5;
+  text-decoration: none;
+}
+
+.affiliate-footer a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* Minimalist Design Enhancements */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9; /* Light background for better readability */
+    color: #333; /* Dark text for contrast */
+}
+
+button, a.cta-button {
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button:hover, a.cta-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Add Scroll Animations using AOS */
+[data-aos] {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+[data-aos][data-aos-active] {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Scroll-triggered animations for sections */
+section {
+    padding: 80px 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+section[data-aos] {
+    transform: translateY(50px);
+}
+
+/* Navbar for Minimalist Design */
+nav {
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Buttons with Gradient Effect */
+.cta-button {
+    background: linear-gradient(90deg, #4e9df5, #8b1cfb);
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(142, 45, 226, 0.4);
+    transition: box-shadow 0.3s ease;
+}
+
+.cta-button:hover {
+    box-shadow: 0 6px 12px rgba(142, 45, 226, 0.6);
+}
+
+/* Footer Styling */
+.footer {
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+
+/* Enhanced Animations and Minimalist Design */
+
+/* Add Scroll Animations using AOS */
+[data-aos] {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+[data-aos][data-aos-active] {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+section {
+    padding: 60px 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+section[data-aos] {
+    transform: translateY(50px);
+}
+
+/* Minimalist Navbar */
+nav {
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Smooth Hover Effect for Buttons */
+button, a.cta-button {
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button:hover, a.cta-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Gradient Buttons */
+.cta-button {
+    background: linear-gradient(90deg, #4e9df5, #8b1cfb);
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(142, 45, 226, 0.4);
+    transition: box-shadow 0.3s ease;
+}
+
+.cta-button:hover {
+    box-shadow: 0 6px 12px rgba(142, 45, 226, 0.6);
+}
+
+/* Footer Design */
+.footer {
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+
+/* Frame.io Inspired Aesthetic */
+
+/* Hero Section */
+.main-hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: linear-gradient(135deg, #1f1f1f 0%, #121212 100%); /* Smooth gradient background */
+    color: #fff;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.main-hero h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.main-hero p {
+    font-size: 1.2rem;
+    margin: 20px 0;
+    color: #aaa;
+}
+
+.cta-button {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    background: linear-gradient(90deg, #4e9df5, #8b1cfb);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Feature Section */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 60px 20px;
+    background-color: #121212;
+}
+
+.feature-item {
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.feature-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #4e9df5;
+}
+
+.feature-item p {
+    color: #ccc;
+    font-size: 1rem;
+}
+
+/* Navigation Bar */
+.navbar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px 50px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.navbar ul {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar ul li a {
+    font-size: 1rem;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    background: #4e9df5;
+    color: #fff;
+}
+
+/* Footer Section */
+.footer {
+    background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+    color: #ccc;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.footer a {
+    color: #4e9df5;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Add AOS Animations */
+[data-aos] {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+[data-aos].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Ensure smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}

@@ -43,3 +43,49 @@
 }
 
   
+
+/* Adjustments to fix visual issues */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif; /* Ensure consistency */
+}
+
+.faq-section {
+    padding: 60px 20px; /* Adjust spacing for better layout */
+    background-color: #0f0f0f;
+    color: #fff;
+    text-align: center;
+}
+
+.faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px; /* Add padding for better spacing */
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a); /* Match other sections */
+    border-radius: 10px; /* Smooth corners */
+}
+
+.faq-item {
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Improved shadow */
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateY(-5px); /* Subtle hover effect */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+}
+
+/* Footer adjustments for better spacing */
+footer {
+    padding: 60px 20px;
+    text-align: left;
+}
+
+footer div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+}
