@@ -22,3 +22,15 @@ function animate() {
 }
 
 animate();
+
+
+// Scroll-triggered animations example
+document.querySelectorAll('.animated').forEach(element => {
+    element.addEventListener('mouseenter', () => {
+        element.style.transform = 'scale(1.05)';
+        element.style.transition = 'transform 0.3s ease-in-out';
+    });
+    element.addEventListener('mouseleave', () => {
+        element.style.transform = 'scale(1)';
+    });
+});
