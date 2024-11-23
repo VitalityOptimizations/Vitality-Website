@@ -1131,6 +1131,7 @@ button:hover, a.cta-button:hover {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
+/* Navbar Links */
 .navbar ul {
     display: flex;
     gap: 20px;
@@ -1148,6 +1149,78 @@ button:hover, a.cta-button:hover {
 .navbar ul li a:hover {
     background: #4e9df5;
     color: #fff;
+}
+
+/* Menu Icon Animation */
+.navbar-menu-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 20px;
+    width: 25px;
+    cursor: pointer;
+}
+
+.navbar-menu-icon span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: white;
+    transition: all 0.3s;
+}
+
+/* Navbar Links when Active (Menu opens) */
+.navbar-links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: -100%; /* Menu starts off-screen */
+    height: 100vh;
+    width: 70%;
+    background: #111;
+    padding: 50px 20px;
+    transition: right 0.3s ease; /* Smooth transition when sliding in */
+}
+
+.navbar-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.navbar-links ul li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    transition: color 0.3s;
+}
+
+.navbar-links ul li a:hover {
+    color: #4e9df5;
+}
+
+/* Active Class to Show Menu */
+.navbar-links.active {
+    right: 0; /* Menu slides in from the right */
+    display: flex;
+}
+
+/* Menu Icon Animation when Active */
+.navbar-menu-icon.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px); /* First line forms part of "X" */
+}
+
+.navbar-menu-icon.active span:nth-child(2) {
+    opacity: 0; /* Middle line disappears */
+}
+
+.navbar-menu-icon.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px); /* Last line forms part of "X" */
 }
 
 /* Footer Section */
@@ -1183,3 +1256,68 @@ button:hover, a.cta-button:hover {
 html {
     scroll-behavior: smooth;
 }
+
+/* Prevent horizontal scrolling */
+html, body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+/* Main container to prevent content overflow */
+.main-content, .navbar, .footer, .feature-grid {
+    width: 100%; /* Ensure they don't overflow */
+    box-sizing: border-box; /* Include padding and borders in the element's total width */
+}
+
+/* Optional: Set a maximum width for the entire page */
+* {
+    box-sizing: border-box; /* Ensure no element overflows */
+}
+
+/* JavaScript Scroll Behavior */
+body {
+    margin-top: 0;
+}
+
+.navbar.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Make sure it stays on top of other content */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Optional: Add shadow to emphasize sticky effect */
+}
+
+/* Ensure Navbar works with scrolling */
+@media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .navbar ul li a {
+        display: block;
+        padding: 10px 0;
+    }
+
+    .main-hero {
+        height: auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer {
+        padding: 20px;
+        text-align: center;
+    }
+}
+
+
+
