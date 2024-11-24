@@ -11,6 +11,8 @@
   <meta property="og:url" content="https://vitalityoptimization.com">
   <meta property="og:type" content="website">
   
+  
+  
   <!-- Canonical URL -->
   <link rel="canonical" href="https://vitalityoptimization.com/">
 
@@ -136,26 +138,19 @@
 <header class="main-hero" data-aos="fade-up" data-aos-duration="1000">
 
     <nav class="navbar">
-    <div class="navbar-logo">
+      <div class="logo">
         VITALITY
         <a href="https://discord.gg/vitalityoptimizations" target="_blank">
-            <img src="logo-discord.svg" alt="Discord Logo">
+          <img src="logo-discord.svg" alt="Discord Logo" width="30" height="30">
         </a>
-    </div>
-    <div class="navbar-menu-icon" id="menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    <div class="navbar-links" id="navbar-links">
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="#about-vitality">About</a></li>
-            <li><a href="/purchase">Purchase</a></li>
-            <li><a href="/faq">FAQ</a></li>
-        </ul>
-    </div>
-</nav>
+      </div>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#about-vitality">About</a></li>
+        <li><a href="/purchase">Purchase</a></li>
+        <li><a href="/faq">FAQ</a></li>
+      </ul>
+    </nav>
     <div class="main-content">
       <div class="content-center">
         <h1>Vitality Optimization</h1>
@@ -171,7 +166,9 @@
 
     <h2>Key Features for Unlimited Gameplay</h2>
     <p>Unlock the true potential of your gaming experience with our powerful features designed to drastically improve your gameplay and reduce input lag.</p>
-    
+    <br>
+	<br>
+	<br>
     <div class="feature-grid">
       <div class="feature-item">
         <div class="feature-icon"><img src="icon-boost.svg" alt="Boost FPS Icon"></div>
@@ -334,47 +331,33 @@
 </footer>
 
   <script src="main.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
   var url = window.location.pathname;
   if (url.endsWith('.html')) {
     var newUrl = url.replace('.html', '');
     window.history.replaceState(null, '', newUrl);
   }
-
-  // Toggle navbar menu visibility when the hamburger icon is clicked
-  const menuIcon = document.getElementById('menu-icon');
-  const navbarLinks = document.getElementById('navbar-links');
-
-  if (menuIcon && navbarLinks) {
-    menuIcon.addEventListener('click', function () {
-        // Toggle 'active' class for the menu icon and navbar links
-        menuIcon.classList.toggle('active');
-        navbarLinks.classList.toggle('active');
-    });
-  }
 });
-</script>
+  </script>
 
 <script>
-  document.querySelectorAll('nav ul li a').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      const href = this.getAttribute('href');
-
-      // Apply smooth scroll only for internal links (e.g., #about-vitality)
-      if (href.startsWith('#')) {
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-      // Allow external links (e.g., /purchase, /faq) to work normally
-    });
-  });
-</script>
+        document.querySelectorAll('nav ul li a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                
+                // Apply smooth scroll only for internal links (e.g., #about-vitality)
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+                // Allow external links (e.g., /purchase, /faq) to work normally
+            });
+        });
+    </script>
 </body>
 </html>
-
-
 
