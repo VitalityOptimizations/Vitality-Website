@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /hidden/
+Sitemap: https://vitalityoptimization.com/sitemap.xml
