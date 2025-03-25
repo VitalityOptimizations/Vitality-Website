@@ -160,7 +160,7 @@ class AppController {
 }
 
 // ============================================================
-// Advanced Preloader with 3D Animation
+// Advanced Preloader with 3D Animation - FIXED VERSION
 // ============================================================
 class ImprovedPreloader {
   constructor(onComplete) {
@@ -169,9 +169,17 @@ class ImprovedPreloader {
     this.currentProgress = 0;
     this.loadingSpeed = 1;
     this.assetsLoaded = false;
+    this.loadTimeout = null;
+    this.maxLoadTime = 8000; // Maximum loading time (8 seconds) before force complete
     
     this.setupPreloader();
+    this.addSkipButton(); // Add manual skip button
     this.loadAssets();
+    
+    // Safety timeout - force complete after max time
+    this.loadTimeout = setTimeout(() => {
+      this.forceComplete();
+    }, this.maxLoadTime);
   }
   
   setupPreloader() {
@@ -216,6 +224,37 @@ class ImprovedPreloader {
     document.body.style.overflow = 'hidden';
   }
   
+  addSkipButton() {
+    // Create skip button for users to manually continue if loading gets stuck
+    this.skipButton = document.createElement('button');
+    this.skipButton.className = 'preloader-skip-button';
+    this.skipButton.textContent = 'Click to Continue';
+    this.skipButton.style.position = 'absolute';
+    this.skipButton.style.bottom = '30px';
+    this.skipButton.style.left = '50%';
+    this.skipButton.style.transform = 'translateX(-50%)';
+    this.skipButton.style.padding = '10px 20px';
+    this.skipButton.style.backgroundColor = '#7534b3';
+    this.skipButton.style.color = '#fff';
+    this.skipButton.style.border = 'none';
+    this.skipButton.style.borderRadius = '5px';
+    this.skipButton.style.cursor = 'pointer';
+    this.skipButton.style.fontFamily = 'var(--font-body, sans-serif)';
+    this.skipButton.style.opacity = '0';
+    this.skipButton.style.transition = 'opacity 0.3s ease';
+    
+    // Show skip button after 4 seconds
+    setTimeout(() => {
+      this.skipButton.style.opacity = '1';
+    }, 4000);
+    
+    this.skipButton.addEventListener('click', () => {
+      this.forceComplete();
+    });
+    
+    this.preloader.appendChild(this.skipButton);
+  }
+  
   loadAssets() {
     // Start counting images and other assets
     this.countAssets();
@@ -253,7 +292,7 @@ class ImprovedPreloader {
         this.assetLoaded();
       } else {
         img.addEventListener('load', () => this.assetLoaded());
-        img.addEventListener('error', () => this.assetLoaded());
+        img.addEventListener('error', () => this.assetLoaded()); // Count errors as loaded too
       }
     });
     
@@ -306,7 +345,9 @@ class ImprovedPreloader {
         this.updateProgress(this.currentProgress);
         
         // Continue animation
-        requestAnimationFrame(incrementProgress);
+        if (!this.completed) {
+          requestAnimationFrame(incrementProgress);
+        }
       } else {
         this.checkCompletion();
       }
@@ -326,6 +367,13 @@ class ImprovedPreloader {
     const rounded = Math.floor(progress);
     this.progressBar.style.width = `${progress}%`;
     this.progressCounter.textContent = `${rounded}%`;
+    
+    // If progress is at 100% for more than 2 seconds, force complete
+    if (rounded >= 100) {
+      setTimeout(() => {
+        this.forceComplete();
+      }, 2000);
+    }
   }
   
   checkCompletion() {
@@ -333,6 +381,15 @@ class ImprovedPreloader {
     if (this.currentProgress >= 100 && this.assetsLoaded) {
       this.completeLoading();
     }
+  }
+  
+  forceComplete() {
+    // Force completion regardless of actual loading status
+    clearTimeout(this.loadTimeout);
+    this.progressTo(100, 10); // Speed up to 100% quickly
+    this.currentProgress = 100;
+    this.updateProgress(100);
+    this.completeLoading();
   }
   
   completeLoading() {
@@ -349,9 +406,14 @@ class ImprovedPreloader {
     // Add loaded class to body
     document.body.classList.add('loaded');
     
+    // Clean up timeout
+    clearTimeout(this.loadTimeout);
+    
     // Remove preloader after transition
     setTimeout(() => {
-      this.preloader.remove();
+      if (this.preloader && this.preloader.parentNode) {
+        this.preloader.remove();
+      }
       
       // Call onComplete callback
       if (this.onComplete) this.onComplete();
