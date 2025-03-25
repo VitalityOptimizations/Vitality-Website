@@ -2706,78 +2706,514 @@ const addLusionSidebarStyles = () => {
   document.head.appendChild(styleElement);
 };
 
-// Initialize the sidebar
-document.addEventListener('DOMContentLoaded', () => {
-  // Add styles
+/**
+ * VITALITY OPTIMIZATION - MODERN SIDEBAR IMPLEMENTATION
+ * This script completely replaces the old sidebar with the modern Lusion-style sidebar
+ * This version includes section configurations for ALL website pages
+ */
+
+// Execute this immediately when the script loads
+(function() {
+  // Remove any existing .modern-sidebar elements
+  const oldSidebars = document.querySelectorAll('.modern-sidebar');
+  oldSidebars.forEach(el => el.remove());
+  
+  // Remove any existing .menu-toggle buttons
+  const oldToggles = document.querySelectorAll('.menu-toggle');
+  oldToggles.forEach(el => el.remove());
+  
+  // Disable the ImmersiveNavigation class by overriding it
+  class ImmersiveNavigation {
+    constructor() {
+      console.log('ImmersiveNavigation disabled');
+    }
+    
+    // Empty methods to prevent errors if they're called
+    createNav() {}
+    init() {}
+    toggleMenu() {}
+    openMenu() {}
+    closeMenu() {}
+    animateLink() {}
+    resetLink() {}
+    handleLinkClick() {}
+    onResize() {}
+  }
+  
+  // Override the original class
+  window.ImmersiveNavigation = ImmersiveNavigation;
+  
+  // Override AppController to prevent navigation initialization
+  if (typeof AppController !== 'undefined') {
+    const originalInitializeCore = AppController.prototype.initializeCore;
+    AppController.prototype.initializeCore = function() {
+      // Call original but replace navigation initialization
+      const result = originalInitializeCore.apply(this, arguments);
+      
+      // Replace navigation with null
+      this.navigation = null;
+      
+      return result;
+    };
+  }
+  
+  // Create Lusion sidebar styles
   addLusionSidebarStyles();
   
-  // Hide the traditional sidebar (prevents both sidebars from showing)
-  const traditionalSidebar = document.querySelector('.modern-sidebar');
-  if (traditionalSidebar) {
-    traditionalSidebar.style.display = 'none';
+  // Initialize Lusion sidebar with page-specific sections
+  initializeLusionSidebar();
+  
+  // Function to create Lusion sidebar CSS
+  function addLusionSidebarStyles() {
+    // Check if styles already exist
+    if (document.querySelector('#lusion-sidebar-styles')) return;
+    
+    const styleElement = document.createElement('style');
+    styleElement.id = 'lusion-sidebar-styles';
+    styleElement.textContent = `
+      /* Lusion-style sidebar */
+      .lusion-sidebar {
+        position: fixed;
+        top: 50%;
+        right: 40px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 100;
+        transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      
+      .lusion-sidebar-progress {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 1px;
+        height: 0%;
+        background-color: rgba(145, 71, 255, 0.8);
+        transform: translateX(-50%);
+        z-index: 1;
+        transition: height 0.3s ease;
+      }
+      
+      .lusion-sidebar-dots {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+        padding: 15px 0;
+      }
+      
+      .lusion-sidebar-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .lusion-sidebar-dot:hover,
+      .lusion-sidebar-dot.active {
+        background-color: rgba(145, 71, 255, 0.9);
+        transform: scale(1.3);
+      }
+      
+      .lusion-sidebar-label {
+        position: absolute;
+        right: 30px;
+        padding: 5px 10px;
+        background-color: rgba(10, 10, 15, 0.8);
+        color: white;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+      
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .lusion-sidebar {
+          right: 15px;
+        }
+        
+        .lusion-sidebar-dot {
+          width: 8px;
+          height: 8px;
+        }
+        
+        .lusion-sidebar-dots {
+          gap: 20px;
+        }
+      }
+    `;
+    
+    document.head.appendChild(styleElement);
   }
   
-  // Get current path
-  const path = window.location.pathname;
-  
-  // Default to empty array
-  let sections = [];
-  
-  // Define sections for each page
-  if (path === '/' || path === '' || path.includes('index')) {
-    // Homepage
-    sections = [
-      { label: 'Features', link: '#features' },
-      { label: 'About', link: '#about-vitality' },
-      { label: 'Performance', link: '#performance-comparison' }
-    ];
-  } 
-  else if (path.includes('how-it-works')) {
-    // How It Works page
-    sections = [
-      { label: 'Process', link: '#process' },
-      { label: 'Video Tutorial', link: '#video-tutorial' },
-      { label: 'Use Cases', link: '#use-cases' },
-      { label: 'Key Features', link: '#key-features' },
-      { label: 'FAQ', link: '#faq-mini' }
-    ];
-  }
-  else if (path.includes('documentation')) {
-    // Documentation page
-    sections = [
-      { label: 'Installation', link: '#installation' },
-      { label: 'Requirements', link: '#system-requirements' },
-      { label: 'License', link: '#license-activation' },
-      { label: 'Features', link: '#performance-tweaks' },
-      { label: 'Support', link: '#support' }
-    ];
-  }
-  else if (path.includes('download')) {
-    // Download page
-    sections = [
-      { label: 'Options', link: '.download-options' },
-      { label: 'Installation', link: '.installation-guide' },
-      { label: 'Changelog', link: '.changelog' }
-    ];
-  }
-  else if (path.includes('faq')) {
-    // FAQ page - only show if enough content
-    const faqItems = document.querySelectorAll('.faq-item');
-    if (faqItems.length > 3) {
-      // Create sections for groups of FAQs
+  // Function to initialize the LusionSidebar
+  function initializeLusionSidebar() {
+    // Define LusionSidebar class if not already defined
+    if (typeof window.LusionSidebar !== 'function') {
+      window.LusionSidebar = class LusionSidebar {
+        constructor(options = {}) {
+          this.options = {
+            fadeDelay: 5000,
+            fadeSpeed: 800,
+            initiallyVisible: true,
+            items: [],
+            ...options
+          };
+          
+          this.isVisible = this.options.initiallyVisible;
+          this.fadeTimeout = null;
+          this.scrolling = false;
+          this.scrollTimeout = null;
+          
+          // Initialize immediately
+          this.init();
+        }
+        
+        init() {
+          this.createSidebar();
+          this.initEventListeners();
+          
+          if (this.isVisible) {
+            this.resetFadeTimer();
+          }
+        }
+        
+        createSidebar() {
+          // Create sidebar container
+          this.sidebar = document.createElement('div');
+          this.sidebar.className = 'lusion-sidebar';
+          
+          // Create dots container
+          this.dotsContainer = document.createElement('div');
+          this.dotsContainer.className = 'lusion-sidebar-dots';
+          
+          // Create label container
+          this.labelContainer = document.createElement('div');
+          this.labelContainer.className = 'lusion-sidebar-label';
+          
+          // Create progress indicator
+          this.progressIndicator = document.createElement('div');
+          this.progressIndicator.className = 'lusion-sidebar-progress';
+          
+          // Add items
+          this.options.items.forEach((item, index) => {
+            const dot = document.createElement('a');
+            dot.className = 'lusion-sidebar-dot';
+            dot.href = item.link;
+            dot.setAttribute('data-index', index);
+            dot.setAttribute('data-label', item.label);
+            
+            dot.addEventListener('mouseenter', () => this.onDotHover(item.label, dot));
+            dot.addEventListener('mouseleave', () => this.onDotLeave());
+            dot.addEventListener('click', (e) => this.onDotClick(item, e));
+            
+            if (index === 0) {
+              dot.classList.add('active');
+            }
+            
+            this.dotsContainer.appendChild(dot);
+          });
+          
+          // Add containers to sidebar
+          this.sidebar.appendChild(this.progressIndicator);
+          this.sidebar.appendChild(this.dotsContainer);
+          this.sidebar.appendChild(this.labelContainer);
+          
+          // Add to DOM
+          document.body.appendChild(this.sidebar);
+          
+          // Update current dot based on scroll position
+          this.updateCurrentDot();
+        }
+        
+        // Basic event listeners
+        initEventListeners() {
+          window.addEventListener('scroll', () => this.onScroll());
+          document.addEventListener('visibilitychange', () => this.onVisibilityChange());
+        }
+        
+        // Handle dot hover
+        onDotHover(label, dot) {
+          this.labelContainer.textContent = label;
+          this.labelContainer.style.opacity = '1';
+          
+          const dotRect = dot.getBoundingClientRect();
+          const sidebarRect = this.sidebar.getBoundingClientRect();
+          this.labelContainer.style.top = `${dotRect.top - sidebarRect.top + dotRect.height/2 - 10}px`;
+        }
+        
+        onDotLeave() {
+          this.labelContainer.style.opacity = '0';
+        }
+        
+        onDotClick(item, e) {
+          e.preventDefault();
+          
+          if (item.link.includes('#')) {
+            const id = item.link.includes('#') ? item.link.split('#')[1] : '';
+            const targetElement = document.getElementById(id);
+            
+            if (targetElement) {
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+              
+              if (window.history && window.history.pushState) {
+                window.history.pushState(null, null, item.link);
+              }
+            } else if (item.link.startsWith('#')) {
+              // If it's just an anchor but no matching element, try using querySelector instead
+              const selector = item.link;
+              const element = document.querySelector(selector);
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              } else {
+                window.location.href = item.link;
+              }
+            } else {
+              window.location.href = item.link;
+            }
+          } else if (item.link.startsWith('.')) {
+            // For class selectors
+            const selector = item.link;
+            const element = document.querySelector(selector);
+            if (element) {
+              element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            } else {
+              window.location.href = item.link;
+            }
+          } else {
+            window.location.href = item.link;
+          }
+        }
+        
+        // Handle scroll events
+        onScroll() {
+          this.showSidebar();
+          this.updateCurrentDot();
+          this.updateProgressIndicator();
+          this.resetFadeTimer();
+          
+          this.scrolling = true;
+          clearTimeout(this.scrollTimeout);
+          this.scrollTimeout = setTimeout(() => {
+            this.scrolling = false;
+          }, 200);
+        }
+        
+        // Handle visibility changes
+        onVisibilityChange() {
+          if (document.hidden) {
+            clearTimeout(this.fadeTimeout);
+          } else if (this.isVisible) {
+            this.resetFadeTimer();
+          }
+        }
+        
+        // Update which dot is active based on scroll position
+        updateCurrentDot() {
+          // First check for elements with IDs
+          const sections = this.options.items
+            .map(item => {
+              if (item.link.includes('#')) {
+                const id = item.link.split('#').pop();
+                return document.getElementById(id);
+              } else if (item.link.startsWith('.')) {
+                // For class selectors
+                return document.querySelector(item.link);
+              }
+              return null;
+            })
+            .filter(Boolean);
+          
+          const scrollPosition = window.scrollY + window.innerHeight / 3;
+          let currentSectionIndex = 0;
+          
+          sections.forEach((section, index) => {
+            if (!section) return;
+            
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+              currentSectionIndex = index;
+            }
+          });
+          
+          if (window.scrollY < 100) {
+            currentSectionIndex = 0;
+          }
+          
+          const dots = this.dotsContainer.querySelectorAll('.lusion-sidebar-dot');
+          
+          dots.forEach((dot, index) => {
+            if (index === currentSectionIndex) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+        
+        // Update the progress indicator based on scroll position
+        updateProgressIndicator() {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          
+          this.progressIndicator.style.height = `${scrollPercent}%`;
+        }
+        
+        // Reset the fade timer
+        resetFadeTimer() {
+          clearTimeout(this.fadeTimeout);
+          
+          this.fadeTimeout = setTimeout(() => {
+            this.hideSidebar();
+          }, this.options.fadeDelay);
+        }
+        
+        // Show the sidebar
+        showSidebar() {
+          if (!this.isVisible) {
+            this.sidebar.style.opacity = '1';
+            this.isVisible = true;
+          }
+        }
+        
+        // Hide the sidebar
+        hideSidebar() {
+          if (this.isVisible) {
+            this.sidebar.style.opacity = '0';
+            this.isVisible = false;
+          }
+        }
+      };
+    }
+    
+    // Get current page path
+    const path = window.location.pathname;
+    
+    // Default to empty array
+    let sections = [];
+    
+    // Define sections for each page
+    if (path === '/' || path === '' || path.includes('index')) {
+      // Homepage
       sections = [
-        { label: 'General', link: '#faq-general' },
-        { label: 'Support', link: '#faq-support' }
+        { label: 'Features', link: '#features' },
+        { label: 'About', link: '#about-vitality' },
+        { label: 'Performance', link: '#performance-comparison' }
+      ];
+    } 
+    else if (path.includes('how-it-works')) {
+      // How It Works page
+      sections = [
+        { label: 'Process', link: '#process' },
+        { label: 'Video Tutorial', link: '#video-tutorial' },
+        { label: 'Use Cases', link: '#use-cases' },
+        { label: 'Key Features', link: '#key-features' },
+        { label: 'FAQ', link: '#faq-mini' },
+        { label: 'Get Started', link: '#cta' }
       ];
     }
+    else if (path.includes('documentation')) {
+      // Documentation page
+      sections = [
+        { label: 'Installation', link: '#installation' },
+        { label: 'Requirements', link: '#system-requirements' },
+        { label: 'Activation', link: '#license-activation' },
+        { label: 'Interface', link: '#user-interface' },
+        { label: 'Tweaks', link: '#performance-tweaks' },
+        { label: 'Misc', link: '#miscellaneous-tweaks' },
+        { label: 'Tools', link: '#tools' },
+        { label: 'Utilities', link: '#utilities' },
+        { label: 'Settings', link: '#settings' },
+        { label: 'Backup', link: '#backup-restore' },
+        { label: 'Games', link: '#optimizing-games' },
+        { label: 'Issues', link: '#common-issues' },
+        { label: 'Support', link: '#support' }
+      ];
+    }
+    else if (path.includes('download')) {
+      // Download page
+      sections = [
+        { label: 'Options', link: '.download-options' },
+        { label: 'Installation', link: '.installation-guide' },
+        { label: 'What\'s New', link: '.changelog' }
+      ];
+    }
+    else if (path.includes('faq')) {
+      // FAQ page sections
+      sections = [
+        { label: 'What Is Vitality', link: '.faq-content' },
+        { label: 'Installation', link: '.faq-item:nth-child(2)' },
+        { label: 'Game Compatibility', link: '.faq-item:nth-child(3)' },
+        { label: 'Premium Features', link: '.faq-item:nth-child(4)' },
+        { label: 'Updates', link: '.faq-item:nth-child(5)' },
+        { label: 'Support', link: '.faq-item:nth-child(6)' },
+        { label: 'Safety', link: '.faq-item:nth-child(7)' },
+        { label: 'Contact Us', link: '.faq-cta' }
+      ];
+    }
+    else if (path.includes('purchase')) {
+      // Purchase page
+      sections = [
+        { label: 'Lifetime', link: '.pricing-grid' },
+        { label: 'Game Mode', link: '.pricing-grid-single' },
+        { label: 'FAQ', link: '/faq' }
+      ];
+    }
+    else if (path.includes('tos')) {
+      // Terms of Service page
+      sections = [
+        { label: 'Introduction', link: '.tos-section:nth-child(1)' },
+        { label: 'User Accounts', link: '.tos-section:nth-child(2)' },
+        { label: 'Acceptable Use', link: '.tos-section:nth-child(3)' },
+        { label: 'Intellectual Property', link: '.tos-section:nth-child(4)' },
+        { label: 'Termination', link: '.tos-section:nth-child(5)' },
+        { label: 'Disclaimers', link: '.tos-section:nth-child(6)' },
+        { label: 'Liability', link: '.tos-section:nth-child(7)' },
+        { label: 'Changes', link: '.tos-section:nth-child(8)' },
+        { label: 'Contact', link: '.tos-footer' }
+      ];
+    }
+    else if (path.includes('affiliate')) {
+      // Affiliate page
+      sections = [
+        { label: 'Introduction', link: '.affiliate-header' },
+        { label: 'Benefits', link: '.affiliate-section:nth-child(1)' },
+        { label: 'How It Works', link: '.affiliate-section:nth-child(2)' },
+        { label: 'Get Started', link: '.affiliate-section:nth-child(3)' }
+      ];
+    }
+    
+    // Only create sidebar if we have sections
+    if (sections.length > 0) {
+      window.lusionSidebar = new LusionSidebar({
+        items: sections,
+        fadeDelay: 5000 // 5 seconds
+      });
+    }
   }
-  // Optional: Add configurations for other pages as needed
-  
-  // Only create sidebar if we have sections
-  if (sections.length > 0) {
-    window.lusionSidebar = new LusionSidebar({
-      items: sections,
-      fadeDelay: 5000 // 5 seconds
-    });
-  }
-});
+})();
