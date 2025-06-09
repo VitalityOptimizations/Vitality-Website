@@ -28,7 +28,7 @@ class AppController {
     
     // Check if WebGL is supported
     if (this.isWebGLSupported()) {
-      this.webglBackground = new PurpleParticleEffect();
+      this.webglBackground = new LusionBackground(); // Changed to LusionBackground as per your file
     }
     
     this.magneticElements = new MagneticElements();
@@ -165,10 +165,12 @@ class AppController {
 class ImprovedPreloader {
   constructor(onComplete) {
     this.onComplete = onComplete;
-    this.progressLimit = 100;
+    this.progressLimit = 0; // Initialize to 0, will be updated based on assets
     this.currentProgress = 0;
     this.loadingSpeed = 1;
     this.assetsLoaded = false;
+    this.completed = false; // Flag to prevent multiple completions
+    this.maxPreloadTime = 5000; // Maximum time in ms before forcing completion (5 seconds)
     
     this.setupPreloader();
     this.loadAssets();
@@ -220,11 +222,13 @@ class ImprovedPreloader {
     // Start counting images and other assets
     this.countAssets();
     
-    // Simulate minimum loading time with a backup timer
-    setTimeout(() => {
+    // *** FIX: Add a stronger timeout to force completion ***
+    this.forceCompletionTimeout = setTimeout(() => {
+      console.warn('Preloader timed out. Forcing completion.');
+      this.progressTo(100, 1); // Ensure progress reaches 100
       this.assetsLoaded = true;
       this.checkCompletion();
-    }, 1500); // Reduced time for faster loading
+    }, this.maxPreloadTime);
     
     // Start progress animation
     this.animateProgress();
@@ -235,8 +239,9 @@ class ImprovedPreloader {
     const images = document.querySelectorAll('img');
     const videos = document.querySelectorAll('video');
     const iframes = document.querySelectorAll('iframe');
-    
-    this.totalAssets = images.length + videos.length + iframes.length;
+    const fonts = document.querySelectorAll('link[rel="stylesheet"]'); // Include fonts
+
+    this.totalAssets = images.length + videos.length + iframes.length + fonts.length;
     this.loadedAssets = 0;
     
     if (this.totalAssets === 0) {
@@ -249,34 +254,52 @@ class ImprovedPreloader {
     
     // Track image loading
     images.forEach(img => {
-      if (img.complete) {
+      // Check if image is already loaded (from cache or quick load)
+      if (img.complete && img.naturalHeight !== 0) {
         this.assetLoaded();
       } else {
-        img.addEventListener('load', () => this.assetLoaded());
-        img.addEventListener('error', () => this.assetLoaded());
+        img.addEventListener('load', () => this.assetLoaded(), { once: true });
+        img.addEventListener('error', () => this.assetLoaded(), { once: true }); // Treat error as loaded to prevent stuck
       }
     });
     
     // Track video loading
     videos.forEach(video => {
-      if (video.readyState >= 3) {
+      if (video.readyState >= 3) { // Enough data to play
         this.assetLoaded();
       } else {
-        video.addEventListener('canplay', () => this.assetLoaded());
-        video.addEventListener('error', () => this.assetLoaded());
+        video.addEventListener('canplaythrough', () => this.assetLoaded(), { once: true });
+        video.addEventListener('error', () => this.assetLoaded(), { once: true });
+        // Fallback for videos that might not trigger events
+        setTimeout(() => this.assetLoaded(), 2000); 
       }
     });
     
     // Track iframe loading
     iframes.forEach(iframe => {
-      iframe.addEventListener('load', () => this.assetLoaded());
-      iframe.addEventListener('error', () => this.assetLoaded());
-      
+      iframe.addEventListener('load', () => this.assetLoaded(), { once: true });
+      iframe.addEventListener('error', () => this.assetLoaded(), { once: true });
       // Fallback for iframes that never trigger load
-      setTimeout(() => {
-        this.assetLoaded();
-      }, 1500);
+      setTimeout(() => this.assetLoaded(), 1500);
     });
+
+    // Track font loading (by checking stylesheet loaded status)
+    fonts.forEach(fontLink => {
+      // Simple check, might not be fully accurate for all font loading scenarios
+      // For more robust font loading, consider FontFaceObserver
+      if (fontLink.sheet) { // Check if stylesheet is loaded
+        this.assetLoaded();
+      } else {
+        fontLink.addEventListener('load', () => this.assetLoaded(), { once: true });
+        fontLink.addEventListener('error', () => this.assetLoaded(), { once: true });
+        setTimeout(() => this.assetLoaded(), 1000); // Fallback for stylesheets
+      }
+    });
+
+    // Special handling for WebGL background, if it's considered an "asset"
+    // Assuming LusionBackground initializes and renders, it might not have a 'load' event.
+    // If it's crucial for the preloader to wait for it, you'd need a specific event from LusionBackground.
+    // For now, we'll assume its initialization is quick enough or covered by other assets.
   }
   
   assetLoaded() {
@@ -307,8 +330,11 @@ class ImprovedPreloader {
         
         // Continue animation
         requestAnimationFrame(incrementProgress);
-      } else {
+      } else if (this.currentProgress === 100 && this.assetsLoaded) { // Only check completion when target is 100 and assets loaded
         this.checkCompletion();
+      } else {
+        // If progressLimit is not 100 yet, keep animating slowly towards it
+        requestAnimationFrame(incrementProgress);
       }
     };
     
@@ -329,8 +355,9 @@ class ImprovedPreloader {
   }
   
   checkCompletion() {
-    // Check if loading is complete
-    if (this.currentProgress >= 100 && this.assetsLoaded) {
+    // Check if loading is complete and prevent double completion
+    if (this.currentProgress >= 99.9 && this.assetsLoaded && !this.completed) { // Added threshold for currentProgress
+      clearTimeout(this.forceCompletionTimeout); // Clear the force completion timeout
       this.completeLoading();
     }
   }
@@ -1369,8 +1396,7 @@ class LusionBackground {
           
           // Calculate distance to mouse position (in normalized device coordinates)
           vec4 viewPosition = modelViewMatrix * vec4(pos, 1.0);
-          vec4 projectedPosition = projectionMatrix * viewPosition;
-          vec2 normalizedDeviceCoord = projectedPosition.xy / projectedPosition.w;
+          vec2 normalizedDeviceCoord = viewPosition.xy / viewPosition.w; // Corrected calculation
           
           // Enhanced mouse interaction
           float distToMouse = length(normalizedDeviceCoord - mousePosition) * 2.0;
