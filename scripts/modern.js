@@ -647,7 +647,7 @@ class ImmersiveNavigation {
           </nav>
           <div class="sidebar-footer">
             <div class="social-links">
-              <a href="https://discord.gg/vitalityoptimizations" target="_blank" class="social-link">
+              <a href="https://discord.com/invite/BKgYeeYbtn" target="_blank" class="social-link">
                 <img src="https://raw.githubusercontent.com/VitalityOptimizations/Vitality-Website/2115598177940dab0c0b82e5a5b6d8a0bc0b26aa/icons/logo-discord.svg" alt="Discord" width="24" height="24">
               </a>
             </div>
