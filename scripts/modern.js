@@ -698,7 +698,7 @@ class ImmersiveNavigation {
                 <img src="https://raw.githubusercontent.com/VitalityOptimizations/Vitality-Website/2115598177940dab0c0b82e5a5b6d8a0bc0b26aa/icons/logo-discord.svg" alt="Discord" width="24" height="24">
               </a>
             </div>
-            <div class="copyright">© 2024 Vitality Optimization</div>
+            <div class="copyright">© 2025 Vitality Optimization</div>
           </div>
         </div>
       `;
