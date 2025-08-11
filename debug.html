@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug - Vitality Optimization</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/modern-styles.css">
+  <style>
+    /* Debug styles */
+    .debug-info {
+      background: #333;
+      color: white;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+    .debug-info h3 {
+      color: #9147ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="debug-info">
+    <h3>Debug Information</h3>
+    <p>Body background: <span id="body-bg">Loading...</span></p>
+    <p>Body color: <span id="body-color">Loading...</span></p>
+    <p>Hero title color: <span id="hero-color">Loading...</span></p>
+    <p>CSS Variables loaded: <span id="css-vars">Loading...</span></p>
+  </div>
+  
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Debug Test</h1>
+      <p class="hero-description">This should be styled if CSS is working</p>
+    </div>
+  </div>
+  
+  <div class="feature-section">
+    <div class="container">
+      <div class="feature-item">
+        <h3>Feature Test</h3>
+        <p>This should have styling</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Debug page loaded');
+      
+      // Check CSS variables
+      const root = getComputedStyle(document.documentElement);
+      const bgDark = root.getPropertyValue('--bg-dark');
+      const textLight = root.getPropertyValue('--text-light');
+      const primary = root.getPropertyValue('--primary');
+      
+      document.getElementById('css-vars').textContent = bgDark ? 'Yes' : 'No';
+      document.getElementById('body-bg').textContent = getComputedStyle(document.body).backgroundColor;
+      document.getElementById('body-color').textContent = getComputedStyle(document.body).color;
+      
+      const heroTitle = document.querySelector('.hero-title');
+      if (heroTitle) {
+        document.getElementById('hero-color').textContent = getComputedStyle(heroTitle).color;
+      }
+      
+      // Force loaded class
+      document.body.classList.add('loaded');
+      
+      console.log('CSS Variables:', {
+        '--bg-dark': bgDark,
+        '--text-light': textLight,
+        '--primary': primary
+      });
+    });
+  </script>
+</body>
+</html>

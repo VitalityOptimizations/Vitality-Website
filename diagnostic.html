@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Diagnostic - Vitality Optimization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .diagnostic-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.warning { background: #fff3cd; color: #856404; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+        
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #7534b3 0%, #9147ff 50%, #b57bff 100%);
+            color: white;
+            border: 1px solid rgba(145, 71, 255, 0.4);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(117, 52, 179, 0.3), 0 0 20px rgba(145, 71, 255, 0.2);
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #8b1cfb 0%, #a855f7 50%, #c084fc 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(117, 52, 179, 0.4), 0 0 25px rgba(145, 71, 255, 0.3);
+            border-color: rgba(145, 71, 255, 0.6);
+        }
+        
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Website Diagnostic Tool</h1>
+    <p>This page will help identify what's preventing the website from displaying properly.</p>
+    
+    <div class="diagnostic-panel">
+        <h2>Basic System Check</h2>
+        <div id="basic-status"></div>
+        <button onclick="runBasicCheck()">Run Basic Check</button>
+    </div>
+    
+    <div class="diagnostic-panel">
+        <h2>CSS Loading Test</h2>
+        <div id="css-status"></div>
+        <button onclick="testCSSLoading()">Test CSS Loading</button>
+    </div>
+    
+    <div class="diagnostic-panel">
+        <h2>JavaScript Loading Test</h2>
+        <div id="js-status"></div>
+        <button onclick="testJSLoading()">Test JavaScript Loading</button>
+    </div>
+    
+    <div class="diagnostic-panel">
+        <h2>File Structure Check</h2>
+        <div id="file-status"></div>
+        <button onclick="checkFileStructure()">Check Files</button>
+    </div>
+    
+    <div class="diagnostic-panel">
+        <h2>Main Website Test</h2>
+        <div id="main-test-status"></div>
+        <button onclick="testMainWebsite()">Test Main Website</button>
+        <div id="main-test-result"></div>
+    </div>
+    
+    <div class="diagnostic-panel">
+        <h2>Console Output</h2>
+        <div id="console-output"></div>
+        <button onclick="clearConsole()">Clear Console</button>
+    </div>
+    
+    <script>
+        // Console logging override to capture all output
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn,
+            info: console.info
+        };
+        
+        function logToPanel(message, type = 'info') {
+            const panel = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `test-result ${type}`;
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            panel.appendChild(logEntry);
+            panel.scrollTop = panel.scrollHeight;
+        }
+        
+        // Override console methods
+        console.log = function(...args) {
+            originalConsole.log.apply(console, args);
+            logToPanel(args.join(' '), 'info');
+        };
+        
+        console.error = function(...args) {
+            originalConsole.error.apply(console, args);
+            logToPanel(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalConsole.warn.apply(console, args);
+            logToPanel(args.join(' '), 'warning');
+        };
+        
+        function runBasicCheck() {
+            const status = document.getElementById('basic-status');
+            status.innerHTML = '';
+            
+            // Check browser
+            const userAgent = navigator.userAgent;
+            const isChrome = userAgent.includes('Chrome');
+            const isFirefox = userAgent.includes('Firefox');
+            const isSafari = userAgent.includes('Safari');
+            const isEdge = userAgent.includes('Edge');
+            
+            let browserStatus = '';
+            if (isChrome) browserStatus = 'Chrome';
+            else if (isFirefox) browserStatus = 'Firefox';
+            else if (isSafari) browserStatus = 'Safari';
+            else if (isEdge) browserStatus = 'Edge';
+            else browserStatus = 'Unknown';
+            
+            status.innerHTML += `<div class="status success">Browser: ${browserStatus}</div>`;
+            status.innerHTML += `<div class="status success">JavaScript: Enabled</div>`;
+            status.innerHTML += `<div class="status success">Cookies: ${navigator.cookieEnabled ? 'Enabled' : 'Disabled'}</div>`;
+            status.innerHTML += `<div class="status success">Screen: ${screen.width}x${screen.height}</div>`;
+            
+            logToPanel('Basic system check completed', 'success');
+        }
+        
+        function testCSSLoading() {
+            const status = document.getElementById('css-status');
+            status.innerHTML = '';
+            
+            // Test if CSS files exist
+            const cssFiles = [
+                'css/styles.css',
+                'css/modern-styles.css'
+            ];
+            
+            cssFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (response.ok) {
+                            status.innerHTML += `<div class="status success">✓ ${file} - Loaded successfully</div>`;
+                            logToPanel(`${file} loaded successfully`, 'success');
+                        } else {
+                            status.innerHTML += `<div class="status error">✗ ${file} - Failed to load (${response.status})</div>`;
+                            logToPanel(`${file} failed to load: ${response.status}`, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        status.innerHTML += `<div class="status error">✗ ${file} - Network error</div>`;
+                        logToPanel(`${file} network error: ${error.message}`, 'error');
+                    });
+            });
+        }
+        
+        function testJSLoading() {
+            const status = document.getElementById('js-status');
+            status.innerHTML = '';
+            
+            // Test if JS files exist
+            const jsFiles = [
+                'scripts/main.js',
+                'scripts/modern.js'
+            ];
+            
+            jsFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (response.ok) {
+                            status.innerHTML += `<div class="status success">✓ ${file} - Loaded successfully</div>`;
+                            logToPanel(`${file} loaded successfully`, 'success');
+                        } else {
+                            status.innerHTML += `<div class="status error">✗ ${file} - Failed to load (${response.status})</div>`;
+                            logToPanel(`${file} failed to load: ${response.status}`, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        status.innerHTML += `<div class="status error">✗ ${file} - Network error</div>`;
+                        logToPanel(`${file} network error: ${error.message}`, 'error');
+                    });
+            });
+        }
+        
+        function checkFileStructure() {
+            const status = document.getElementById('file-status');
+            status.innerHTML = '';
+            
+            // Check if key files exist
+            const keyFiles = [
+                'index.html',
+                'css/',
+                'scripts/',
+                'images/',
+                'icons/',
+                'logo/'
+            ];
+            
+            keyFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (response.ok) {
+                            status.innerHTML += `<div class="status success">✓ ${file} - Found</div>`;
+                            logToPanel(`${file} found`, 'success');
+                        } else {
+                            status.innerHTML += `<div class="status error">✗ ${file} - Not found (${response.status})</div>`;
+                            logToPanel(`${file} not found: ${response.status}`, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        status.innerHTML += `<div class="status error">✗ ${file} - Error checking</div>`;
+                        logToPanel(`${file} error checking: ${error.message}`, 'error');
+                    });
+            });
+        }
+        
+        function testMainWebsite() {
+            const status = document.getElementById('main-test-status');
+            const result = document.getElementById('main-test-result');
+            
+            status.innerHTML = '<div class="status info">Testing main website...</div>';
+            result.innerHTML = '';
+            
+            // Create an iframe to test the main website
+            const iframe = document.createElement('iframe');
+            iframe.src = 'index.html';
+            iframe.style.width = '100%';
+            iframe.style.height = '400px';
+            iframe.style.border = '1px solid #ddd';
+            
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const body = iframeDoc.body;
+                    
+                    if (body) {
+                        const bodyClasses = body.className;
+                        const bodyOpacity = getComputedStyle(body).opacity;
+                        const bodyVisibility = getComputedStyle(body).visibility;
+                        
+                        result.innerHTML = `
+                            <div class="test-result">
+                                <h4>Main Website Analysis:</h4>
+                                <p><strong>Body Classes:</strong> ${bodyClasses}</p>
+                                <p><strong>Body Opacity:</strong> ${bodyOpacity}</p>
+                                <p><strong>Body Visibility:</strong> ${bodyVisibility}</p>
+                                <p><strong>Content Elements:</strong> ${body.children.length} child elements</p>
+                            </div>
+                        `;
+                        
+                        status.innerHTML = '<div class="status success">Main website loaded successfully</div>';
+                        logToPanel('Main website loaded and analyzed', 'success');
+                    } else {
+                        status.innerHTML = '<div class="status error">Failed to access main website content</div>';
+                        logToPanel('Failed to access main website content', 'error');
+                    }
+                } catch (error) {
+                    status.innerHTML = '<div class="status error">Cross-origin restriction - cannot analyze content</div>';
+                    logToPanel(`Cross-origin restriction: ${error.message}`, 'warning');
+                }
+            };
+            
+            iframe.onerror = function() {
+                status.innerHTML = '<div class="status error">Failed to load main website</div>';
+                logToPanel('Failed to load main website', 'error');
+            };
+            
+            result.appendChild(iframe);
+        }
+        
+        function clearConsole() {
+            document.getElementById('console-output').innerHTML = '';
+        }
+        
+        // Auto-run basic checks on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            logToPanel('Diagnostic page loaded', 'info');
+            runBasicCheck();
+        });
+    </script>
+</body>
+</html>

@@ -5,6 +5,11 @@
 
 // Initialize all components when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Force disable custom cursor to restore normal cursor
+  if (typeof AdvancedCursor !== 'undefined') {
+    AdvancedCursor.forceDisable();
+  }
+  
   // Initialize core components
   window.App = new AppController();
 });
@@ -22,13 +27,13 @@ class AppController {
 
   initializeCore() {
     // Initialize core components after preloader
-    this.cursor = new AdvancedCursor();
+    // this.cursor = new AdvancedCursor(); // Custom cursor disabled
     this.navigation = new ImmersiveNavigation();
     this.scrollAnimations = new EnhancedScrollAnimations();
     
     // Check if WebGL is supported
     if (this.isWebGLSupported()) {
-      this.webglBackground = new LusionBackground(); // Changed to LusionBackground as per your file
+      this.webglBackground = new PurpleParticleEffect();
     }
     
     this.magneticElements = new MagneticElements();
@@ -160,20 +165,26 @@ class AppController {
 }
 
 // ============================================================
-// Advanced Preloader with 3D Animation
+// Advanced Preloader with 3D Animation - FIXED VERSION
 // ============================================================
 class ImprovedPreloader {
   constructor(onComplete) {
     this.onComplete = onComplete;
-    this.progressLimit = 0; // Initialize to 0, will be updated based on assets
+    this.progressLimit = 100;
     this.currentProgress = 0;
     this.loadingSpeed = 1;
     this.assetsLoaded = false;
-    this.completed = false; // Flag to prevent multiple completions
-    this.maxPreloadTime = 5000; // Maximum time in ms before forcing completion (5 seconds)
+    this.loadTimeout = null;
+    this.maxLoadTime = 8000; // Maximum loading time (8 seconds) before force complete
     
     this.setupPreloader();
+    this.addSkipButton(); // Add manual skip button
     this.loadAssets();
+    
+    // Safety timeout - force complete after max time
+    this.loadTimeout = setTimeout(() => {
+      this.forceComplete();
+    }, this.maxLoadTime);
   }
   
   setupPreloader() {
@@ -218,17 +229,46 @@ class ImprovedPreloader {
     document.body.style.overflow = 'hidden';
   }
   
+  addSkipButton() {
+    // Create skip button for users to manually continue if loading gets stuck
+    this.skipButton = document.createElement('button');
+    this.skipButton.className = 'preloader-skip-button';
+    this.skipButton.textContent = 'Click to Continue';
+    this.skipButton.style.position = 'absolute';
+    this.skipButton.style.bottom = '30px';
+    this.skipButton.style.left = '50%';
+    this.skipButton.style.transform = 'translateX(-50%)';
+    this.skipButton.style.padding = '10px 20px';
+    this.skipButton.style.backgroundColor = '#7534b3';
+    this.skipButton.style.color = '#fff';
+    this.skipButton.style.border = 'none';
+    this.skipButton.style.borderRadius = '5px';
+    this.skipButton.style.cursor = 'pointer';
+    this.skipButton.style.fontFamily = 'var(--font-body, sans-serif)';
+    this.skipButton.style.opacity = '0';
+    this.skipButton.style.transition = 'opacity 0.3s ease';
+    
+    // Show skip button after 4 seconds
+    setTimeout(() => {
+      this.skipButton.style.opacity = '1';
+    }, 4000);
+    
+    this.skipButton.addEventListener('click', () => {
+      this.forceComplete();
+    });
+    
+    this.preloader.appendChild(this.skipButton);
+  }
+  
   loadAssets() {
     // Start counting images and other assets
     this.countAssets();
     
-    // *** FIX: Add a stronger timeout to force completion ***
-    this.forceCompletionTimeout = setTimeout(() => {
-      console.warn('Preloader timed out. Forcing completion.');
-      this.progressTo(100, 1); // Ensure progress reaches 100
+    // Simulate minimum loading time with a backup timer
+    setTimeout(() => {
       this.assetsLoaded = true;
       this.checkCompletion();
-    }, this.maxPreloadTime);
+    }, 1500); // Reduced time for faster loading
     
     // Start progress animation
     this.animateProgress();
@@ -239,9 +279,8 @@ class ImprovedPreloader {
     const images = document.querySelectorAll('img');
     const videos = document.querySelectorAll('video');
     const iframes = document.querySelectorAll('iframe');
-    const fonts = document.querySelectorAll('link[rel="stylesheet"]'); // Include fonts
-
-    this.totalAssets = images.length + videos.length + iframes.length + fonts.length;
+    
+    this.totalAssets = images.length + videos.length + iframes.length;
     this.loadedAssets = 0;
     
     if (this.totalAssets === 0) {
@@ -254,52 +293,34 @@ class ImprovedPreloader {
     
     // Track image loading
     images.forEach(img => {
-      // Check if image is already loaded (from cache or quick load)
-      if (img.complete && img.naturalHeight !== 0) {
+      if (img.complete) {
         this.assetLoaded();
       } else {
-        img.addEventListener('load', () => this.assetLoaded(), { once: true });
-        img.addEventListener('error', () => this.assetLoaded(), { once: true }); // Treat error as loaded to prevent stuck
+        img.addEventListener('load', () => this.assetLoaded());
+        img.addEventListener('error', () => this.assetLoaded()); // Count errors as loaded too
       }
     });
     
     // Track video loading
     videos.forEach(video => {
-      if (video.readyState >= 3) { // Enough data to play
+      if (video.readyState >= 3) {
         this.assetLoaded();
       } else {
-        video.addEventListener('canplaythrough', () => this.assetLoaded(), { once: true });
-        video.addEventListener('error', () => this.assetLoaded(), { once: true });
-        // Fallback for videos that might not trigger events
-        setTimeout(() => this.assetLoaded(), 2000); 
+        video.addEventListener('canplay', () => this.assetLoaded());
+        video.addEventListener('error', () => this.assetLoaded());
       }
     });
     
     // Track iframe loading
     iframes.forEach(iframe => {
-      iframe.addEventListener('load', () => this.assetLoaded(), { once: true });
-      iframe.addEventListener('error', () => this.assetLoaded(), { once: true });
+      iframe.addEventListener('load', () => this.assetLoaded());
+      iframe.addEventListener('error', () => this.assetLoaded());
+      
       // Fallback for iframes that never trigger load
-      setTimeout(() => this.assetLoaded(), 1500);
-    });
-
-    // Track font loading (by checking stylesheet loaded status)
-    fonts.forEach(fontLink => {
-      // Simple check, might not be fully accurate for all font loading scenarios
-      // For more robust font loading, consider FontFaceObserver
-      if (fontLink.sheet) { // Check if stylesheet is loaded
+      setTimeout(() => {
         this.assetLoaded();
-      } else {
-        fontLink.addEventListener('load', () => this.assetLoaded(), { once: true });
-        fontLink.addEventListener('error', () => this.assetLoaded(), { once: true });
-        setTimeout(() => this.assetLoaded(), 1000); // Fallback for stylesheets
-      }
+      }, 1500);
     });
-
-    // Special handling for WebGL background, if it's considered an "asset"
-    // Assuming LusionBackground initializes and renders, it might not have a 'load' event.
-    // If it's crucial for the preloader to wait for it, you'd need a specific event from LusionBackground.
-    // For now, we'll assume its initialization is quick enough or covered by other assets.
   }
   
   assetLoaded() {
@@ -329,12 +350,11 @@ class ImprovedPreloader {
         this.updateProgress(this.currentProgress);
         
         // Continue animation
-        requestAnimationFrame(incrementProgress);
-      } else if (this.currentProgress === 100 && this.assetsLoaded) { // Only check completion when target is 100 and assets loaded
-        this.checkCompletion();
+        if (!this.completed) {
+          requestAnimationFrame(incrementProgress);
+        }
       } else {
-        // If progressLimit is not 100 yet, keep animating slowly towards it
-        requestAnimationFrame(incrementProgress);
+        this.checkCompletion();
       }
     };
     
@@ -352,14 +372,29 @@ class ImprovedPreloader {
     const rounded = Math.floor(progress);
     this.progressBar.style.width = `${progress}%`;
     this.progressCounter.textContent = `${rounded}%`;
+    
+    // If progress is at 100% for more than 2 seconds, force complete
+    if (rounded >= 100) {
+      setTimeout(() => {
+        this.forceComplete();
+      }, 2000);
+    }
   }
   
   checkCompletion() {
-    // Check if loading is complete and prevent double completion
-    if (this.currentProgress >= 99.9 && this.assetsLoaded && !this.completed) { // Added threshold for currentProgress
-      clearTimeout(this.forceCompletionTimeout); // Clear the force completion timeout
+    // Check if loading is complete
+    if (this.currentProgress >= 100 && this.assetsLoaded) {
       this.completeLoading();
     }
+  }
+  
+  forceComplete() {
+    // Force completion regardless of actual loading status
+    clearTimeout(this.loadTimeout);
+    this.progressTo(100, 10); // Speed up to 100% quickly
+    this.currentProgress = 100;
+    this.updateProgress(100);
+    this.completeLoading();
   }
   
   completeLoading() {
@@ -376,9 +411,14 @@ class ImprovedPreloader {
     // Add loaded class to body
     document.body.classList.add('loaded');
     
+    // Clean up timeout
+    clearTimeout(this.loadTimeout);
+    
     // Remove preloader after transition
     setTimeout(() => {
-      this.preloader.remove();
+      if (this.preloader && this.preloader.parentNode) {
+        this.preloader.remove();
+      }
       
       // Call onComplete callback
       if (this.onComplete) this.onComplete();
@@ -439,6 +479,13 @@ class AdvancedCursor {
     
     if (this.cursor) this.cursor.remove();
     if (this.cursorFollower) this.cursorFollower.remove();
+  }
+  
+  // Force disable custom cursor for all devices
+  static forceDisable() {
+    document.body.classList.remove('has-custom-cursor');
+    const customCursors = document.querySelectorAll('.custom-cursor, .cursor-follower');
+    customCursors.forEach(el => el.remove());
   }
   
   addEventListeners() {
@@ -647,11 +694,11 @@ class ImmersiveNavigation {
           </nav>
           <div class="sidebar-footer">
             <div class="social-links">
-              <a href="https://discord.com/invite/BKgYeeYbtn" target="_blank" class="social-link">
+              <a href="https://discord.gg/vitalityoptimizations" target="_blank" class="social-link">
                 <img src="https://raw.githubusercontent.com/VitalityOptimizations/Vitality-Website/2115598177940dab0c0b82e5a5b6d8a0bc0b26aa/icons/logo-discord.svg" alt="Discord" width="24" height="24">
               </a>
             </div>
-            <div class="copyright">© 2025 Vitality Optimization</div>
+            <div class="copyright">© 2024 Vitality Optimization</div>
           </div>
         </div>
       `;
@@ -870,28 +917,64 @@ class EnhancedScrollAnimations {
       }
     }
     
-    // Performance section animations
-    const fpsBars = document.querySelectorAll('.fps-bar');
+    // Performance section animations - FIXED VERSION
+    const performanceSection = document.querySelector('.performance-section, .fps-comparison');
     
-    if (fpsBars.length) {
-      fpsBars.forEach(bar => {
-        // Get width values from data attributes
-        const withVitality = bar.querySelector('.with-vitality');
-        const withoutVitality = bar.querySelector('.without-vitality');
+    if (performanceSection) {
+      // Find all with/without Vitality bars
+      const withVitalityBars = document.querySelectorAll('.with-vitality');
+      const withoutVitalityBars = document.querySelectorAll('.without-vitality');
+      
+      if (withVitalityBars.length || withoutVitalityBars.length) {
+        // Set initial state - make sure bars are visible
+        gsap.set(withVitalityBars, { width: '0%' });
+        gsap.set(withoutVitalityBars, { width: '0%' });
         
-        if (withVitality && withoutVitality) {
-          ScrollTrigger.create({
-            trigger: bar,
-            start: 'top 80%',
-            onEnter: () => {
-              bar.classList.add('animate');
-            },
-            onLeaveBack: () => {
-              bar.classList.remove('animate');
-            }
-          });
-        }
-      });
+        ScrollTrigger.create({
+          trigger: performanceSection,
+          start: 'top 80%',
+          onEnter: () => {
+            // Animate "with vitality" bars using data attributes
+            withVitalityBars.forEach(bar => {
+              const targetWidth = bar.dataset.targetWidth || '80%';
+              gsap.to(bar, {
+                width: targetWidth,
+                duration: 1.5,
+                ease: "power3.out"
+              });
+              // Ensure text remains visible during animation
+              bar.style.minWidth = 'max-content';
+            });
+            
+            // Animate "without vitality" bars with a slight delay
+            withoutVitalityBars.forEach(bar => {
+              const targetWidth = bar.dataset.targetWidth || '60%';
+              gsap.to(bar, {
+                width: targetWidth,
+                duration: 1.5,
+                delay: 0.3,
+                ease: "power3.out"
+              });
+              // Ensure text remains visible during animation
+              bar.style.minWidth = 'max-content';
+            });
+          },
+          onLeaveBack: () => {
+            // Reset when scrolling back up but keep text visible
+            gsap.set(withVitalityBars, { width: '0%' });
+            gsap.set(withoutVitalityBars, { width: '0%' });
+            
+            // Ensure text remains visible even when width is 0
+            withVitalityBars.forEach(bar => {
+              bar.style.minWidth = 'max-content';
+            });
+            withoutVitalityBars.forEach(bar => {
+              bar.style.minWidth = 'max-content';
+            });
+          },
+          once: false
+        });
+      }
     }
     
     // Documentation specific animations
@@ -951,42 +1034,6 @@ class EnhancedScrollAnimations {
         once: false // Make false to animate every time it comes into view
       });
     }
-
-    // Performance bar animations - Restore the animation for the FPS bars
-    const performanceSection = document.querySelector('.performance-section, .fps-comparison');
-    if (performanceSection) {
-      // Find all with/without Vitality bars
-      const withVitalityBars = document.querySelectorAll('.with-vitality');
-      const withoutVitalityBars = document.querySelectorAll('.without-vitality');
-      
-      if (withVitalityBars.length || withoutVitalityBars.length) {
-        ScrollTrigger.create({
-          trigger: performanceSection,
-          start: 'top 80%',
-          onEnter: () => {
-            // Reset to 0 first
-            gsap.set(withVitalityBars, { width: '0%' });
-            gsap.set(withoutVitalityBars, { width: '0%' });
-            
-            // Animate "with vitality" bars
-            gsap.to(withVitalityBars, {
-              width: '80%',
-              duration: 1.5,
-              ease: "power3.out"
-            });
-            
-            // Animate "without vitality" bars with a slight delay
-            gsap.to(withoutVitalityBars, {
-              width: '60%',
-              duration: 1.5,
-              delay: 0.3,
-              ease: "power3.out"
-            });
-          },
-          once: false
-        });
-      }
-    }
   }
   
   initIntersectionObserver() {
@@ -1022,25 +1069,71 @@ class EnhancedScrollAnimations {
     this.elements = Array.from(animatedElements);
     this.elements.forEach(el => this.observer.observe(el));
     
-    // Set up FPS bar animations
+    // Set up FPS bar animations - FIXED VERSION
     const fpsBars = document.querySelectorAll('.fps-bar');
     fpsBars.forEach(bar => {
       const withVitality = bar.querySelector('.with-vitality');
       const withoutVitality = bar.querySelector('.without-vitality');
       
-      // Store the target width in data attributes but set actual width to 0
+      // Initialize bars with 0 width for animation
       if (withVitality) {
-        const targetWidth = bar.dataset.withVitality || '80%';
-        withVitality.dataset.targetWidth = targetWidth;
+        // Get target width from data attribute
+        const targetWidth = withVitality.dataset.targetWidth || '80%';
         withVitality.style.width = '0%';
       }
       
       if (withoutVitality) {
-        const targetWidth = bar.dataset.withoutVitality || '60%';
-        withoutVitality.dataset.targetWidth = targetWidth;
+        // Get target width from data attribute
+        const targetWidth = withoutVitality.dataset.targetWidth || '60%';
         withoutVitality.style.width = '0%';
       }
     });
+    
+    // Add fallback animation for performance bars if GSAP is not available
+    if (typeof gsap === 'undefined') {
+      this.setupFallbackPerformanceAnimation();
+    }
+  }
+  
+  setupFallbackPerformanceAnimation() {
+    // Simple fallback animation for performance bars without GSAP
+    const performanceSection = document.querySelector('.performance-section, .fps-comparison');
+    
+    if (performanceSection) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const withVitalityBars = entry.target.querySelectorAll('.with-vitality');
+            const withoutVitalityBars = entry.target.querySelectorAll('.without-vitality');
+            
+            // Animate with vitality bars
+            withVitalityBars.forEach(bar => {
+              const targetWidth = bar.dataset.targetWidth || '80%';
+              bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+              bar.style.width = targetWidth;
+              // Ensure text remains visible during animation
+              bar.style.minWidth = 'max-content';
+            });
+            
+            // Animate without vitality bars with delay
+            setTimeout(() => {
+              withoutVitalityBars.forEach(bar => {
+                const targetWidth = bar.dataset.targetWidth || '60%';
+                bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                bar.style.width = targetWidth;
+                // Ensure text remains visible during animation
+                bar.style.minWidth = 'max-content';
+              });
+            }, 300);
+            
+            // Only animate once
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.8 });
+      
+      observer.observe(performanceSection);
+    }
   }
 }
 
@@ -1396,7 +1489,8 @@ class LusionBackground {
           
           // Calculate distance to mouse position (in normalized device coordinates)
           vec4 viewPosition = modelViewMatrix * vec4(pos, 1.0);
-          vec2 normalizedDeviceCoord = viewPosition.xy / viewPosition.w; // Corrected calculation
+          vec4 projectedPosition = projectionMatrix * viewPosition;
+          vec2 normalizedDeviceCoord = projectedPosition.xy / projectedPosition.w;
           
           // Enhanced mouse interaction
           float distToMouse = length(normalizedDeviceCoord - mousePosition) * 2.0;
@@ -1773,23 +1867,14 @@ class LusionBackground {
 
 // Initialize the background immediately with improved visibility handling
 document.addEventListener('DOMContentLoaded', () => {
-  // Make background visible immediately
-  const bgElement = document.querySelector('.webgl-background');
-  if (bgElement) {
-    bgElement.classList.add('visible');
-  } else {
-    // Create if not exists
-    const newBgElement = document.createElement('div');
-    newBgElement.className = 'webgl-background visible';
-    document.body.prepend(newBgElement);
-  }
-  
-  // Initialize with premium effects
-  window.lusionBackground = new LusionBackground();
-  
-  // Add to App controller if it exists
-  if (window.App && window.App.webglBackground === undefined) {
-    window.App.webglBackground = window.lusionBackground;
+  // Initialize with premium effects if WebGL is supported
+  if (window.App && window.App.webglBackground === undefined && window.WebGLRenderingContext) {
+    try {
+      window.lusionBackground = new LusionBackground();
+      window.App.webglBackground = window.lusionBackground;
+    } catch (e) {
+      console.log('WebGL background not available:', e);
+    }
   }
 });
 
@@ -2732,78 +2817,514 @@ const addLusionSidebarStyles = () => {
   document.head.appendChild(styleElement);
 };
 
-// Initialize the sidebar
-document.addEventListener('DOMContentLoaded', () => {
-  // Add styles
+/**
+ * VITALITY OPTIMIZATION - MODERN SIDEBAR IMPLEMENTATION
+ * This script completely replaces the old sidebar with the modern Lusion-style sidebar
+ * This version includes section configurations for ALL website pages
+ */
+
+// Execute this immediately when the script loads
+(function() {
+  // Remove any existing .modern-sidebar elements
+  const oldSidebars = document.querySelectorAll('.modern-sidebar');
+  oldSidebars.forEach(el => el.remove());
+  
+  // Remove any existing .menu-toggle buttons
+  const oldToggles = document.querySelectorAll('.menu-toggle');
+  oldToggles.forEach(el => el.remove());
+  
+  // Disable the ImmersiveNavigation class by overriding it
+  class ImmersiveNavigation {
+    constructor() {
+      console.log('ImmersiveNavigation disabled');
+    }
+    
+    // Empty methods to prevent errors if they're called
+    createNav() {}
+    init() {}
+    toggleMenu() {}
+    openMenu() {}
+    closeMenu() {}
+    animateLink() {}
+    resetLink() {}
+    handleLinkClick() {}
+    onResize() {}
+  }
+  
+  // Override the original class
+  window.ImmersiveNavigation = ImmersiveNavigation;
+  
+  // Override AppController to prevent navigation initialization
+  if (typeof AppController !== 'undefined') {
+    const originalInitializeCore = AppController.prototype.initializeCore;
+    AppController.prototype.initializeCore = function() {
+      // Call original but replace navigation initialization
+      const result = originalInitializeCore.apply(this, arguments);
+      
+      // Replace navigation with null
+      this.navigation = null;
+      
+      return result;
+    };
+  }
+  
+  // Create Lusion sidebar styles
   addLusionSidebarStyles();
   
-  // Hide the traditional sidebar (prevents both sidebars from showing)
-  const traditionalSidebar = document.querySelector('.modern-sidebar');
-  if (traditionalSidebar) {
-    traditionalSidebar.style.display = 'none';
+  // Initialize Lusion sidebar with page-specific sections
+  initializeLusionSidebar();
+  
+  // Function to create Lusion sidebar CSS
+  function addLusionSidebarStyles() {
+    // Check if styles already exist
+    if (document.querySelector('#lusion-sidebar-styles')) return;
+    
+    const styleElement = document.createElement('style');
+    styleElement.id = 'lusion-sidebar-styles';
+    styleElement.textContent = `
+      /* Lusion-style sidebar */
+      .lusion-sidebar {
+        position: fixed;
+        top: 50%;
+        right: 40px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 100;
+        transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      
+      .lusion-sidebar-progress {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 1px;
+        height: 0%;
+        background-color: rgba(145, 71, 255, 0.8);
+        transform: translateX(-50%);
+        z-index: 1;
+        transition: height 0.3s ease;
+      }
+      
+      .lusion-sidebar-dots {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+        padding: 15px 0;
+      }
+      
+      .lusion-sidebar-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .lusion-sidebar-dot:hover,
+      .lusion-sidebar-dot.active {
+        background-color: rgba(145, 71, 255, 0.9);
+        transform: scale(1.3);
+      }
+      
+      .lusion-sidebar-label {
+        position: absolute;
+        right: 30px;
+        padding: 5px 10px;
+        background-color: rgba(10, 10, 15, 0.8);
+        color: white;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+      
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .lusion-sidebar {
+          right: 15px;
+        }
+        
+        .lusion-sidebar-dot {
+          width: 8px;
+          height: 8px;
+        }
+        
+        .lusion-sidebar-dots {
+          gap: 20px;
+        }
+      }
+    `;
+    
+    document.head.appendChild(styleElement);
   }
   
-  // Get current path
-  const path = window.location.pathname;
-  
-  // Default to empty array
-  let sections = [];
-  
-  // Define sections for each page
-  if (path === '/' || path === '' || path.includes('index')) {
-    // Homepage
-    sections = [
-      { label: 'Features', link: '#features' },
-      { label: 'About', link: '#about-vitality' },
-      { label: 'Performance', link: '#performance-comparison' }
-    ];
-  } 
-  else if (path.includes('how-it-works')) {
-    // How It Works page
-    sections = [
-      { label: 'Process', link: '#process' },
-      { label: 'Video Tutorial', link: '#video-tutorial' },
-      { label: 'Use Cases', link: '#use-cases' },
-      { label: 'Key Features', link: '#key-features' },
-      { label: 'FAQ', link: '#faq-mini' }
-    ];
-  }
-  else if (path.includes('documentation')) {
-    // Documentation page
-    sections = [
-      { label: 'Installation', link: '#installation' },
-      { label: 'Requirements', link: '#system-requirements' },
-      { label: 'License', link: '#license-activation' },
-      { label: 'Features', link: '#performance-tweaks' },
-      { label: 'Support', link: '#support' }
-    ];
-  }
-  else if (path.includes('download')) {
-    // Download page
-    sections = [
-      { label: 'Options', link: '.download-options' },
-      { label: 'Installation', link: '.installation-guide' },
-      { label: 'Changelog', link: '.changelog' }
-    ];
-  }
-  else if (path.includes('faq')) {
-    // FAQ page - only show if enough content
-    const faqItems = document.querySelectorAll('.faq-item');
-    if (faqItems.length > 3) {
-      // Create sections for groups of FAQs
+  // Function to initialize the LusionSidebar
+  function initializeLusionSidebar() {
+    // Define LusionSidebar class if not already defined
+    if (typeof window.LusionSidebar !== 'function') {
+      window.LusionSidebar = class LusionSidebar {
+        constructor(options = {}) {
+          this.options = {
+            fadeDelay: 5000,
+            fadeSpeed: 800,
+            initiallyVisible: true,
+            items: [],
+            ...options
+          };
+          
+          this.isVisible = this.options.initiallyVisible;
+          this.fadeTimeout = null;
+          this.scrolling = false;
+          this.scrollTimeout = null;
+          
+          // Initialize immediately
+          this.init();
+        }
+        
+        init() {
+          this.createSidebar();
+          this.initEventListeners();
+          
+          if (this.isVisible) {
+            this.resetFadeTimer();
+          }
+        }
+        
+        createSidebar() {
+          // Create sidebar container
+          this.sidebar = document.createElement('div');
+          this.sidebar.className = 'lusion-sidebar';
+          
+          // Create dots container
+          this.dotsContainer = document.createElement('div');
+          this.dotsContainer.className = 'lusion-sidebar-dots';
+          
+          // Create label container
+          this.labelContainer = document.createElement('div');
+          this.labelContainer.className = 'lusion-sidebar-label';
+          
+          // Create progress indicator
+          this.progressIndicator = document.createElement('div');
+          this.progressIndicator.className = 'lusion-sidebar-progress';
+          
+          // Add items
+          this.options.items.forEach((item, index) => {
+            const dot = document.createElement('a');
+            dot.className = 'lusion-sidebar-dot';
+            dot.href = item.link;
+            dot.setAttribute('data-index', index);
+            dot.setAttribute('data-label', item.label);
+            
+            dot.addEventListener('mouseenter', () => this.onDotHover(item.label, dot));
+            dot.addEventListener('mouseleave', () => this.onDotLeave());
+            dot.addEventListener('click', (e) => this.onDotClick(item, e));
+            
+            if (index === 0) {
+              dot.classList.add('active');
+            }
+            
+            this.dotsContainer.appendChild(dot);
+          });
+          
+          // Add containers to sidebar
+          this.sidebar.appendChild(this.progressIndicator);
+          this.sidebar.appendChild(this.dotsContainer);
+          this.sidebar.appendChild(this.labelContainer);
+          
+          // Add to DOM
+          document.body.appendChild(this.sidebar);
+          
+          // Update current dot based on scroll position
+          this.updateCurrentDot();
+        }
+        
+        // Basic event listeners
+        initEventListeners() {
+          window.addEventListener('scroll', () => this.onScroll());
+          document.addEventListener('visibilitychange', () => this.onVisibilityChange());
+        }
+        
+        // Handle dot hover
+        onDotHover(label, dot) {
+          this.labelContainer.textContent = label;
+          this.labelContainer.style.opacity = '1';
+          
+          const dotRect = dot.getBoundingClientRect();
+          const sidebarRect = this.sidebar.getBoundingClientRect();
+          this.labelContainer.style.top = `${dotRect.top - sidebarRect.top + dotRect.height/2 - 10}px`;
+        }
+        
+        onDotLeave() {
+          this.labelContainer.style.opacity = '0';
+        }
+        
+        onDotClick(item, e) {
+          e.preventDefault();
+          
+          if (item.link.includes('#')) {
+            const id = item.link.includes('#') ? item.link.split('#')[1] : '';
+            const targetElement = document.getElementById(id);
+            
+            if (targetElement) {
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+              
+              if (window.history && window.history.pushState) {
+                window.history.pushState(null, null, item.link);
+              }
+            } else if (item.link.startsWith('#')) {
+              // If it's just an anchor but no matching element, try using querySelector instead
+              const selector = item.link;
+              const element = document.querySelector(selector);
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              } else {
+                window.location.href = item.link;
+              }
+            } else {
+              window.location.href = item.link;
+            }
+          } else if (item.link.startsWith('.')) {
+            // For class selectors
+            const selector = item.link;
+            const element = document.querySelector(selector);
+            if (element) {
+              element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            } else {
+              window.location.href = item.link;
+            }
+          } else {
+            window.location.href = item.link;
+          }
+        }
+        
+        // Handle scroll events
+        onScroll() {
+          this.showSidebar();
+          this.updateCurrentDot();
+          this.updateProgressIndicator();
+          this.resetFadeTimer();
+          
+          this.scrolling = true;
+          clearTimeout(this.scrollTimeout);
+          this.scrollTimeout = setTimeout(() => {
+            this.scrolling = false;
+          }, 200);
+        }
+        
+        // Handle visibility changes
+        onVisibilityChange() {
+          if (document.hidden) {
+            clearTimeout(this.fadeTimeout);
+          } else if (this.isVisible) {
+            this.resetFadeTimer();
+          }
+        }
+        
+        // Update which dot is active based on scroll position
+        updateCurrentDot() {
+          // First check for elements with IDs
+          const sections = this.options.items
+            .map(item => {
+              if (item.link.includes('#')) {
+                const id = item.link.split('#').pop();
+                return document.getElementById(id);
+              } else if (item.link.startsWith('.')) {
+                // For class selectors
+                return document.querySelector(item.link);
+              }
+              return null;
+            })
+            .filter(Boolean);
+          
+          const scrollPosition = window.scrollY + window.innerHeight / 3;
+          let currentSectionIndex = 0;
+          
+          sections.forEach((section, index) => {
+            if (!section) return;
+            
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+              currentSectionIndex = index;
+            }
+          });
+          
+          if (window.scrollY < 100) {
+            currentSectionIndex = 0;
+          }
+          
+          const dots = this.dotsContainer.querySelectorAll('.lusion-sidebar-dot');
+          
+          dots.forEach((dot, index) => {
+            if (index === currentSectionIndex) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+        
+        // Update the progress indicator based on scroll position
+        updateProgressIndicator() {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          
+          this.progressIndicator.style.height = `${scrollPercent}%`;
+        }
+        
+        // Reset the fade timer
+        resetFadeTimer() {
+          clearTimeout(this.fadeTimeout);
+          
+          this.fadeTimeout = setTimeout(() => {
+            this.hideSidebar();
+          }, this.options.fadeDelay);
+        }
+        
+        // Show the sidebar
+        showSidebar() {
+          if (!this.isVisible) {
+            this.sidebar.style.opacity = '1';
+            this.isVisible = true;
+          }
+        }
+        
+        // Hide the sidebar
+        hideSidebar() {
+          if (this.isVisible) {
+            this.sidebar.style.opacity = '0';
+            this.isVisible = false;
+          }
+        }
+      };
+    }
+    
+    // Get current page path
+    const path = window.location.pathname;
+    
+    // Default to empty array
+    let sections = [];
+    
+    // Define sections for each page
+    if (path === '/' || path === '' || path.includes('index')) {
+      // Homepage
       sections = [
-        { label: 'General', link: '#faq-general' },
-        { label: 'Support', link: '#faq-support' }
+        { label: 'Features', link: '#features' },
+        { label: 'About', link: '#about-vitality' },
+        { label: 'Performance', link: '#performance-comparison' }
+      ];
+    } 
+    else if (path.includes('how-it-works')) {
+      // How It Works page
+      sections = [
+        { label: 'Process', link: '#process' },
+        { label: 'Video Tutorial', link: '#video-tutorial' },
+        { label: 'Use Cases', link: '#use-cases' },
+        { label: 'Key Features', link: '#key-features' },
+        { label: 'FAQ', link: '#faq-mini' },
+        { label: 'Get Started', link: '#cta' }
       ];
     }
+    else if (path.includes('documentation')) {
+      // Documentation page
+      sections = [
+        { label: 'Installation', link: '#installation' },
+        { label: 'Requirements', link: '#system-requirements' },
+        { label: 'Activation', link: '#license-activation' },
+        { label: 'Interface', link: '#user-interface' },
+        { label: 'Tweaks', link: '#performance-tweaks' },
+        { label: 'Misc', link: '#miscellaneous-tweaks' },
+        { label: 'Tools', link: '#tools' },
+        { label: 'Utilities', link: '#utilities' },
+        { label: 'Settings', link: '#settings' },
+        { label: 'Backup', link: '#backup-restore' },
+        { label: 'Games', link: '#optimizing-games' },
+        { label: 'Issues', link: '#common-issues' },
+        { label: 'Support', link: '#support' }
+      ];
+    }
+    else if (path.includes('download')) {
+      // Download page
+      sections = [
+        { label: 'Options', link: '.download-options' },
+        { label: 'Installation', link: '.installation-guide' },
+        { label: 'What\'s New', link: '.changelog' }
+      ];
+    }
+    else if (path.includes('faq')) {
+      // FAQ page sections
+      sections = [
+        { label: 'What Is Vitality', link: '.faq-content' },
+        { label: 'Installation', link: '.faq-item:nth-child(2)' },
+        { label: 'Game Compatibility', link: '.faq-item:nth-child(3)' },
+        { label: 'Premium Features', link: '.faq-item:nth-child(4)' },
+        { label: 'Updates', link: '.faq-item:nth-child(5)' },
+        { label: 'Support', link: '.faq-item:nth-child(6)' },
+        { label: 'Safety', link: '.faq-item:nth-child(7)' },
+        { label: 'Contact Us', link: '.faq-cta' }
+      ];
+    }
+    else if (path.includes('purchase')) {
+      // Purchase page
+      sections = [
+        { label: 'Lifetime', link: '.pricing-grid' },
+        { label: 'Game Mode', link: '.pricing-grid-single' },
+        { label: 'FAQ', link: '/faq' }
+      ];
+    }
+    else if (path.includes('tos')) {
+      // Terms of Service page
+      sections = [
+        { label: 'Introduction', link: '.tos-section:nth-child(1)' },
+        { label: 'User Accounts', link: '.tos-section:nth-child(2)' },
+        { label: 'Acceptable Use', link: '.tos-section:nth-child(3)' },
+        { label: 'Intellectual Property', link: '.tos-section:nth-child(4)' },
+        { label: 'Termination', link: '.tos-section:nth-child(5)' },
+        { label: 'Disclaimers', link: '.tos-section:nth-child(6)' },
+        { label: 'Liability', link: '.tos-section:nth-child(7)' },
+        { label: 'Changes', link: '.tos-section:nth-child(8)' },
+        { label: 'Contact', link: '.tos-footer' }
+      ];
+    }
+    else if (path.includes('affiliate')) {
+      // Affiliate page
+      sections = [
+        { label: 'Introduction', link: '.affiliate-header' },
+        { label: 'Benefits', link: '.affiliate-section:nth-child(1)' },
+        { label: 'How It Works', link: '.affiliate-section:nth-child(2)' },
+        { label: 'Get Started', link: '.affiliate-section:nth-child(3)' }
+      ];
+    }
+    
+    // Only create sidebar if we have sections
+    if (sections.length > 0) {
+      window.lusionSidebar = new LusionSidebar({
+        items: sections,
+        fadeDelay: 5000 // 5 seconds
+      });
+    }
   }
-  // Optional: Add configurations for other pages as needed
-  
-  // Only create sidebar if we have sections
-  if (sections.length > 0) {
-    window.lusionSidebar = new LusionSidebar({
-      items: sections,
-      fadeDelay: 5000 // 5 seconds
-    });
-  }
-});
+})();
