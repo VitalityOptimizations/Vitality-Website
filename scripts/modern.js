@@ -43,7 +43,7 @@ class AppController {
     this.scrollIndicator = new ScrollProgressIndicator();
     
     // Initialize documentation-specific enhancements if on documentation page
-    if (document.querySelector('.documentation-container')) {
+    if (document.querySelector('.documentation-container') || document.querySelector('.faq-content')) {
       this.documentationEnhancements = new DocumentationEnhancements();
     }
     
