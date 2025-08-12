@@ -150,6 +150,15 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Override grid layout for full-width content */
+.documentation-container .documentation-content.full-width {
+  grid-column: 1 / -1;
+}
+
+.documentation-container .documentation-content.full-width ~ .documentation-content {
+  grid-column: 2;
+}
+
 .sidebar-nav h3 {
   color: var(--text-light);
   font-size: 1.2rem;
