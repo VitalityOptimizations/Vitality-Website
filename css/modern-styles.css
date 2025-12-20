@@ -159,6 +159,16 @@ a:hover {
   color: var(--text-light) !important;
 }
 
+/* Don't override gradient text on hover */
+.navbar-logo a:hover,
+.navbar .logo a:hover,
+.sidebar-header .logo:hover,
+.hero-title:hover,
+.preloader-logo:hover {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -470,12 +480,33 @@ button,
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-light);
   text-decoration: none;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: inline-block;
+  background: linear-gradient(
+    135deg,
+    #7534b3 0%,
+    #8b1cfb 25%,
+    #9147ff 50%,
+    #b57bff 75%,
+    #7534b3 100%
+  );
+  background-size: 200% 200%;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: transparent;
+  animation: gradientShift 3s ease infinite;
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+  .navbar-logo a {
+    color: var(--accent);
+    background: none;
+    -webkit-text-fill-color: var(--accent);
+  }
 }
 
 .navbar-links {
@@ -580,15 +611,35 @@ button,
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-light);
   text-decoration: none;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   display: flex;
   align-items: center;
   height: 100%;
+  background: linear-gradient(
+    135deg,
+    #7534b3 0%,
+    #8b1cfb 25%,
+    #9147ff 50%,
+    #b57bff 75%,
+    #7534b3 100%
+  );
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradientShift 3s ease infinite;
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+  .navbar .logo a {
+    color: var(--accent);
+    background: none;
+    -webkit-text-fill-color: var(--accent);
+  }
 }
 
 .navbar .nav-links {
@@ -686,7 +737,31 @@ button,
   gap: var(--space-sm);
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-light);
+  background: linear-gradient(
+    135deg,
+    #7534b3 0%,
+    #8b1cfb 25%,
+    #9147ff 50%,
+    #b57bff 75%,
+    #7534b3 100%
+  );
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradientShift 3s ease infinite;
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+  .sidebar-header .logo {
+    color: var(--accent);
+    background: none;
+    -webkit-text-fill-color: var(--accent);
+  }
 }
 
 .sidebar-header .logo img {
@@ -890,7 +965,13 @@ body:not(.loaded) > *:not(.preloader) {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg-darker);
+  background: 
+    linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.8) 50%, rgba(0, 0, 0, 0.9) 100%),
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%),
+    var(--bg-dark);
+  background-attachment: fixed;
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -922,6 +1003,36 @@ body:not(.loaded) > *:not(.preloader) {
 .preloader-logo {
   margin-bottom: var(--space-xl);
   transition: all var(--transition-medium);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: 700;
+  display: inline-block;
+  background: linear-gradient(
+    135deg,
+    #7534b3 0%,
+    #8b1cfb 25%,
+    #9147ff 50%,
+    #b57bff 75%,
+    #7534b3 100%
+  );
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradientShift 3s ease infinite;
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+  .preloader-logo {
+    color: var(--accent);
+    background: none;
+    -webkit-text-fill-color: var(--accent);
+    text-shadow: 0 0 30px rgba(145, 71, 255, 0.5);
+  }
 }
 
 .preloader-logo img {
@@ -932,15 +1043,57 @@ body:not(.loaded) > *:not(.preloader) {
 
 .preloader-progress-container {
   margin-bottom: var(--space-lg);
+  width: 100%;
+  height: 4px;
+  background: rgba(26, 26, 26, 0.6);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  position: relative;
 }
 
 .preloader-progress-bar {
-  width: 100%;
-  height: 4px;
-  background: var(--bg-light);
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #7534b3 0%,
+    #8b1cfb 25%,
+    #9147ff 50%,
+    #b57bff 75%,
+    #7534b3 100%
+  );
+  background-size: 200% 100%;
   border-radius: var(--radius-full);
-  overflow: hidden;
-  transition: transform var(--transition-medium);
+  transition: width var(--transition-fast);
+  box-shadow: 0 0 10px rgba(145, 71, 255, 0.6), 0 0 20px rgba(117, 52, 179, 0.4);
+  animation: gradientShift 3s ease infinite;
+  position: relative;
+}
+
+.preloader-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
 }
 
 .preloader-progress-fill {
@@ -953,8 +1106,10 @@ body:not(.loaded) > *:not(.preloader) {
 
 .preloader-counter {
   font-size: 0.875rem;
-  color: var(--text-dim);
-  font-weight: 500;
+  color: var(--accent);
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(145, 71, 255, 0.5);
+  letter-spacing: 0.1em;
 }
 
 /* ============================================================
@@ -1953,6 +2108,19 @@ body.loaded .main-hero {
   75% { transform: translate(-5px, 10px) scale(1.03); }
 }
 
+/* Continuous animated gradient for logo and titles */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .hero-content {
   position: relative;
   z-index: 2;
@@ -1976,14 +2144,36 @@ body.loaded .main-hero {
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 700;
   margin-bottom: var(--space-lg);
-  background: linear-gradient(135deg, #e0e7ff 0%, #a78bfa 50%, #7c3aed 100%);
+  display: inline-block;
+  background: linear-gradient(
+    135deg,
+    #7534b3 0%,
+    #8b1cfb 25%,
+    #9147ff 50%,
+    #b57bff 75%,
+    #7534b3 100%
+  );
+  background-size: 200% 200%;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: transparent;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   line-height: 1.1;
   opacity: 1;
   transform: none;
+  animation: gradientShift 3s ease infinite;
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+  .hero-title {
+    color: var(--accent);
+    background: none;
+    -webkit-text-fill-color: var(--accent);
+  }
 }
 
 .hero-description {
@@ -3075,7 +3265,6 @@ body.loaded .preloader {
 }
 
 /* Ensure text content is visible */
-.hero-title,
 .hero-description,
 .hero-subtitle,
 .section-title,
@@ -3087,6 +3276,91 @@ body.loaded .preloader {
   opacity: 1 !important;
   visibility: visible !important;
   color: inherit !important;
+}
+
+
+/* ============================================================
+   CLEAN ANIMATIONS - Text Reveal & Effects
+   ============================================================ */
+.text-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) rotateX(-90deg);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.text-word {
+  display: inline-block;
+  margin-right: 0.25em;
+}
+
+.text-revealed .text-char {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .text-char {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  
+  .feature-item,
+  .about-column,
+  .step-card,
+  .pricing-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Card animation initial state - All page types */
+.feature-item,
+.about-column,
+.step-card,
+.pricing-card,
+.faq-preview-item,
+.page-section,
+.documentation-content,
+.tos-section,
+.affiliate-section {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.cards-animated .feature-item,
+.cards-animated .about-column,
+.cards-animated .step-card,
+.cards-animated .pricing-card,
+.cards-animated .faq-preview-item,
+.cards-animated .page-section,
+.cards-animated .documentation-content,
+.cards-animated .tos-section,
+.cards-animated .affiliate-section,
+.section-animated {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Page header animations */
+.page-header h1,
+.pricing-header h1,
+.documentation-header h1,
+.faq-header h1 {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.page-header h1.text-revealed,
+.pricing-header h1.text-revealed,
+.documentation-header h1.text-revealed,
+.faq-header h1.text-revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Override any transform animations */

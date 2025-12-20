@@ -33,6 +33,9 @@ class AppController {
     this.navigation = new ImmersiveNavigation();
     this.scrollAnimations = new EnhancedScrollAnimations();
     
+    // Initialize clean animations
+    this.cleanAnimations = new CleanAnimations();
+    
     // Check if WebGL is supported
     if (this.isWebGLSupported()) {
       this.webglBackground = new PurpleParticleEffect();
@@ -106,11 +109,19 @@ class AppController {
     if (window.gsap) {
       const tl = gsap.timeline();
       
+      // Animate only transform and opacity, don't touch color/background properties
       tl.to(heroTitle, {
         y: 0,
         opacity: 1,
         duration: 1.2,
-        ease: "power3.out"
+        ease: "power3.out",
+        // Explicitly preserve gradient text CSS properties
+        onComplete: function() {
+          // Ensure gradient properties are preserved after animation
+          heroTitle.style.color = '';
+          heroTitle.style.background = '';
+          heroTitle.style.backgroundImage = '';
+        }
       })
       .to(heroDescription, {
         y: 0,
@@ -3582,3 +3593,327 @@ const addLusionSidebarStyles = () => {
   setTimeout(ensureMenuToggleWorks, 1000);
   setTimeout(ensureMenuToggleWorks, 2000);
 })();
+
+// ============================================================
+// CLEAN ANIMATIONS - Professional, Performance-Optimized
+// Based on best practices from modern animation libraries
+// ============================================================
+class CleanAnimations {
+  constructor() {
+    this.observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    // Respect user preferences
+    this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (!this.prefersReducedMotion) {
+      this.initTextReveal();
+      this.initNumberCounters();
+      this.initCardAnimations();
+      this.initSmoothScroll();
+    }
+  }
+  
+  // Text Reveal Animation - Clean split text effect
+  initTextReveal() {
+    // Comprehensive selectors for all pages
+    // EXCLUDE gradient text elements (.hero-title, .preloader-logo, .navbar-logo a, .navbar .logo a, .sidebar-header .logo)
+    const textElements = document.querySelectorAll(
+      '.section-title, .page-header h1, .pricing-header h1, ' +
+      'h2, .documentation-header h1, .faq-header h1, ' +
+      '.page-section h2, .page-section h3, .card-header h3'
+    );
+    
+    if (textElements.length === 0) return;
+    
+    const textObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('text-revealed')) {
+          entry.target.classList.add('text-revealed');
+          this.animateTextReveal(entry.target);
+        }
+      });
+    }, this.observerOptions);
+    
+    textElements.forEach(el => {
+      // Skip if already processed, if it's empty, or if it's a gradient text element
+      if (el.querySelector('.text-char') || 
+          !el.textContent.trim() || 
+          el.classList.contains('hero-title') ||
+          el.classList.contains('preloader-logo') ||
+          el.classList.contains('navbar-logo') ||
+          el.closest('.navbar-logo') ||
+          el.closest('.navbar .logo') ||
+          el.closest('.sidebar-header .logo')) return;
+      
+      // Wrap text in spans for character animation
+      this.wrapTextInSpans(el);
+      textObserver.observe(el);
+    });
+  }
+  
+  wrapTextInSpans(element) {
+    const text = element.textContent;
+    const words = text.split(' ');
+    element.innerHTML = words.map(word => 
+      `<span class="text-word">${word.split('').map(char => 
+        `<span class="text-char">${char === ' ' ? '&nbsp;' : char}</span>`
+      ).join('')}</span>`
+    ).join(' ');
+  }
+  
+  animateTextReveal(element) {
+    const chars = element.querySelectorAll('.text-char');
+    if (chars.length === 0) return;
+    
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(chars, 
+        { 
+          opacity: 0, 
+          y: 20,
+          rotationX: -90
+        },
+        { 
+          opacity: 1, 
+          y: 0,
+          rotationX: 0,
+          duration: 0.6,
+          stagger: 0.02,
+          ease: "power3.out"
+        }
+      );
+    } else {
+      // Fallback without GSAP
+      chars.forEach((char, index) => {
+        setTimeout(() => {
+          char.style.opacity = '1';
+          char.style.transform = 'translateY(0)';
+        }, index * 20);
+      });
+    }
+  }
+  
+  // Number Counter Animation - Smooth counting effect
+  initNumberCounters() {
+    // Comprehensive selectors for prices, percentages, and counters across all pages
+    const counters = document.querySelectorAll(
+      '.boost-percentage, .price, [data-count], ' +
+      '.card-header .price, .pricing-card .price, ' +
+      '.faq-preview-item .price, .step-card .price'
+    );
+    
+    if (counters.length === 0) return;
+    
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+          entry.target.classList.add('counted');
+          this.animateCounter(entry.target);
+        }
+      });
+    }, this.observerOptions);
+    
+    counters.forEach(counter => {
+      counterObserver.observe(counter);
+    });
+  }
+  
+  animateCounter(element) {
+    const text = element.textContent;
+    const match = text.match(/(\d+\.?\d*)/);
+    
+    if (!match) return;
+    
+    const targetValue = parseFloat(match[1]);
+    const suffix = text.replace(match[0], '');
+    const duration = 2000;
+    const startTime = performance.now();
+    
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentValue = targetValue * easeOutQuart;
+      
+      element.textContent = currentValue.toFixed(2) + suffix;
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        element.textContent = targetValue.toFixed(2) + suffix;
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }
+  
+  // Enhanced Card Animations - Smooth stagger with scale
+  initCardAnimations() {
+    // Comprehensive selectors for all card containers across pages
+    const cardContainers = document.querySelectorAll(
+      '.feature-grid, .about-content, .steps-grid, .pricing-grid, ' +
+      '.pricing-wrapper .pricing-grid, .faq-preview-grid, ' +
+      '.documentation-container, .page-section'
+    );
+    
+    if (cardContainers.length === 0) return;
+    
+    cardContainers.forEach(container => {
+      // Find all card types across all pages
+      const cards = container.querySelectorAll(
+        '.feature-item, .about-column, .step-card, .pricing-card, ' +
+        '.faq-preview-item, .page-section, .documentation-content, ' +
+        '.tos-section, .affiliate-section'
+      );
+      
+      if (cards.length === 0) return;
+      
+      const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !container.classList.contains('cards-animated')) {
+            container.classList.add('cards-animated');
+            this.animateCards(cards);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      cardObserver.observe(container);
+    });
+    
+    // Also animate individual page sections that might not be in containers
+    const standaloneSections = document.querySelectorAll(
+      '.page-section:not(.cards-animated), ' +
+      '.documentation-content:not(.cards-animated), ' +
+      '.tos-section:not(.cards-animated), ' +
+      '.affiliate-section:not(.cards-animated)'
+    );
+    
+    if (standaloneSections.length > 0) {
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !entry.target.classList.contains('section-animated')) {
+            entry.target.classList.add('section-animated');
+            this.animateSingleElement(entry.target);
+          }
+        });
+      }, this.observerOptions);
+      
+      standaloneSections.forEach(section => {
+        sectionObserver.observe(section);
+      });
+    }
+  }
+  
+  // Animate a single element
+  animateSingleElement(element) {
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(element,
+        {
+          opacity: 0,
+          y: 30,
+          scale: 0.98
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          ease: "power3.out"
+        }
+      );
+    } else {
+      // Fallback without GSAP
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(30px) scale(0.98)';
+      setTimeout(() => {
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0) scale(1)';
+      }, 50);
+    }
+  }
+  
+  animateCards(cards) {
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(cards,
+        {
+          opacity: 0,
+          y: 50,
+          scale: 0.9
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out"
+        }
+      );
+    } else {
+      // Fallback without GSAP
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0) scale(1)';
+        }, index * 100);
+      });
+    }
+  }
+  
+  // Smooth Scroll Animation - Enhanced scroll-to behavior
+  initSmoothScroll() {
+    // Enhance existing anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (href === '#' || href === '#!') return;
+        
+        const target = document.querySelector(href);
+        if (!target) return;
+        
+        e.preventDefault();
+        this.smoothScrollTo(target);
+      });
+    });
+  }
+  
+  smoothScrollTo(target) {
+    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - 70; // Account for navbar
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1000;
+    let start = null;
+    
+    const easeInOutCubic = (t) => {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+    
+    const animation = (currentTime) => {
+      if (start === null) start = currentTime;
+      const timeElapsed = currentTime - start;
+      const progress = Math.min(timeElapsed / duration, 1);
+      
+      window.scrollTo(0, startPosition + distance * easeInOutCubic(progress));
+      
+      if (progress < 1) {
+        requestAnimationFrame(animation);
+      }
+    };
+    
+    requestAnimationFrame(animation);
+  }
+  
+  // Re-initialize animations for dynamically loaded content
+  refresh() {
+    if (!this.prefersReducedMotion) {
+      this.initTextReveal();
+      this.initNumberCounters();
+      this.initCardAnimations();
+    }
+  }
+}
