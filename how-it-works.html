@@ -16,14 +16,12 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/modern-styles.css">
   <link rel="stylesheet" href="css/page-specific-styles.css">
-  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,600,700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header class="main-hero">
     <nav class="navbar">
       <div class="logo">
         <a href="/">VITALITY</a>
-          
       </div>
       <ul class="nav-links">
       </ul>
@@ -257,7 +255,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="/#about-vitality">About Us</a></li>
-          <li><a href="/Affiliate">Affiliate</a></li>
+          <li><a href="/affiliate">Affiliate</a></li>
           <li><a href="/tos">Terms of Service</a></li>
         </ul>
       </div>
@@ -320,60 +318,27 @@
     });
   </script>
 <script>
-  // Comprehensive fix for both loading and scrolling issues
+  // Fix WebGL background that's capturing scroll events
   document.addEventListener('DOMContentLoaded', function() {
-    // Force body to load and enable scrolling after 1 second
-    setTimeout(function() {
-      // Force loaded state
-      document.body.classList.add('loaded');
+    // Fix WebGL background that's capturing scroll events
+    const webglBackground = document.querySelector('.webgl-background');
+    if (webglBackground) {
+      webglBackground.style.pointerEvents = "none";
       
-      // Fix scrolling - first ensure body allows scrolling
-      document.body.style.overflow = "auto";
-      document.body.style.height = "auto";
-      
-      // Remove the preloader if it exists
-      const preloader = document.querySelector('.preloader');
-      if (preloader) {
-        preloader.classList.add('preloader-hidden');
-        setTimeout(() => {
-          if (preloader && preloader.parentNode) {
-            preloader.parentNode.removeChild(preloader);
-          }
-        }, 500);
-      }
-      
-      // Fix WebGL background that's capturing scroll events
-      const webglBackground = document.querySelector('.webgl-background');
-      if (webglBackground) {
-        webglBackground.style.pointerEvents = "none";
-        
-        // Also fix any canvas elements inside
-        const canvases = webglBackground.querySelectorAll('canvas');
-        canvases.forEach(canvas => {
-          canvas.style.pointerEvents = "none";
-        });
-      }
-      
-      // Check for and fix any fixed position elements covering viewport
-      document.querySelectorAll('.webgl-canvas, .custom-cursor, .cursor-follower').forEach(el => {
-        if (el) {
-          el.style.pointerEvents = "none";
-        }
+      // Also fix any canvas elements inside
+      const canvases = webglBackground.querySelectorAll('canvas');
+      canvases.forEach(canvas => {
+        canvas.style.pointerEvents = "none";
       });
-      
-      // Force scroll positions to be recalculated
-      window.dispatchEvent(new Event('resize'));
-    }, 1000); // Reduced wait time to 1 second
+    }
+    
+    // Check for and fix any fixed position elements covering viewport
+    document.querySelectorAll('.webgl-canvas, .custom-cursor, .cursor-follower').forEach(el => {
+      if (el) {
+        el.style.pointerEvents = "none";
+      }
+    });
   });
-
-  // Emergency scroll fix - run immediately
-  (function() {
-    // Immediate execution to try fixing scroll
-    document.body.style.overflow = "auto";
-    document.body.style.height = "auto";
-    document.documentElement.style.overflow = "auto";
-    document.documentElement.style.height = "auto";
-  })();
 </script>
 </body>
 </html>

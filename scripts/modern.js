@@ -3,6 +3,8 @@
  * Improved animations and WebGL effects for a Lusion-inspired experience
  */
 
+// Preloader will be created immediately
+
 // Initialize all components when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
   // Force disable custom cursor to restore normal cursor
@@ -175,16 +177,50 @@ class ImprovedPreloader {
     this.loadingSpeed = 1;
     this.assetsLoaded = false;
     this.loadTimeout = null;
-    this.maxLoadTime = 8000; // Maximum loading time (8 seconds) before force complete
+    this.maxLoadTime = 5000; // Maximum loading time (5 seconds) before force complete
+    this.completed = false;
+    this.forceCompleteCalled = false;
     
     this.setupPreloader();
     this.addSkipButton(); // Add manual skip button
     this.loadAssets();
     
-    // Safety timeout - force complete after max time
+    // Multiple safety timeouts at different intervals to ensure completion
+    // Primary timeout - force complete after max time
     this.loadTimeout = setTimeout(() => {
       this.forceComplete();
     }, this.maxLoadTime);
+    
+    // Secondary timeout - backup at 6 seconds
+    setTimeout(() => {
+      if (!this.completed) {
+        this.forceComplete();
+      }
+    }, 6000);
+    
+    // Tertiary timeout - final backup at 8 seconds (absolute maximum)
+    setTimeout(() => {
+      if (!this.completed) {
+        this.forceComplete();
+      }
+    }, 8000);
+    
+    // Emergency fallback - if DOM is ready and nothing happened, complete immediately
+    if (document.readyState === 'complete') {
+      setTimeout(() => {
+        if (!this.completed) {
+          this.forceComplete();
+        }
+      }, 2000);
+    } else {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          if (!this.completed) {
+            this.forceComplete();
+          }
+        }, 2000);
+      });
+    }
   }
   
   setupPreloader() {
@@ -205,8 +241,19 @@ class ImprovedPreloader {
         </div>
       `;
       
-      document.body.appendChild(this.preloader);
+      // Insert at the very beginning of body to ensure it's on top
+      if (document.body.firstChild) {
+        document.body.insertBefore(this.preloader, document.body.firstChild);
+      } else {
+        document.body.appendChild(this.preloader);
+      }
     }
+    
+    // Ensure preloader is visible and on top
+    this.preloader.style.opacity = '1';
+    this.preloader.style.visibility = 'visible';
+    this.preloader.style.zIndex = '99999';
+    this.preloader.style.display = 'flex';
     
     // Get elements
     this.progressBar = this.preloader.querySelector('.preloader-progress-bar');
@@ -233,45 +280,86 @@ class ImprovedPreloader {
     // Create skip button for users to manually continue if loading gets stuck
     this.skipButton = document.createElement('button');
     this.skipButton.className = 'preloader-skip-button';
-    this.skipButton.textContent = 'Click to Continue';
+    this.skipButton.textContent = 'Skip Loading';
     this.skipButton.style.position = 'absolute';
     this.skipButton.style.bottom = '30px';
     this.skipButton.style.left = '50%';
     this.skipButton.style.transform = 'translateX(-50%)';
-    this.skipButton.style.padding = '10px 20px';
+    this.skipButton.style.padding = '12px 24px';
     this.skipButton.style.backgroundColor = '#7534b3';
     this.skipButton.style.color = '#fff';
     this.skipButton.style.border = 'none';
     this.skipButton.style.borderRadius = '5px';
     this.skipButton.style.cursor = 'pointer';
     this.skipButton.style.fontFamily = 'var(--font-body, sans-serif)';
+    this.skipButton.style.fontSize = '14px';
+    this.skipButton.style.fontWeight = '500';
+    this.skipButton.style.zIndex = '100000';
     this.skipButton.style.opacity = '0';
-    this.skipButton.style.transition = 'opacity 0.3s ease';
+    this.skipButton.style.transition = 'opacity 0.3s ease, background-color 0.2s ease';
+    this.skipButton.style.pointerEvents = 'auto';
     
-    // Show skip button after 4 seconds
+    // Hover effect
+    this.skipButton.addEventListener('mouseenter', () => {
+      this.skipButton.style.backgroundColor = '#8a42c9';
+    });
+    this.skipButton.addEventListener('mouseleave', () => {
+      this.skipButton.style.backgroundColor = '#7534b3';
+    });
+    
+    // Show skip button after 2 seconds (faster than before)
     setTimeout(() => {
-      this.skipButton.style.opacity = '1';
-    }, 4000);
+      if (this.skipButton && !this.completed) {
+        this.skipButton.style.opacity = '1';
+      }
+    }, 2000);
     
-    this.skipButton.addEventListener('click', () => {
+    // Always show skip button if loading takes too long
+    setTimeout(() => {
+      if (this.skipButton && !this.completed) {
+        this.skipButton.style.opacity = '1';
+      }
+    }, 3000);
+    
+    this.skipButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       this.forceComplete();
     });
     
-    this.preloader.appendChild(this.skipButton);
+    if (this.preloader) {
+      this.preloader.appendChild(this.skipButton);
+    }
   }
   
   loadAssets() {
     // Start counting images and other assets
     this.countAssets();
     
-    // Simulate minimum loading time with a backup timer
+    // Always ensure progress reaches 100% - start animation that guarantees 100%
+    this.animateProgress();
+    
+    // Guarantee progress reaches 100% after minimum time
     setTimeout(() => {
+      // Force progress to 100% if not already there
+      if (this.currentProgress < 100) {
+        this.progressTo(100, 2);
+      }
       this.assetsLoaded = true;
       this.checkCompletion();
-    }, 1500); // Reduced time for faster loading
+    }, 1500);
     
-    // Start progress animation
-    this.animateProgress();
+    // Backup: if assets don't load, mark as loaded anyway after 3 seconds
+    setTimeout(() => {
+      if (!this.assetsLoaded) {
+        this.assetsLoaded = true;
+      }
+      // Force to 100% if not already
+      if (this.currentProgress < 100) {
+        this.progressTo(100, 3);
+        this.checkCompletion();
+      }
+    }, 3000);
   }
   
   countAssets() {
@@ -284,10 +372,9 @@ class ImprovedPreloader {
     this.loadedAssets = 0;
     
     if (this.totalAssets === 0) {
-      // If no assets, complete after a minimum time
-      setTimeout(() => {
-        this.progressTo(100, 1);
-      }, 500);
+      // If no assets, ensure we still animate to 100%
+      this.progressTo(100, 1);
+      this.assetsLoaded = true;
       return;
     }
     
@@ -298,6 +385,12 @@ class ImprovedPreloader {
       } else {
         img.addEventListener('load', () => this.assetLoaded());
         img.addEventListener('error', () => this.assetLoaded()); // Count errors as loaded too
+        // Fallback timeout for images that never load
+        setTimeout(() => {
+          if (!img.complete) {
+            this.assetLoaded();
+          }
+        }, 2000);
       }
     });
     
@@ -308,6 +401,10 @@ class ImprovedPreloader {
       } else {
         video.addEventListener('canplay', () => this.assetLoaded());
         video.addEventListener('error', () => this.assetLoaded());
+        // Fallback timeout
+        setTimeout(() => {
+          this.assetLoaded();
+        }, 2000);
       }
     });
     
@@ -319,47 +416,92 @@ class ImprovedPreloader {
       // Fallback for iframes that never trigger load
       setTimeout(() => {
         this.assetLoaded();
-      }, 1500);
+      }, 2000);
     });
+    
+    // Final fallback: if not all assets loaded after timeout, mark as complete
+    setTimeout(() => {
+      if (this.loadedAssets < this.totalAssets) {
+        // Mark remaining as loaded
+        const remaining = this.totalAssets - this.loadedAssets;
+        for (let i = 0; i < remaining; i++) {
+          this.assetLoaded();
+        }
+      }
+    }, 2500);
   }
   
   assetLoaded() {
     this.loadedAssets++;
-    const progress = Math.min(100, Math.floor((this.loadedAssets / this.totalAssets) * 100));
-    this.progressTo(progress, 0.5);
+    // Calculate progress but don't set it as the limit - just track it
+    const assetProgress = Math.min(95, Math.floor((this.loadedAssets / this.totalAssets) * 95));
+    
+    // Update progress limit but ensure we always continue to 100%
+    if (assetProgress > this.progressLimit) {
+      this.progressTo(assetProgress, 0.5);
+    }
     
     if (this.loadedAssets >= this.totalAssets) {
       this.assetsLoaded = true;
-      this.checkCompletion();
+      // When all assets are loaded, ensure we go to 100%
+      this.progressTo(100, 1);
+      setTimeout(() => {
+        this.checkCompletion();
+      }, 300);
     }
   }
   
   animateProgress() {
-    // Animate progress smoothly
+    // Animate progress smoothly - ALWAYS continue to 100%
     const incrementProgress = () => {
-      if (this.currentProgress < this.progressLimit) {
-        // Calculate new progress
-        const increment = (this.progressLimit - this.currentProgress) * 0.05 * this.loadingSpeed;
-        this.currentProgress += Math.max(0.1, increment);
+      if (this.completed) return; // Stop if already completed
+      
+      // Always aim for 100%, but respect progressLimit as minimum target
+      const target = Math.max(this.progressLimit, 100);
+      
+      if (this.currentProgress < target) {
+        // Calculate new progress - ensure we always move forward
+        const remaining = target - this.currentProgress;
+        const increment = Math.max(0.1, remaining * 0.05 * this.loadingSpeed);
+        this.currentProgress += increment;
         
-        if (this.currentProgress > this.progressLimit) {
-          this.currentProgress = this.progressLimit;
+        // Cap at target
+        if (this.currentProgress > target) {
+          this.currentProgress = target;
         }
         
         // Update UI
         this.updateProgress(this.currentProgress);
         
-        // Continue animation
-        if (!this.completed) {
+        // Continue animation until we reach 100%
+        if (this.currentProgress < 100) {
           requestAnimationFrame(incrementProgress);
+        } else {
+          // We've reached 100%, check if we can complete
+          this.checkCompletion();
         }
-      } else {
+      } else if (this.currentProgress >= 100) {
+        // We're at 100%, check completion
         this.checkCompletion();
+      } else {
+        // Still below target, continue
+        requestAnimationFrame(incrementProgress);
       }
     };
     
     // Start animation
     requestAnimationFrame(incrementProgress);
+    
+    // Safety: ensure we always reach 100% after a reasonable time
+    setTimeout(() => {
+      if (this.currentProgress < 100 && !this.completed) {
+        this.progressTo(100, 5);
+        // Force update
+        this.currentProgress = 100;
+        this.updateProgress(100);
+        this.checkCompletion();
+      }
+    }, 4000);
   }
   
   progressTo(target, speed) {
@@ -368,32 +510,88 @@ class ImprovedPreloader {
   }
   
   updateProgress(progress) {
-    // Update progress bar and counter
-    const rounded = Math.floor(progress);
-    this.progressBar.style.width = `${progress}%`;
-    this.progressCounter.textContent = `${rounded}%`;
+    // Ensure progress never exceeds 100%
+    const clampedProgress = Math.min(100, Math.max(0, progress));
+    const rounded = Math.floor(clampedProgress);
     
-    // If progress is at 100% for more than 2 seconds, force complete
-    if (rounded >= 100) {
+    // Update progress bar - always show exact percentage
+    if (this.progressBar) {
+      this.progressBar.style.width = `${clampedProgress}%`;
+    }
+    
+    // Update counter - always show 100% when at or above 100%
+    if (this.progressCounter) {
+      if (clampedProgress >= 100) {
+        this.progressCounter.textContent = '100%';
+      } else {
+        this.progressCounter.textContent = `${rounded}%`;
+      }
+    }
+    
+    // If progress is at 100% or above, ensure completion
+    if (clampedProgress >= 100 && !this.completed) {
+      // Update current progress to exactly 100
+      this.currentProgress = 100;
       setTimeout(() => {
-        this.forceComplete();
-      }, 2000);
+        if (!this.completed) {
+          this.checkCompletion();
+        }
+      }, 300);
     }
   }
   
   checkCompletion() {
-    // Check if loading is complete
-    if (this.currentProgress >= 100 && this.assetsLoaded) {
-      this.completeLoading();
+    // Only complete when progress is exactly 100%
+    if (this.currentProgress >= 100) {
+      // Ensure assets are marked as loaded
+      this.assetsLoaded = true;
+      // Small delay to ensure UI shows 100%
+      setTimeout(() => {
+        if (!this.completed) {
+          this.completeLoading();
+        }
+      }, 200);
+    } else if (this.assetsLoaded && this.currentProgress >= 90) {
+      // If assets are loaded and we're close, force to 100%
+      this.progressTo(100, 5);
+      // Update immediately
+      this.currentProgress = 100;
+      this.updateProgress(100);
+      setTimeout(() => {
+        if (!this.completed) {
+          this.completeLoading();
+        }
+      }, 300);
+    } else if (this.currentProgress < 100) {
+      // If not at 100%, ensure we continue animating
+      this.progressTo(100, 2);
     }
   }
   
   forceComplete() {
-    // Force completion regardless of actual loading status
-    clearTimeout(this.loadTimeout);
-    this.progressTo(100, 10); // Speed up to 100% quickly
+    // Prevent multiple calls
+    if (this.forceCompleteCalled || this.completed) return;
+    this.forceCompleteCalled = true;
+    
+    // Clear all timeouts
+    if (this.loadTimeout) {
+      clearTimeout(this.loadTimeout);
+    }
+    
+    // Force progress to 100%
+    this.progressLimit = 100;
     this.currentProgress = 100;
-    this.updateProgress(100);
+    this.assetsLoaded = true;
+    
+    // Update UI immediately
+    if (this.progressBar) {
+      this.progressBar.style.width = '100%';
+    }
+    if (this.progressCounter) {
+      this.progressCounter.textContent = '100%';
+    }
+    
+    // Complete loading
     this.completeLoading();
   }
   
@@ -402,27 +600,47 @@ class ImprovedPreloader {
     if (this.completed) return;
     this.completed = true;
     
+    // Clear all timeouts
+    if (this.loadTimeout) {
+      clearTimeout(this.loadTimeout);
+    }
+    
+    // Add loaded class to body first - this will show content via CSS
+    document.body.classList.add('loaded');
+    
     // Add class for CSS transition
-    this.preloader.classList.add('preloader-hidden');
+    if (this.preloader) {
+      this.preloader.classList.add('preloader-hidden');
+    }
     
     // Enable scrolling
     document.body.style.overflow = '';
     
-    // Add loaded class to body
-    document.body.classList.add('loaded');
-    
-    // Clean up timeout
-    clearTimeout(this.loadTimeout);
-    
-    // Remove preloader after transition
+    // Remove preloader after transition (shorter delay for faster UX)
     setTimeout(() => {
       if (this.preloader && this.preloader.parentNode) {
         this.preloader.remove();
       }
       
       // Call onComplete callback
-      if (this.onComplete) this.onComplete();
-    }, 1000);
+      if (this.onComplete) {
+        try {
+          this.onComplete();
+        } catch (e) {
+          console.error('Preloader onComplete callback error:', e);
+        }
+      }
+    }, 800);
+    
+    // Emergency cleanup - ensure preloader is removed even if something fails
+    setTimeout(() => {
+      const preloader = document.querySelector('.preloader');
+      if (preloader && preloader.parentNode) {
+        preloader.remove();
+      }
+      document.body.classList.add('loaded');
+      document.body.style.overflow = '';
+    }, 2000);
   }
 }
 
@@ -709,13 +927,31 @@ class ImmersiveNavigation {
   init() {
     // Add event listeners
     if (this.menuBtn) {
-      this.menuBtn.addEventListener('click', this.toggleMenu.bind(this));
+      // Remove any existing listeners to prevent duplicates
+      const newMenuBtn = this.menuBtn.cloneNode(true);
+      this.menuBtn.parentNode.replaceChild(newMenuBtn, this.menuBtn);
+      this.menuBtn = newMenuBtn;
+      
+      // Add click event listener
+      this.menuBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleMenu();
+      });
+      
+      // Ensure button is clickable
+      this.menuBtn.style.pointerEvents = 'auto';
+      this.menuBtn.style.cursor = 'pointer';
     }
     
     if (this.sidebar) {
       const backdrop = this.sidebar.querySelector('.sidebar-backdrop');
       if (backdrop) {
-        backdrop.addEventListener('click', this.closeMenu.bind(this));
+        backdrop.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.closeMenu();
+        });
       }
       
       // Store all nav links
@@ -753,9 +989,6 @@ class ImmersiveNavigation {
     
     if (this.sidebar) {
       this.sidebar.classList.add('active');
-      
-      // No need for GSAP animation here - CSS transitions will handle it
-      // The animations are now directly in the CSS with staggered delays
     }
   }
   
@@ -2819,54 +3052,15 @@ const addLusionSidebarStyles = () => {
 
 /**
  * VITALITY OPTIMIZATION - MODERN SIDEBAR IMPLEMENTATION
- * This script completely replaces the old sidebar with the modern Lusion-style sidebar
- * This version includes section configurations for ALL website pages
+ * This script adds a Lusion-style sidebar for navigation dots
+ * The hamburger menu (ImmersiveNavigation) remains functional
  */
 
 // Execute this immediately when the script loads
 (function() {
-  // Remove any existing .modern-sidebar elements
-  const oldSidebars = document.querySelectorAll('.modern-sidebar');
-  oldSidebars.forEach(el => el.remove());
-  
-  // Remove any existing .menu-toggle buttons
-  const oldToggles = document.querySelectorAll('.menu-toggle');
-  oldToggles.forEach(el => el.remove());
-  
-  // Disable the ImmersiveNavigation class by overriding it
-  class ImmersiveNavigation {
-    constructor() {
-      console.log('ImmersiveNavigation disabled');
-    }
-    
-    // Empty methods to prevent errors if they're called
-    createNav() {}
-    init() {}
-    toggleMenu() {}
-    openMenu() {}
-    closeMenu() {}
-    animateLink() {}
-    resetLink() {}
-    handleLinkClick() {}
-    onResize() {}
-  }
-  
-  // Override the original class
-  window.ImmersiveNavigation = ImmersiveNavigation;
-  
-  // Override AppController to prevent navigation initialization
-  if (typeof AppController !== 'undefined') {
-    const originalInitializeCore = AppController.prototype.initializeCore;
-    AppController.prototype.initializeCore = function() {
-      // Call original but replace navigation initialization
-      const result = originalInitializeCore.apply(this, arguments);
-      
-      // Replace navigation with null
-      this.navigation = null;
-      
-      return result;
-    };
-  }
+  // Only remove old Lusion sidebars, NOT the hamburger menu
+  const oldLusionSidebars = document.querySelectorAll('.lusion-sidebar');
+  oldLusionSidebars.forEach(el => el.remove());
   
   // Create Lusion sidebar styles
   addLusionSidebarStyles();
@@ -3327,4 +3521,64 @@ const addLusionSidebarStyles = () => {
       });
     }
   }
+})();
+
+// Fallback: Ensure hamburger menu works on all pages
+(function() {
+  function ensureMenuToggleWorks() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.modern-sidebar');
+    
+    if (menuToggle && !menuToggle.hasAttribute('data-listener-added')) {
+      menuToggle.setAttribute('data-listener-added', 'true');
+      
+      // Remove any existing listeners by cloning
+      const newToggle = menuToggle.cloneNode(true);
+      menuToggle.parentNode.replaceChild(newToggle, menuToggle);
+      
+      // Add click listener
+      newToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Get the navigation instance from AppController
+        if (window.App && window.App.navigation) {
+          window.App.navigation.toggleMenu();
+        } else {
+          // Fallback: manually toggle sidebar
+          if (sidebar) {
+            const isOpen = sidebar.classList.contains('active');
+            if (isOpen) {
+              sidebar.classList.remove('active');
+              document.body.classList.remove('menu-open');
+              newToggle.classList.remove('active');
+            } else {
+              sidebar.classList.add('active');
+              document.body.classList.add('menu-open');
+              newToggle.classList.add('active');
+            }
+          }
+        }
+      });
+      
+      // Ensure it's clickable
+      newToggle.style.pointerEvents = 'auto';
+      newToggle.style.cursor = 'pointer';
+    }
+  }
+  
+  // Try immediately
+  ensureMenuToggleWorks();
+  
+  // Try after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensureMenuToggleWorks);
+  } else {
+    ensureMenuToggleWorks();
+  }
+  
+  // Try after a short delay to catch late initialization
+  setTimeout(ensureMenuToggleWorks, 500);
+  setTimeout(ensureMenuToggleWorks, 1000);
+  setTimeout(ensureMenuToggleWorks, 2000);
 })();

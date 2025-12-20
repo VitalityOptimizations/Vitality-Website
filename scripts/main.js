@@ -28,8 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   } catch (error) {
     console.error('Main script error:', error);
-    // Ensure page is still functional even if there are errors
-    document.body.classList.add('loaded');
+    // Don't add loaded class here - let preloader handle it
   }
 });
 
@@ -44,8 +43,8 @@ function initCoreFeatures() {
     window.history.replaceState(null, '', newUrl);
   }
   
-  // Add loaded class to body for CSS transitions
-  document.body.classList.add('loaded');
+  // Don't add loaded class here - let preloader handle it
+  // The preloader will add 'loaded' class when ready
   
   // Initialize any lazy loading
   initLazyLoading();
