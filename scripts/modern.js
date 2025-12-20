@@ -3721,13 +3721,24 @@ class CleanAnimations {
   }
   
   animateCounter(element) {
-    const text = element.textContent;
-    const match = text.match(/(\d+\.?\d*)/);
+    // Get the full text content including any child elements
+    const fullText = element.textContent.trim();
+    
+    // Match currency symbol (if any), number, and remaining text
+    // Handles formats like: "£25.00 one-time", "25.00 one-time", "$25.00", etc.
+    const match = fullText.match(/^([^\d]*?)(\d+\.?\d*)(.*)$/);
     
     if (!match) return;
     
-    const targetValue = parseFloat(match[1]);
-    const suffix = text.replace(match[0], '');
+    const prefix = match[1] || ''; // Currency symbol and anything before the number
+    const targetValue = parseFloat(match[2]); // The number
+    const suffix = match[3] || ''; // Everything after the number (including span text)
+    
+    // Check if there's a span element to preserve
+    const spanElement = element.querySelector('span');
+    const spanText = spanElement ? spanElement.textContent : '';
+    const spanHTML = spanElement ? spanElement.outerHTML : '';
+    
     const duration = 2000;
     const startTime = performance.now();
     
@@ -3739,12 +3750,24 @@ class CleanAnimations {
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
       const currentValue = targetValue * easeOutQuart;
       
-      element.textContent = currentValue.toFixed(2) + suffix;
+      // Reconstruct with prefix (currency) + number + suffix/span
+      if (spanElement) {
+        // Preserve the span structure: prefix + number + space + span
+        element.innerHTML = prefix + currentValue.toFixed(2) + ' ' + spanHTML;
+      } else {
+        // No span, just update text content
+        element.textContent = prefix + currentValue.toFixed(2) + suffix;
+      }
       
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
-        element.textContent = targetValue.toFixed(2) + suffix;
+        // Final value with correct format
+        if (spanElement) {
+          element.innerHTML = prefix + targetValue.toFixed(2) + ' ' + spanHTML;
+        } else {
+          element.textContent = prefix + targetValue.toFixed(2) + suffix;
+        }
       }
     };
     
