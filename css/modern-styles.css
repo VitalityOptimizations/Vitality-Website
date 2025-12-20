@@ -1122,7 +1122,8 @@ body:not(.loaded) > *:not(.preloader) {
 }
 
 .project-item {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: all var(--transition-medium);
@@ -1194,7 +1195,8 @@ body:not(.loaded) > *:not(.preloader) {
 }
 
 .feature-item {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   padding: var(--space-xl);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-light);
@@ -1243,7 +1245,8 @@ body:not(.loaded) > *:not(.preloader) {
 }
 
 .documentation-sidebar {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   height: fit-content;
@@ -2177,7 +2180,8 @@ body.loaded .main-hero {
 }
 
 .feature-item {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   padding: var(--space-2xl);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-light);
@@ -2277,7 +2281,8 @@ body.loaded .main-hero {
 }
 
 .about-column {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   padding: var(--space-2xl);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-light);
@@ -2353,7 +2358,8 @@ body.loaded .main-hero {
 }
 
 .performance-stats {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   padding: var(--space-2xl);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-light);
@@ -2373,7 +2379,8 @@ body.loaded .main-hero {
 .game-selection select {
   width: 100%;
   padding: var(--space-md);
-  background: var(--bg-darker);
+  background: rgba(5, 5, 5, 0.5);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
   color: var(--text-light);
@@ -2405,7 +2412,8 @@ body.loaded .main-hero {
 
 .fps-bar {
   height: 40px;
-  background: var(--bg-darker);
+  background: rgba(5, 5, 5, 0.4);
+  backdrop-filter: blur(5px);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-md);
   overflow: hidden;
@@ -2445,7 +2453,8 @@ body.loaded .main-hero {
 .methodology {
   margin-top: var(--space-xl);
   padding: var(--space-lg);
-  background: var(--bg-darker);
+  background: rgba(26, 26, 26, 0.3);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-light);
 }
@@ -2516,7 +2525,8 @@ body.loaded .main-hero {
 }
 
 .step-card {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   padding: var(--space-xl);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-light);
@@ -2577,7 +2587,8 @@ body.loaded .main-hero {
 }
 
 .pricing-preview-card {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   padding: var(--space-2xl);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-light);
@@ -2684,7 +2695,8 @@ body.loaded .main-hero {
 }
 
 .faq-preview-item {
-  background: var(--bg-light);
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(10px);
   padding: var(--space-xl);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-light);
