@@ -812,6 +812,7 @@ button,
 .sidebar-nav li:nth-child(7) { transition-delay: 0.4s; }
 .sidebar-nav li:nth-child(8) { transition-delay: 0.45s; }
 .sidebar-nav li:nth-child(9) { transition-delay: 0.5s; }
+.sidebar-nav li:nth-child(10) { transition-delay: 0.55s; }
 
 .sidebar-nav a {
   display: block;

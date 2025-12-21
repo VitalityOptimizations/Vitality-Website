@@ -14,6 +14,22 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Initialize core components
   window.App = new AppController();
+  
+  // Safety mechanism: Ensure preloader is removed and body gets loaded class
+  // This prevents white box from showing if preloader fails
+  setTimeout(() => {
+    const preloader = document.querySelector('.preloader');
+    if (preloader && !document.body.classList.contains('loaded')) {
+      // Force complete if preloader is still visible after 6 seconds
+      preloader.classList.add('preloader-hidden');
+      document.body.classList.add('loaded');
+      setTimeout(() => {
+        if (preloader && preloader.parentNode) {
+          preloader.remove();
+        }
+      }, 500);
+    }
+  }, 6000); // 6 second safety timeout
 });
 
 // ============================================================
@@ -913,6 +929,7 @@ class ImmersiveNavigation {
               <li><a href="/" data-text="Home">Home</a></li>
               <li><a href="/#about-vitality" data-text="About">About</a></li>
               <li><a href="/download" data-text="Download">Download</a></li>
+              <li><a href="/bios-tweaker" data-text="BIOS Tweaker">BIOS Tweaker</a></li>
               <li><a href="/documentation" data-text="Documentation">Documentation</a></li>
               <li><a href="/how-it-works" data-text="How It Works">How It Works</a></li>
               <li><a href="/purchase" data-text="Purchase">Purchase</a></li>
@@ -3496,7 +3513,7 @@ const addLusionSidebarStyles = () => {
       // Purchase page
       sections = [
         { label: 'Lifetime', link: '.pricing-grid' },
-        { label: 'Game Mode', link: '.pricing-grid-single' },
+        { label: 'BIOS Tweaker', link: '.pricing-grid-single' },
         { label: 'FAQ', link: '/faq' }
       ];
     }
