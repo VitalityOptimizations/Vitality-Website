@@ -1507,68 +1507,52 @@
 }
 
 /* ============================================================
+   MOBILE OPTIMIZATION - PREVENT HORIZONTAL SCROLL
+   ============================================================ */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ============================================================
    BIOS TWEAKER PAGE STYLES
    ============================================================ */
-.page-container {
-  padding: 120px 40px 40px;
+.bios-wrapper {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 40px 30px 60px;
+  min-height: calc(100vh - 70px);
+  width: 100%;
+  overflow-x: hidden;
 }
 
-.page-header {
+.bios-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 
-.page-title {
-  font-size: 3.5rem;
-  font-weight: 700;
-  margin-bottom: 20px;
-  background: linear-gradient(
-    135deg,
-    #7534b3 0%,
-    #8b1cfb 25%,
-    #9147ff 50%,
-    #b57bff 75%,
-    #7534b3 100%
-  );
-  background-size: 200% 200%;
-  background-clip: text;
+.bios-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation: gradientShift 3s ease infinite;
-  background-repeat: no-repeat;
-  background-position: 0% 50%;
-  display: inline-block;
+  background-clip: text;
 }
 
-/* Fallback for browsers without background-clip support */
-@supports not (background-clip: text) {
-  .page-title {
-    color: var(--accent);
-    background: none;
-    -webkit-text-fill-color: var(--accent);
-  }
-}
-
-.page-subtitle {
-  font-size: 1.3rem;
+.bios-header p {
   color: var(--text-dim);
-  max-width: 700px;
+  font-size: 1.2rem;
+  max-width: 600px;
   margin: 0 auto 40px;
-  line-height: 1.6;
-}
-
-.page-cta {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  align-items: center;
 }
 
 .page-section {
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 
 .two-column-content {
@@ -1576,6 +1560,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   align-items: start;
+  width: 100%;
+  max-width: 100%;
 }
 
 .content-block h2 {
@@ -1598,8 +1584,182 @@
 }
 
 /* ============================================================
-   RESPONSIVE DESIGN
+   BIOS TWEAKER MOBILE-SPECIFIC STYLES
    ============================================================ */
+
+/* Fix ALL grid layouts and inline styles on mobile */
+@media (max-width: 768px) {
+  /* ALL grid layouts - 3 column, 2 column, any grid */
+  .page-section div[style*="grid-template-columns: repeat(3, 1fr)"],
+  .page-section div[style*="grid-template-columns: repeat(2, 1fr)"],
+  .page-section div[style*="display: grid"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-top: 20px !important;
+  }
+  
+  /* ALL card-like containers with any background */
+  .page-section div[style*="background: rgba(117, 52, 179"],
+  .page-section div[style*="background: rgba(26, 26, 26"],
+  .page-section div[style*="background: linear-gradient"],
+  .page-section div[style*="padding: 30px"],
+  .page-section div[style*="padding: 25px"],
+  .page-section div[style*="padding: 20px"] {
+    padding: 20px !important;
+    margin-bottom: 15px !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* ALL large numbers and stats */
+  .page-section div[style*="font-size: 3rem"],
+  .page-section div[style*="font-size: 3.5rem"] {
+    font-size: 2.2rem !important;
+    margin-bottom: 12px !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* ALL headers in sections */
+  .page-section h3[style*="color: var(--text-light)"],
+  .page-section h3[style*="color: var(--accent)"],
+  .page-section h2[style*="margin-bottom: 20px"] {
+    font-size: 1.3rem !important;
+    margin-bottom: 10px !important;
+    line-height: 1.3 !important;
+  }
+  
+  /* ALL paragraphs and descriptions */
+  .page-section p[style*="color: var(--text-dim)"],
+  .page-section p[style*="font-size: 1.1rem"],
+  .page-section p[style*="max-width: 600px"],
+  .page-section p[style*="line-height: 1.7"] {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 15px !important;
+  }
+  
+  /* ALL centered sections and CTA areas */
+  .page-section div[style*="text-align: center"] {
+    padding: 25px 15px !important;
+    margin: 20px 0 !important;
+    text-align: center !important;
+  }
+  
+  /* ALL button containers */
+  .page-section div[style*="margin-right: 15px"],
+  .page-section div[style*="margin-top: 40px"] a {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: center !important;
+  }
+  
+  .page-section a[style*="margin-right: 15px"] {
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 280px !important;
+    text-align: center !important;
+    padding: 15px 20px !important;
+  }
+  
+  /* Technical specs and lists */
+  .page-section ul[style*="list-style: none"] {
+    padding-left: 0 !important;
+  }
+  
+  .page-section li[style*="margin-bottom"] {
+    margin-bottom: 15px !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Further reduce sizes for small screens */
+  .page-section div[style*="grid-template-columns"],
+  .page-section div[style*="display: grid"] {
+    gap: 15px !important;
+    margin-top: 15px !important;
+  }
+  
+  .page-section div[style*="background:"],
+  .page-section div[style*="padding:"] {
+    padding: 15px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .page-section div[style*="font-size: 3rem"],
+  .page-section div[style*="font-size: 3.5rem"] {
+    font-size: 1.8rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .page-section h3[style*="color:"],
+  .page-section h2[style*="margin-bottom:"] {
+    font-size: 1.2rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .page-section p[style*="color:"],
+  .page-section p[style*="font-size:"],
+  .page-section p[style*="line-height:"] {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .page-section div[style*="text-align: center"] {
+    padding: 20px 10px !important;
+  }
+  
+  .page-section a[style*="margin-right:"] {
+    max-width: 260px !important;
+    padding: 12px 15px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .page-section li[style*="margin-bottom:"] {
+    margin-bottom: 12px !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+/* List styling for mobile */
+@media (max-width: 768px) {
+  .content-block ul {
+    padding-left: 15px !important;
+    margin-top: 15px !important;
+  }
+  
+  .content-block li {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .content-block li strong {
+    display: block !important;
+    margin-bottom: 3px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-block ul {
+    padding-left: 12px !important;
+    margin-top: 12px !important;
+  }
+  
+  .content-block li {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 6px !important;
+  }
+}
 @media (max-width: 1200px) {
   .documentation-container {
     grid-template-columns: 1fr;
@@ -1613,35 +1773,82 @@
 }
 
 @media (max-width: 768px) {
-  .page-container,
+  .bios-wrapper,
   .download-wrapper,
   .faq-wrapper,
   .pricing-wrapper,
   .tos-container,
   .affiliate-container {
-    padding: 100px 20px 40px;
+    padding: 100px 15px 40px;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   
-  .page-title {
-    font-size: 2.5rem;
+  .bios-header h1 {
+    font-size: 2.2rem;
+    line-height: 1.2;
+    margin-bottom: 15px;
   }
   
-  .page-subtitle {
-    font-size: 1.1rem;
+  .bios-header p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    padding: 0 10px;
   }
   
-  .page-cta {
+  .cta-buttons {
     flex-direction: column;
     gap: 15px;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .cta-button {
+    width: 100%;
+    max-width: 280px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    text-align: center;
   }
   
   .two-column-content {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 25px;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .content-block {
+    padding: 0 5px;
   }
   
   .content-block h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    line-height: 1.3;
+  }
+  
+  .content-block h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+  
+  .content-block p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  
+  .page-section {
+    margin-bottom: 40px;
+    padding: 0 5px;
+  }
+  
+  /* Mobile-specific spacing fixes */
+  .page-section:last-child {
+    margin-bottom: 20px;
   }
   
   .page-header h1,
@@ -1692,29 +1899,66 @@
 }
 
 @media (max-width: 480px) {
-  .page-container,
+  .bios-wrapper,
   .download-wrapper,
   .faq-wrapper,
   .pricing-wrapper,
   .tos-container,
   .affiliate-container {
-    padding: 80px 15px 30px;
+    padding: 90px 12px 30px;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   
-  .page-title {
-    font-size: 2rem;
+  .bios-header h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+    margin-bottom: 12px;
   }
   
-  .page-subtitle {
-    font-size: 1rem;
+  .bios-header p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 25px;
+    padding: 0 5px;
+  }
+  
+  .cta-button {
+    width: 100%;
+    max-width: 260px;
+    padding: 12px 18px;
+    font-size: 0.95rem;
+  }
+  
+  .content-block {
+    padding: 0 3px;
   }
   
   .content-block h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    line-height: 1.2;
   }
   
   .content-block h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  
+  .content-block p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  
+  .page-section {
+    margin-bottom: 30px;
+    padding: 0 3px;
+  }
+  
+  .two-column-content {
+    gap: 20px;
   }
   
   .page-header h1,
