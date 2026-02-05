@@ -272,8 +272,8 @@ class ImprovedPreloader {
       if (document.body.firstChild) {
         document.body.insertBefore(this.preloader, document.body.firstChild);
       } else {
-        document.body.appendChild(this.preloader);
-      }
+      document.body.appendChild(this.preloader);
+    }
     }
     
     // Ensure preloader is visible and on top
@@ -337,7 +337,7 @@ class ImprovedPreloader {
     // Show skip button after 2 seconds (faster than before)
     setTimeout(() => {
       if (this.skipButton && !this.completed) {
-        this.skipButton.style.opacity = '1';
+      this.skipButton.style.opacity = '1';
       }
     }, 2000);
     
@@ -355,7 +355,7 @@ class ImprovedPreloader {
     });
     
     if (this.preloader) {
-      this.preloader.appendChild(this.skipButton);
+    this.preloader.appendChild(this.skipButton);
     }
   }
   
@@ -400,7 +400,7 @@ class ImprovedPreloader {
     
     if (this.totalAssets === 0) {
       // If no assets, ensure we still animate to 100%
-      this.progressTo(100, 1);
+        this.progressTo(100, 1);
       this.assetsLoaded = true;
       return;
     }
@@ -473,7 +473,7 @@ class ImprovedPreloader {
       // When all assets are loaded, ensure we go to 100%
       this.progressTo(100, 1);
       setTimeout(() => {
-        this.checkCompletion();
+      this.checkCompletion();
       }, 300);
     }
   }
@@ -503,9 +503,9 @@ class ImprovedPreloader {
         // Continue animation until we reach 100%
         if (this.currentProgress < 100) {
           requestAnimationFrame(incrementProgress);
-        } else {
+      } else {
           // We've reached 100%, check if we can complete
-          this.checkCompletion();
+        this.checkCompletion();
         }
       } else if (this.currentProgress >= 100) {
         // We're at 100%, check completion
@@ -551,7 +551,7 @@ class ImprovedPreloader {
       if (clampedProgress >= 100) {
         this.progressCounter.textContent = '100%';
       } else {
-        this.progressCounter.textContent = `${rounded}%`;
+    this.progressCounter.textContent = `${rounded}%`;
       }
     }
     
@@ -575,7 +575,7 @@ class ImprovedPreloader {
       // Small delay to ensure UI shows 100%
       setTimeout(() => {
         if (!this.completed) {
-          this.completeLoading();
+      this.completeLoading();
         }
       }, 200);
     } else if (this.assetsLoaded && this.currentProgress >= 90) {
@@ -602,7 +602,7 @@ class ImprovedPreloader {
     
     // Clear all timeouts
     if (this.loadTimeout) {
-      clearTimeout(this.loadTimeout);
+    clearTimeout(this.loadTimeout);
     }
     
     // Force progress to 100%
@@ -637,7 +637,7 @@ class ImprovedPreloader {
     
     // Add class for CSS transition
     if (this.preloader) {
-      this.preloader.classList.add('preloader-hidden');
+    this.preloader.classList.add('preloader-hidden');
     }
     
     // Enable scrolling
@@ -1036,84 +1036,95 @@ class ImmersiveNavigation {
   }
   
   animateLink(e) {
+    // Simple hover effect - just add CSS class
     const link = e.currentTarget;
-    const text = link.getAttribute('data-text');
-    
-    // Skip if already animated
-    if (link.querySelector('span')) return;
-    
-    // Create hover effect with letter split animation (Lusion style)
-    link.innerHTML = '';
-    
-    // Split text into spans
-    for (let i = 0; i < text.length; i++) {
-      const letterSpan = document.createElement('span');
-      letterSpan.textContent = text[i];
-      letterSpan.style.display = 'inline-block';
-      letterSpan.style.transform = 'translateY(0)';
-      letterSpan.style.opacity = '1';
-      letterSpan.style.transition = `transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.03}s, 
-                                    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.03}s`;
-      
-      // Add hover animation
-      setTimeout(() => {
-        letterSpan.style.transform = 'translateY(-8px)';
-      }, 10);
-      
-      link.appendChild(letterSpan);
-      this.letters.push(letterSpan);
-    }
+    link.classList.add('nav-link-hover');
   }
   
   resetLink(e) {
+    // Remove hover effect
     const link = e.currentTarget;
-    const text = link.getAttribute('data-text');
-    
-    // Reset to original text
-    link.innerHTML = text;
-    this.letters = [];
+    link.classList.remove('nav-link-hover');
   }
   
   handleLinkClick(e) {
     const link = e.currentTarget;
     const href = link.getAttribute('href');
     
-    // Close menu
-    this.closeMenu();
-    
-    // Handle internal links with smooth scroll
-    if (href.startsWith('#') || (href.includes('#') && href.startsWith('/'))) {
+    // Handle internal links with instant scroll
+    if (href && href.startsWith('#')) {
       e.preventDefault();
       
+      // Close menu first
+      this.closeMenu();
+      
       // Extract the ID
-      const id = href.includes('#') ? href.split('#')[1] : href.substring(1);
+      const id = href.substring(1);
       const target = document.getElementById(id);
       
       if (target) {
-        // Perform smooth scroll
-        if (window.gsap && window.ScrollToPlugin) {
-          gsap.to(window, {
-            duration: 1,
-            scrollTo: { y: target, offsetY: 80 },
-            ease: "power3.inOut"
-          });
-        } else {
-          // Fallback smooth scroll
-          target.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-          });
-        }
+        // Calculate offset for header
+        const headerOffset = 80;
+        const elementPosition = target.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
-        // Update URL without scrolling
-        if (window.history && window.history.pushState) {
-          history.pushState(null, null, href);
-        }
-      } else if (href.startsWith('/')) {
-        // Navigate to the page then the anchor
-        window.location.href = href;
+        // Instant scroll with slight delay for menu close animation
+        setTimeout(() => {
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'instant'
+          });
+          
+          // Update URL
+          if (window.history && window.history.pushState) {
+            history.pushState(null, null, href);
+          }
+        }, 150);
       }
+      return;
     }
+    
+    // Handle cross-page anchors (e.g., /#about-vitality)
+    if (href && href.includes('#') && href.startsWith('/')) {
+      e.preventDefault();
+      
+      // Close menu
+      this.closeMenu();
+      
+      // Check if we're on the same page
+      const [path, hash] = href.split('#');
+      const currentPath = window.location.pathname;
+      
+      if (currentPath === path || (currentPath === '/' && path === '/')) {
+        // Same page - just scroll
+        const target = document.getElementById(hash);
+        if (target) {
+          const headerOffset = 80;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          
+          setTimeout(() => {
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'instant'
+            });
+            
+            if (window.history && window.history.pushState) {
+              history.pushState(null, null, href);
+            }
+          }, 150);
+        }
+      } else {
+        // Different page - navigate
+        setTimeout(() => {
+          window.location.href = href;
+        }, 150);
+      }
+      return;
+    }
+    
+    // Regular links - just close menu and navigate
+    this.closeMenu();
   }
   
   onResize() {
@@ -2424,8 +2435,13 @@ class ScrollProgressIndicator {
 // ============================================================
 class DocumentationEnhancements {
   constructor() {
+    this.sections = [];
+    this.sidebarLinks = [];
+    this.isScrolling = false;
+    this.scrollTimeout = null;
+    this.lastActiveLink = null;
+    
     this.initSidebar();
-    this.initStickyBehavior();
     this.initSectionHighlight();
     this.initSearchFunctionality();
     this.animateDocumentationElements();
@@ -2433,119 +2449,153 @@ class DocumentationEnhancements {
   
   initSidebar() {
     const sidebar = document.querySelector('.documentation-sidebar');
-    const links = sidebar ? sidebar.querySelectorAll('a') : [];
+    this.sidebarLinks = sidebar ? Array.from(sidebar.querySelectorAll('a')) : [];
     
-    // Add active class to current section link
-    const currentHash = window.location.hash;
+    if (!this.sidebarLinks.length) return;
     
-    if (currentHash && links.length) {
-      links.forEach(link => {
-        if (link.getAttribute('href') === currentHash) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
+    // Get all sections
+    this.sections = this.sidebarLinks
+      .map(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          const element = document.querySelector(href);
+          return element ? { id: href, element, link } : null;
         }
-      });
-    } else if (links.length) {
-      // Activate first link by default
-      links[0].classList.add('active');
-    }
+        return null;
+      })
+      .filter(Boolean);
+    
+    // Set initial active state based on hash or first section
+    const currentHash = window.location.hash || this.sections[0]?.id;
+    this.setActiveLink(currentHash);
     
     // Add click handling for smooth scrolling
-    links.forEach(link => {
+    this.sidebarLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         const href = link.getAttribute('href');
         
-        if (href.startsWith('#')) {
+        if (href && href.startsWith('#')) {
           e.preventDefault();
+          this.isScrolling = true;
           
           const targetElement = document.querySelector(href);
           
           if (targetElement) {
-            // Update active class
-            links.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+            // Update active class immediately
+            this.setActiveLink(href);
             
-            // Scroll to target
-            if (window.gsap && window.ScrollToPlugin) {
-              gsap.to(window, {
-                duration: 0.8,
-                scrollTo: { y: targetElement, offsetY: 80 },
-                ease: "power3.inOut"
-              });
-              
-              // Update URL hash without scrolling
-              history.pushState(null, null, href);
-            } else {
-              targetElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
+            // Calculate offset for header
+            const headerOffset = 100;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+            // Smooth scroll
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+            
+            // Update URL hash
+            history.pushState(null, null, href);
+            
+            // Reset scrolling flag after animation
+            setTimeout(() => {
+              this.isScrolling = false;
+            }, 1000);
           }
         }
       });
     });
   }
   
-  initStickyBehavior() {
-    const sidebar = document.querySelector('.documentation-sidebar');
+  setActiveLink(hash) {
+    if (!hash) return;
     
-    if (!sidebar) return;
-    
-    // Make the sidebar stick when scrolling
-    const stickyTop = sidebar.offsetTop;
-    
-    window.addEventListener('scroll', () => {
-      if (window.innerWidth < 1200) return; // Skip on mobile
-      
-      if (window.pageYOffset > stickyTop - 20) {
-        sidebar.style.position = 'fixed';
-        sidebar.style.top = '20px';
+    this.sidebarLinks.forEach(link => {
+      const linkHref = link.getAttribute('href');
+      if (linkHref === hash) {
+        link.classList.add('active');
+        this.lastActiveLink = link;
+        
+        // Smooth scroll link into view in sidebar if needed
+        const sidebar = document.querySelector('.documentation-sidebar');
+        if (sidebar && link.offsetTop) {
+          const linkTop = link.offsetTop;
+          const linkHeight = link.offsetHeight;
+          const sidebarScroll = sidebar.scrollTop;
+          const sidebarHeight = sidebar.clientHeight;
+          
+          if (linkTop < sidebarScroll || linkTop + linkHeight > sidebarScroll + sidebarHeight) {
+            link.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
       } else {
-        sidebar.style.position = 'sticky';
-        sidebar.style.top = 'initial';
+        link.classList.remove('active');
       }
     });
   }
   
   initSectionHighlight() {
-    const sections = document.querySelectorAll('.doc-section');
-    const sidebarLinks = document.querySelectorAll('.documentation-sidebar a');
+    if (!this.sections.length) return;
     
-    if (!sections.length || !sidebarLinks.length) return;
+    // Use Intersection Observer for better performance
+    const observerOptions = {
+      root: null,
+      rootMargin: '-100px 0px -66% 0px', // Only trigger when section is in top third
+      threshold: 0
+    };
     
-    // Track which section is currently in view
-    window.addEventListener('scroll', () => {
-      let currentSection = '';
+    const observer = new IntersectionObserver((entries) => {
+      // Don't update during manual scrolling
+      if (this.isScrolling) return;
       
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        const scrollPosition = window.pageYOffset;
-        
-        if (scrollPosition >= sectionTop - 100 && 
-            scrollPosition < sectionTop + sectionHeight - 100) {
-          currentSection = '#' + section.getAttribute('id');
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = '#' + entry.target.getAttribute('id');
+          this.setActiveLink(id);
+          
+          // Update URL hash without scrolling
+          if (window.history && window.history.replaceState) {
+            history.replaceState(null, null, id);
+          }
         }
       });
-      
-      // Update active link
-      if (currentSection) {
-        sidebarLinks.forEach(link => {
-          if (link.getAttribute('href') === currentSection) {
-            link.classList.add('active');
-          } else {
-            link.classList.remove('active');
-          }
+    }, observerOptions);
+    
+    // Observe all sections
+    this.sections.forEach(({ element }) => {
+      if (element) observer.observe(element);
+    });
+    
+    // Fallback: Handle scroll to bottom (last section)
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking && !this.isScrolling) {
+        window.requestAnimationFrame(() => {
+          this.handleScrollPosition();
+          ticking = false;
         });
-        
-        // Update URL hash without scrolling
-        if (window.history && window.history.replaceState) {
-          history.replaceState(null, null, currentSection);
-        }
+        ticking = true;
       }
     });
+  }
+  
+  handleScrollPosition() {
+    // Check if we're at the bottom of the page
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+    
+    if (scrollTop + clientHeight >= scrollHeight - 50) {
+      // At bottom - activate last link
+      const lastSection = this.sections[this.sections.length - 1];
+      if (lastSection) {
+        this.setActiveLink(lastSection.id);
+        if (window.history && window.history.replaceState) {
+          history.replaceState(null, null, lastSection.id);
+        }
+      }
+    }
   }
   
   initSearchFunctionality() {
