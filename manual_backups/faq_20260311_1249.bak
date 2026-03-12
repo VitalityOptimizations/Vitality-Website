@@ -112,8 +112,8 @@
     </nav>
   </header>
 
-  <div id="main-content" class="faq-wrapper page-wrapper">
-    <div class="faq-header page-header">
+  <div id="main-content" class="faq-wrapper">
+    <div class="faq-header">
       <h1>Frequently Asked Questions</h1>
       <p>Find comprehensive answers to common questions about Vitality Optimization</p>
     </div>
@@ -231,7 +231,7 @@
       <div class="footer-container">
         <div class="footer-column">
           <img src="https://raw.githubusercontent.com/VitalityOptimizations/Vitality-Website/refs/heads/main/favicon/favicon.ico" alt="Vitality Logo" class="footer-logo">
-          <p>&copy; 2026 Vitality Optimization. All rights reserved.</p>
+          <p>&copy; 2025 Vitality Optimization. All rights reserved.</p>
         </div>
 
         <div class="footer-column">
@@ -245,18 +245,18 @@
         <div class="footer-column">
           <h4>Features</h4>
           <ul>
-            <li><a href="/#features">Boost FPS</a></li>
-            <li><a href="/#features">Reduce Latency</a></li>
-            <li><a href="/how-it-works">Real Time Optimizations</a></li>
-            <li><a href="/how-it-works">Games Support</a></li>
+            <li><a href="#">Boost FPS</a></li>
+            <li><a href="#">Reduce Latency</a></li>
+            <li><a href="#">Real Time Optimizations</a></li>
+            <li><a href="#">Games Support</a></li>
           </ul>
         </div>
 
         <div class="footer-column">
           <h4>Resources</h4>
           <ul>
+            <li><a href="#">Blog</a></li>
             <li><a href="/faq">FAQs</a></li>
-            <li><a href="/documentation">Docs</a></li>
             <li><a href="https://discord.com/invite/BKgYeeYbtn" target="_blank">Support & Contact</a></li>
           </ul>
         </div>
@@ -273,13 +273,11 @@
     </div>
   </footer>
 
-  <script src="scripts/shader-bg.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
+  
   <script src="scripts/modern.js"></script>
-  <script src="scripts/glowing-effect.js"></script>
-
+  
 
   <script>
     // FAQ Accordion Script

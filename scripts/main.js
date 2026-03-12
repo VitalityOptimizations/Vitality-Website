@@ -135,11 +135,13 @@ function initPerformanceStats() {
       }
     };
     
-    // Update game selection options
+    // Update game selection options (replace existing options)
+    gameSelect.innerHTML = '';
+    const gameNames = { fortnite: 'Fortnite', valorant: 'Valorant', csgo: 'CS:GO', apex: 'Apex Legends' };
     Object.keys(gameData).forEach(game => {
       const option = document.createElement('option');
       option.value = game;
-      option.textContent = game.charAt(0).toUpperCase() + game.slice(1);
+      option.textContent = gameNames[game] || game.charAt(0).toUpperCase() + game.slice(1);
       gameSelect.appendChild(option);
     });
     
@@ -240,16 +242,13 @@ function initMobileMenu() {
 // SCROLL EFFECTS AND ANIMATIONS
 // ============================================================
 function initScrollEffects() {
-  // Parallax effect for hero section
-  const heroSection = document.querySelector('.main-hero');
+  // Parallax effect for hero section only (not the header/navbar)
+  const heroSection = document.querySelector('.hero-section.main-hero');
   if (heroSection) {
     window.addEventListener('scroll', function() {
       const scrolled = window.pageYOffset;
       const rate = scrolled * -0.5;
-      
-      if (heroSection) {
-        heroSection.style.transform = `translateY(${rate}px)`;
-      }
+      heroSection.style.transform = `translateY(${rate}px)`;
     });
   }
   

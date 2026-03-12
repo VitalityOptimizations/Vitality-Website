@@ -13,130 +13,564 @@
 
   <link rel="canonical" href="https://vitalityoptimization.com/purchase">
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="/favicon/favicon-48x48.png" sizes="48x48">
   <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
-  
-  <!-- Stylesheets -->
+
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/modern-styles.css">
   <link rel="stylesheet" href="css/page-specific-styles.css">
+
+  <style>
+    /* ── Pricing page overrides ── */
+    .pricing-page-wrapper {
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: transparent;
+    }
+
+    /* Sparkle canvas layer */
+    #pricing-particles {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(50% 50% at 50% 0%, white, transparent);
+      -webkit-mask-image: radial-gradient(50% 50% at 50% 0%, white, transparent);
+    }
+
+    /* Grid background */
+    .pricing-grid-bg {
+      position: absolute;
+      inset: 0;
+      height: 380px;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(58,58,58,0.05) 1px, transparent 1px);
+      background-size: 70px 80px;
+      mask-image: radial-gradient(50% 50% at 50% 0%, white, transparent);
+      -webkit-mask-image: radial-gradient(50% 50% at 50% 0%, white, transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glow ellipse */
+    .pricing-glow-ellipse {
+      position: absolute;
+      top: -114px;
+      left: 10%;
+      right: 10%;
+      width: 80%;
+      height: 70vh;
+      border-radius: 50%;
+      border: 180px solid #7534b3;
+      filter: blur(88px);
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Content wrapper */
+    .pricing-content {
+      position: relative;
+      z-index: 10;
+      padding-top: 120px;
+      padding-bottom: 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    /* Header */
+    .pricing-hero-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .pricing-hero-header h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #7534b3 0%, #8b1cfb 30%, #9147ff 55%, #b57bff 80%, #7534b3 100%);
+      background-size: 200% 200%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: gradientShift 4s ease infinite;
+      display: inline-block;
+    }
+
+    .pricing-hero-header p {
+      color: rgba(255,255,255,0.55);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    /* Cards grid */
+    .pricing-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 900px) {
+      .pricing-cards-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* Base card */
+    .pricing-card-v2 {
+      position: relative;
+      background: rgba(10, 4, 24, 0.60);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(145, 71, 255, 0.12);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      opacity: 0;
+      transform: translateY(28px);
+    }
+
+    .pricing-card-v2.revealed {
+      animation: cardReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .pricing-card-v2:nth-child(1).revealed { animation-delay: 0s; }
+    .pricing-card-v2:nth-child(2).revealed { animation-delay: 0.15s; }
+    .pricing-card-v2:nth-child(3).revealed { animation-delay: 0.3s; }
+
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(28px); filter: blur(6px); }
+      to   { opacity: 1; transform: translateY(0);    filter: blur(0);   }
+    }
+
+    .pricing-card-v2:hover {
+      transform: translateY(-4px);
+      border-color: rgba(145, 71, 255, 0.3);
+    }
+
+    /* Popular card */
+    .pricing-card-v2.popular {
+      border-color: rgba(145, 71, 255, 0.35);
+      box-shadow: 0 -14px 280px 0 rgba(117, 52, 179, 0.55);
+      z-index: 2;
+    }
+
+    .pricing-card-v2.popular:hover {
+      transform: translateY(-4px);
+      border-color: rgba(145, 71, 255, 0.6);
+    }
+
+    /* Popular badge */
+    .popular-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #7534b3, #9147ff);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 4px 14px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Card inner sections */
+    .pcard-header {
+      margin-bottom: 20px;
+    }
+
+    .pcard-name {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .pcard-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .pcard-currency {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .pcard-amount {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+      transition: all 0.4s ease;
+    }
+
+    .pcard-period {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.45);
+      margin-left: 4px;
+    }
+
+    .pcard-desc {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* CTA button */
+    .pcard-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      margin-bottom: 24px;
+      transition: all 0.25s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .pcard-btn-default,
+    .pcard-btn-outline {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+      box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.25),
+        inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.09),
+        inset -3px -3px 0.5px -3.5px rgba(255, 255, 255, 0.85),
+        inset 1px 1px 1px -0.5px rgba(255, 255, 255, 0.6),
+        inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.6),
+        inset 0 0 6px 6px rgba(255, 255, 255, 0.12),
+        inset 0 0 2px 2px rgba(255, 255, 255, 0.06),
+        0 0 16px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .pcard-btn-default {
+      background: rgba(255, 255, 255, 0.13);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .pcard-btn-default:hover,
+    .pcard-btn-outline:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        0 0 24px rgba(145, 71, 255, 0.25),
+        inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.09),
+        inset -3px -3px 0.5px -3.5px rgba(255, 255, 255, 0.85),
+        inset 1px 1px 1px -0.5px rgba(255, 255, 255, 0.6),
+        inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.6),
+        inset 0 0 6px 6px rgba(255, 255, 255, 0.14),
+        inset 0 0 2px 2px rgba(255, 255, 255, 0.08);
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* Features divider */
+    .pcard-features {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+      flex: 1;
+    }
+
+    .pcard-features-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 12px;
+    }
+
+    .pcard-features ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pcard-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .pcard-features li::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(145, 71, 255, 0.6);
+      flex-shrink: 0;
+    }
+
+    .popular .pcard-features li::before {
+      background: #9147ff;
+    }
+
+    /* Note */
+    .pcard-note {
+      margin-top: 16px;
+      padding: 10px 14px;
+      background: rgba(117, 52, 179, 0.1);
+      border: 1px solid rgba(117, 52, 179, 0.2);
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+    }
+
+    /* ── FAQ section ── */
+    .pricing-faq-section {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .pricing-faq-section h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #fff;
+      margin-bottom: 32px;
+    }
+
+    .pfaq-item {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,0.02);
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .pfaq-item:hover {
+      border-color: rgba(145, 71, 255, 0.3);
+      background: rgba(145, 71, 255, 0.04);
+    }
+
+    .pfaq-question {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pfaq-question::after {
+      content: '+';
+      font-size: 1.2rem;
+      color: rgba(145,71,255,0.7);
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .pfaq-item.open .pfaq-question::after {
+      transform: rotate(45deg);
+    }
+
+    .pfaq-answer {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, margin-top 0.2s ease;
+      margin-top: 0;
+    }
+
+    .pfaq-item.open .pfaq-answer {
+      max-height: 200px;
+      margin-top: 12px;
+    }
+  </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <!-- Main Hero Section -->
+
   <header class="main-hero">
     <nav class="navbar">
       <div class="logo">
         <a href="/">VITALITY</a>
       </div>
       <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/download">Download</a></li>
+        <li><a href="/purchase">Pricing</a></li>
+        <li><a href="/bios-tweaker">BIOS Tweaker</a></li>
+        <li><a href="/how-it-works">How It Works</a></li>
+        <li><a href="/documentation">Docs</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/affiliate">Affiliate</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Pricing Content -->
-  <div id="main-content" class="pricing-wrapper">
-    <div class="pricing-header">
-      <h1>Purchase Now</h1>
-      <p>Optimize Your PC for Gaming</p>
-    </div>
-    
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="card-header">
-          <h3>Lifetime</h3>
-          <div class="price">£25.00 <span>one-time</span></div>
-        </div>
-        <div class="card-body">
-          <p>Take your PC optimization to the next level.</p>
-          <ul class="features-list">
-            <li>Full access to Vitality Premium</li>
-            <li>All optimization features</li>
-            <li>Advanced system tweaks</li>
-            <li>Priority support</li>
-            <li>No recurring fees</li>
-          </ul>
-          <div class="card-note">
-            <p>Create a support ticket after purchase to activate your license</p>
+  <div id="main-content" class="pricing-page-wrapper">
+
+    <!-- Background layers -->
+    <div class="pricing-grid-bg"></div>
+    <div class="pricing-glow-ellipse"></div>
+    <canvas id="pricing-particles"></canvas>
+
+    <!-- Pricing content -->
+    <div class="pricing-content">
+      <div class="pricing-hero-header">
+        <h1>Simple, Transparent Pricing</h1>
+        <p>One-time payment. No subscriptions. Yours forever.</p>
+      </div>
+
+      <div class="pricing-cards-grid">
+
+        <!-- Card 1: Lifetime -->
+        <div class="pricing-card-v2">
+          <div class="pcard-header">
+            <div class="pcard-name">Lifetime</div>
+            <div class="pcard-price">
+              <span class="pcard-currency">£</span>
+              <span class="pcard-amount" data-target="25">25</span>
+              <span class="pcard-period">one-time</span>
+            </div>
+            <p class="pcard-desc">Take your PC optimization to the next level with permanent access.</p>
+          </div>
+
+          <a href="https://buy.stripe.com/6oEdUo2Pt2wPcSY5kq" class="pcard-btn pcard-btn-outline">Get Vitality Lifetime</a>
+
+          <div class="pcard-features">
+            <div class="pcard-features-label">Included:</div>
+            <ul>
+              <li>Full access to Vitality Premium</li>
+              <li>All optimization features</li>
+              <li>Advanced system tweaks</li>
+              <li>Priority Discord support</li>
+              <li>No recurring fees</li>
+            </ul>
+            <div class="pcard-note">Create a support ticket after purchase to activate your license</div>
           </div>
         </div>
-        <div class="card-footer">
-          <a href="https://buy.stripe.com/6oEdUo2Pt2wPcSY5kq" class="cta-button">Get Vitality Lifetime</a>
-        </div>
-      </div>
 
-      <div class="pricing-card featured">
-        <div class="featured-badge">POPULAR</div>
-        <div class="card-header">
-          <h3>Lifetime Updates</h3>
-          <div class="price">£55.00 <span>one-time</span></div>
+        <!-- Card 2: Lifetime Updates (POPULAR) -->
+        <div class="pricing-card-v2 popular">
+          <div class="popular-badge">Most Popular</div>
+          <div class="pcard-header">
+            <div class="pcard-name">Lifetime + Updates</div>
+            <div class="pcard-price">
+              <span class="pcard-currency">£</span>
+              <span class="pcard-amount" data-target="55">55</span>
+              <span class="pcard-period">one-time</span>
+            </div>
+            <p class="pcard-desc">Always stay up-to-date with the latest tweaks and future features.</p>
+          </div>
+
+          <a href="https://buy.stripe.com/aEUeYs3TxfjB4ms28f" class="pcard-btn pcard-btn-default">Get Lifetime + Updates</a>
+
+          <div class="pcard-features">
+            <div class="pcard-features-label">Everything in Lifetime, plus:</div>
+            <ul>
+              <li>All future updates included</li>
+              <li>New optimization methods</li>
+              <li>Early access to new features</li>
+              <li>Premium priority support</li>
+              <li>Lifetime value guarantee</li>
+            </ul>
+          </div>
         </div>
-        <div class="card-body">
-          <p>Always stay up-to-date with the latest tweaks and features.</p>
-          <ul class="features-list">
-            <li>All Lifetime features</li>
-            <li>Future updates included</li>
-            <li>New optimization methods</li>
-            <li>Early access to new features</li>
-            <li>Premium support</li>
-          </ul>
+
+        <!-- Card 3: BIOS Tweaker -->
+        <div class="pricing-card-v2">
+          <div class="pcard-header">
+            <div class="pcard-name">BIOS Tweaker</div>
+            <div class="pcard-price">
+              <span class="pcard-currency">£</span>
+              <span class="pcard-amount" data-target="15">15</span>
+              <span class="pcard-period">one-time</span>
+            </div>
+            <p class="pcard-desc">Unlock hidden BIOS settings and maximize hardware-level performance.</p>
+          </div>
+
+          <a href="https://buy.stripe.com/4gM14odd3dOy6Zq9co2go09" class="pcard-btn pcard-btn-outline">Purchase BIOS Tweaker</a>
+
+          <div class="pcard-features">
+            <div class="pcard-features-label">Included:</div>
+            <ul>
+              <li>Professional NVRAM file editor</li>
+              <li>BIOS settings management</li>
+              <li>Advanced search & filter</li>
+              <li>Safe editing with validation</li>
+              <li>Custom themes support</li>
+            </ul>
+          </div>
         </div>
-        <div class="card-footer">
-          <a href="https://buy.stripe.com/aEUeYs3TxfjB4ms28f" class="cta-button">Get Lifetime + Premium Updates</a>
-        </div>
+
       </div>
     </div>
 
-    <div class="pricing-grid-single">
-      <div class="pricing-card">
-        <div class="card-header">
-          <h3>BIOS Tweaker</h3>
-          <div class="price">£15.00 <span>one-time</span></div>
-        </div>
-        <div class="card-body">
-          <p>Unlock your system's true potential with advanced BIOS optimization.</p>
-          <ul class="features-list">
-            <li>Professional NVRAM file editor</li>
-            <li>BIOS settings management</li>
-            <li>Advanced search and filter</li>
-            <li>Safe editing with validation</li>
-            <li>Custom themes support</li>
-          </ul>
-        </div>
-        <div class="card-footer">
-          <a href="https://buy.stripe.com/4gM14odd3dOy6Zq9co2go09" class="cta-button">Purchase BIOS Tweaker</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="pricing-faq">
+    <!-- FAQ -->
+    <div class="pricing-faq-section">
       <h2>Frequently Asked Questions</h2>
-      
-      <div class="faq-item">
-        <h3>What's the difference between plans?</h3>
-        <p>Lifetime gives you access to the current version forever. Lifetime Updates includes all future updates and new features at no additional cost.</p>
+
+      <div class="pfaq-item">
+        <div class="pfaq-question">What's the difference between plans?</div>
+        <div class="pfaq-answer">Lifetime gives you permanent access to the current version of Vitality. Lifetime Updates includes all future updates and new features at no additional cost — the best long-term value.</div>
       </div>
-      
-      <div class="faq-item">
-        <h3>Can I upgrade later?</h3>
-        <p>Yes, you can upgrade from Lifetime to Lifetime Updates by paying the difference.</p>
+
+      <div class="pfaq-item">
+        <div class="pfaq-question">Can I upgrade from Lifetime to Lifetime Updates later?</div>
+        <div class="pfaq-answer">Yes, you can upgrade by paying the difference. Open a support ticket on our Discord and our team will assist you with the upgrade process.</div>
       </div>
-      
-      <div class="faq-item">
-        <h3>How do I activate my license?</h3>
-        <p>After purchase, join our Discord and create a ticket. Our team will provide your license key and activation instructions.</p>
+
+      <div class="pfaq-item">
+        <div class="pfaq-question">How do I activate my license?</div>
+        <div class="pfaq-answer">After purchase, join our Discord server and create a support ticket. Our team will verify your purchase and provide your license key with full activation instructions.</div>
+      </div>
+
+      <div class="pfaq-item">
+        <div class="pfaq-question">Is the BIOS Tweaker a separate product?</div>
+        <div class="pfaq-answer">Yes, BIOS Tweaker is a standalone tool for editing NVRAM and BIOS settings at the hardware level. It works alongside Vitality Optimization but is purchased separately.</div>
       </div>
     </div>
-  </div>
 
-  <!-- Footer Section -->
+  </div><!-- end .pricing-page-wrapper -->
+
   <footer class="footer">
     <div class="container">
       <div class="footer-container">
         <div class="footer-column">
           <img src="https://raw.githubusercontent.com/VitalityOptimizations/Vitality-Website/refs/heads/main/favicon/favicon.ico" alt="Vitality Logo" class="footer-logo">
-          <p>&copy; 2025 Vitality Optimization. All rights reserved.</p>
+          <p>&copy; 2026 Vitality Optimization. All rights reserved.</p>
         </div>
 
         <div class="footer-column">
@@ -150,18 +584,18 @@
         <div class="footer-column">
           <h4>Features</h4>
           <ul>
-            <li><a href="#">Boost FPS</a></li>
-            <li><a href="#">Reduce Latency</a></li>
-            <li><a href="#">Real Time Optimizations</a></li>
-            <li><a href="#">Games Support</a></li>
+            <li><a href="/#features">Boost FPS</a></li>
+            <li><a href="/#features">Reduce Latency</a></li>
+            <li><a href="/how-it-works">Real Time Optimizations</a></li>
+            <li><a href="/how-it-works">Games Support</a></li>
           </ul>
         </div>
 
         <div class="footer-column">
           <h4>Resources</h4>
           <ul>
-            <li><a href="#">Blog</a></li>
             <li><a href="/faq">FAQs</a></li>
+            <li><a href="/documentation">Docs</a></li>
             <li><a href="https://discord.com/invite/BKgYeeYbtn" target="_blank">Support & Contact</a></li>
           </ul>
         </div>
@@ -178,13 +612,67 @@
     </div>
   </footer>
 
-  <!-- Required Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/@barba/core"></script>
+  <script src="scripts/shader-bg.js"></script>
+  <!-- tsParticles for sparkle effect -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.12.0/tsparticles.slim.bundle.min.js"></script>
 
-  <!-- Modern JS -->
+  <script src="scripts/main.js"></script>
   <script src="scripts/modern.js"></script>
+  <script src="scripts/glowing-effect.js"></script>
 
+  <script>
+    // ── Sparkle particles ──
+    (async () => {
+      if (typeof tsParticles === 'undefined') return;
+      const canvas = document.getElementById('pricing-particles');
+      if (!canvas) return;
+      await tsParticles.load({
+        element: canvas,
+        options: {
+          fullScreen: { enable: false },
+          background: { color: { value: 'transparent' } },
+          fpsLimit: 60,
+          particles: {
+            color: { value: '#ffffff' },
+            number: { value: 120 },
+            opacity: {
+              value: { min: 0.05, max: 0.45 },
+              animation: { enable: true, speed: 1.5, sync: false }
+            },
+            size: { value: { min: 0.5, max: 1.8 } },
+            move: {
+              enable: true,
+              direction: 'bottom',
+              speed: { min: 0.3, max: 0.9 },
+              straight: false,
+              outModes: { default: 'out' }
+            }
+          },
+          detectRetina: true
+        }
+      });
+    })();
+
+    // ── Card reveal on scroll ──
+    const cards = document.querySelectorAll('.pricing-card-v2');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    cards.forEach(c => revealObserver.observe(c));
+
+    // ── FAQ accordion ──
+    document.querySelectorAll('.pfaq-item').forEach(item => {
+      item.querySelector('.pfaq-question').addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.pfaq-item.open').forEach(o => o.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
 </body>
 </html>

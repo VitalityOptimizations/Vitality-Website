@@ -258,11 +258,15 @@ class ImprovedPreloader {
       this.preloader = document.createElement('div');
       this.preloader.className = 'preloader';
       
+      const loaderLetters = 'LOADING'.split('').map((l, i) =>
+        `<span class="loader-letter" style="animation-delay:${(0.05 + i * 0.05).toFixed(3)}s">${l}</span>`
+      ).join('');
       this.preloader.innerHTML = `
         <div class="preloader-content">
           <h1 class="preloader-logo">VITALITY</h1>
-          <div class="preloader-progress-container">
-            <div class="preloader-progress-bar"></div>
+          <div class="loader-letters-wrapper">
+            <div class="loader-letters-scan"></div>
+            ${loaderLetters}
           </div>
           <div class="preloader-counter">0%</div>
         </div>
@@ -903,11 +907,10 @@ class ImmersiveNavigation {
       this.menuBtn = document.createElement('div');
       this.menuBtn.className = 'menu-toggle';
       this.menuBtn.innerHTML = `
-        <div class="menu-icon">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+        <svg class="menu-toggle-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path class="menu-svg-path" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"/>
+          <path d="M7 16 27 16"/>
+        </svg>
       `;
       document.body.appendChild(this.menuBtn);
     }
@@ -918,6 +921,7 @@ class ImmersiveNavigation {
     if (!this.sidebar) {
       this.sidebar = document.createElement('div');
       this.sidebar.className = 'modern-sidebar';
+      const _arrow = `<svg class="sidebar-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
       this.sidebar.innerHTML = `
         <div class="sidebar-backdrop"></div>
         <div class="sidebar-content">
@@ -926,16 +930,16 @@ class ImmersiveNavigation {
           </div>
           <nav class="sidebar-nav">
             <ul>
-              <li><a href="/" data-text="Home">Home</a></li>
-              <li><a href="/#about-vitality" data-text="About">About</a></li>
-              <li><a href="/download" data-text="Download">Download</a></li>
-              <li><a href="/bios-tweaker" data-text="BIOS Tweaker">BIOS Tweaker</a></li>
-              <li><a href="/documentation" data-text="Documentation">Documentation</a></li>
-              <li><a href="/how-it-works" data-text="How It Works">How It Works</a></li>
-              <li><a href="/purchase" data-text="Purchase">Purchase</a></li>
-              <li><a href="/affiliate" data-text="Affiliate">Affiliate</a></li>
-              <li><a href="/faq" data-text="FAQ">FAQ</a></li>
-              <li><a href="/tos" data-text="TOS">TOS</a></li>
+              <li>${_arrow}<a href="/">Home</a></li>
+              <li>${_arrow}<a href="/#about-vitality">About</a></li>
+              <li>${_arrow}<a href="/download">Download</a></li>
+              <li>${_arrow}<a href="/bios-tweaker">BIOS Tweaker</a></li>
+              <li>${_arrow}<a href="/documentation">Documentation</a></li>
+              <li>${_arrow}<a href="/how-it-works">How It Works</a></li>
+              <li>${_arrow}<a href="/purchase">Purchase</a></li>
+              <li>${_arrow}<a href="/affiliate">Affiliate</a></li>
+              <li>${_arrow}<a href="/faq">FAQ</a></li>
+              <li>${_arrow}<a href="/tos">TOS</a></li>
             </ul>
           </nav>
           <div class="sidebar-footer">
@@ -944,7 +948,7 @@ class ImmersiveNavigation {
                 <img src="https://raw.githubusercontent.com/VitalityOptimizations/Vitality-Website/2115598177940dab0c0b82e5a5b6d8a0bc0b26aa/icons/logo-discord.svg" alt="Discord" width="24" height="24">
               </a>
             </div>
-            <div class="copyright">© 2025 Vitality Optimization</div>
+            <div class="copyright">© 2026 Vitality Optimization</div>
           </div>
         </div>
       `;
@@ -2757,847 +2761,273 @@ class DocumentationEnhancements {
   }
 }
 
-/**
- * LusionSidebar - Elegant, minimal sidebar that appears in the center
- * Auto-fades when inactive and reappears on scroll
- */
-class LusionSidebar {
-  constructor(options = {}) {
-    this.options = {
-      fadeDelay: 5000, // 5 seconds before fading
-      fadeSpeed: 800,  // 800ms fade animation
-      initiallyVisible: true,
-      items: [
-        { label: 'Home', link: '/' },
-        { label: 'About', link: '/#about-vitality' },
-        { label: 'Download', link: '/download' },
-        { label: 'Documentation', link: '/documentation' }
-      ],
-      ...options
-    };
-    
-    this.isVisible = this.options.initiallyVisible;
-    this.fadeTimeout = null;
-    this.scrolling = false;
-    this.scrollTimeout = null;
-    
-    this.init();
-  }
-  
-  init() {
-    this.createSidebar();
-    this.initEventListeners();
-    
-    // Start fade timer if initially visible
-    if (this.isVisible) {
-      this.resetFadeTimer();
-    }
-  }
-  
-  createSidebar() {
-    // Create sidebar container
-    this.sidebar = document.createElement('div');
-    this.sidebar.className = 'lusion-sidebar';
-    
-    // Create dots container
-    this.dotsContainer = document.createElement('div');
-    this.dotsContainer.className = 'lusion-sidebar-dots';
-    
-    // Create label container (shows on hover)
-    this.labelContainer = document.createElement('div');
-    this.labelContainer.className = 'lusion-sidebar-label';
-    
-    // Create progress indicator
-    this.progressIndicator = document.createElement('div');
-    this.progressIndicator.className = 'lusion-sidebar-progress';
-    
-    // Add items
-    this.options.items.forEach((item, index) => {
-      // Create dot
-      const dot = document.createElement('a');
-      dot.className = 'lusion-sidebar-dot';
-      dot.href = item.link;
-      dot.setAttribute('data-index', index);
-      dot.setAttribute('data-label', item.label);
-      
-      // Add event listeners for hover
-      dot.addEventListener('mouseenter', this.onDotHover.bind(this, item.label, dot));
-      dot.addEventListener('mouseleave', this.onDotLeave.bind(this));
-      
-      // Add click handler for smooth scrolling to sections
-      dot.addEventListener('click', this.onDotClick.bind(this, item));
-      
-      // Set first dot as active
-      if (index === 0) {
-        dot.classList.add('active');
-      }
-      
-      // Add to container
-      this.dotsContainer.appendChild(dot);
-    });
-    
-    // Add containers to sidebar
-    this.sidebar.appendChild(this.progressIndicator);
-    this.sidebar.appendChild(this.dotsContainer);
-    this.sidebar.appendChild(this.labelContainer);
-    
-    // Add to DOM
-    document.body.appendChild(this.sidebar);
-    
-    // Initially update current dot based on scroll position
-    this.updateCurrentDot();
-  }
-  
-  initEventListeners() {
-    // Scroll events
-    window.addEventListener('scroll', this.onScroll.bind(this));
-    
-    // Sidebar hover events
-    this.sidebar.addEventListener('mouseenter', this.onSidebarHover.bind(this));
-    this.sidebar.addEventListener('mouseleave', this.onSidebarLeave.bind(this));
-    
-    // Page visibility change
-    document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
-  }
-  
-  onScroll() {
-    // Make sidebar visible on scroll
-    this.showSidebar();
-    
-    // Update active dot
-    this.updateCurrentDot();
-    
-    // Update progress indicator
-    this.updateProgressIndicator();
-    
-    // Reset fade timer
-    this.resetFadeTimer();
-    
-    // Track scrolling state with debounce
-    this.scrolling = true;
-    clearTimeout(this.scrollTimeout);
-    this.scrollTimeout = setTimeout(() => {
-      this.scrolling = false;
-    }, 200);
-  }
-  
-  onDotHover(label, dot) {
-    // Show label
-    this.labelContainer.textContent = label;
-    this.labelContainer.style.opacity = '1';
-    
-    // Position label next to dot
-    const dotRect = dot.getBoundingClientRect();
-    const sidebarRect = this.sidebar.getBoundingClientRect();
-    this.labelContainer.style.top = `${dotRect.top - sidebarRect.top + dotRect.height/2 - 10}px`;
-  }
-  
-  onDotLeave() {
-    // Hide label
-    this.labelContainer.style.opacity = '0';
-  }
-  
-  onDotClick(item, e) {
-    // Prevent default link behavior
-    e.preventDefault();
-    
-    // If it's an anchor link
-    if (item.link.includes('#')) {
-      const id = item.link.includes('#') ? item.link.split('#')[1] : '';
-      const targetElement = document.getElementById(id);
-      
-      if (targetElement) {
-        // Smooth scroll to target
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-        
-        // Update URL without page reload
-        if (window.history && window.history.pushState) {
-          window.history.pushState(null, null, item.link);
-        }
-      } else {
-        // If anchor not found, navigate normally
-        window.location.href = item.link;
-      }
-    } else {
-      // Regular navigation
-      window.location.href = item.link;
-    }
-  }
-  
-  onSidebarHover() {
-    // Cancel fade when hovering sidebar
-    clearTimeout(this.fadeTimeout);
-    this.showSidebar();
-  }
-  
-  onSidebarLeave() {
-    // Resume fade timer when leaving sidebar
-    if (!this.scrolling) {
-      this.resetFadeTimer();
-    }
-  }
-  
-  onVisibilityChange() {
-    // Handle tab visibility changes
-    if (document.hidden) {
-      // Clear timeout when tab is not visible
-      clearTimeout(this.fadeTimeout);
-    } else {
-      // Reset timer when tab becomes visible again
-      if (this.isVisible) {
-        this.resetFadeTimer();
-      }
-    }
-  }
-  
-  updateCurrentDot() {
-    // Get all sections by IDs referenced in sidebar items
-    const sections = this.options.items
-      .map(item => {
-        if (item.link.includes('#')) {
-          const id = item.link.split('#').pop();
-          return document.getElementById(id);
-        }
-        return null;
-      })
-      .filter(Boolean);
-    
-    // Determine which section is in view
-    const scrollPosition = window.scrollY + window.innerHeight / 3;
-    
-    // Find the current section in view
-    let currentSectionIndex = 0;
-    
-    sections.forEach((section, index) => {
-      if (!section) return;
-      
-      const sectionTop = section.offsetTop;
-      const sectionBottom = sectionTop + section.offsetHeight;
-      
-      if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-        currentSectionIndex = index;
-      }
-    });
-    
-    // Special case for top of page
-    if (window.scrollY < 100) {
-      currentSectionIndex = 0;
-    }
-    
-    // Get all dots and update active state
-    const dots = this.dotsContainer.querySelectorAll('.lusion-sidebar-dot');
-    
-    dots.forEach((dot, index) => {
-      if (index === currentSectionIndex) {
-        dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
-      }
-    });
-  }
-  
-  updateProgressIndicator() {
-    // Calculate scroll progress
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = (scrollTop / docHeight) * 100;
-    
-    // Update progress indicator height
-    this.progressIndicator.style.height = `${scrollPercent}%`;
-  }
-  
-  resetFadeTimer() {
-    // Clear existing timeout
-    clearTimeout(this.fadeTimeout);
-    
-    // Set new timeout
-    this.fadeTimeout = setTimeout(() => {
-      this.hideSidebar();
-    }, this.options.fadeDelay);
-  }
-  
-  showSidebar() {
-    // Make sidebar visible
-    if (!this.isVisible) {
-      this.sidebar.style.opacity = '1';
-      this.isVisible = true;
-    }
-  }
-  
-  hideSidebar() {
-    // Hide sidebar
-    if (this.isVisible) {
-      this.sidebar.style.opacity = '0';
-      this.isVisible = false;
-    }
-  }
-}
+// ============================================================
+// ScrollDots - Clean section indicator dots (right side)
+// ============================================================
+(function () {
+  // Remove any existing instances to prevent duplicates
+  document.querySelectorAll('.lusion-sidebar').forEach(el => el.remove());
+  const existingStyle = document.querySelector('#lusion-sidebar-styles');
+  if (existingStyle) existingStyle.remove();
 
-// Add the CSS for the Lusion-style sidebar
-const addLusionSidebarStyles = () => {
-  const styleElement = document.createElement('style');
-  styleElement.textContent = `
-    /* Lusion-style sidebar */
+  // Inject styles
+  const style = document.createElement('style');
+  style.id = 'lusion-sidebar-styles';
+  // DOT_SIZE and GAP must match the CSS values below
+  const DOT = 10, GAP = 26;
+  style.textContent = `
     .lusion-sidebar {
       position: fixed;
       top: 50%;
-      right: 40px;
+      right: 24px;
       transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 100;
-      transition: opacity ${800}ms cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 200;
+      opacity: 0;
+      transition: opacity 500ms ease;
+      pointer-events: none;
     }
-    
-    .lusion-sidebar-progress {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 1px;
-      height: 0%;
-      background-color: rgba(145, 71, 255, 0.8);
-      transform: translateX(-50%);
-      z-index: 1;
-      transition: height 0.3s ease;
+    .lusion-sidebar.visible {
+      opacity: 1;
+      pointer-events: auto;
     }
-    
-    .lusion-sidebar-dots {
+    .lusion-sidebar-track {
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 25px;
-      padding: 15px 0;
+      gap: ${GAP}px;
+      padding: ${DOT}px 0;
     }
-    
+    /* Static faint background line */
+    .lusion-sidebar-track::before {
+      content: '';
+      position: absolute;
+      top: ${DOT}px;
+      bottom: ${DOT}px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+    /* Animated progress line — driven by --prog CSS var */
+    .lusion-sidebar-fill {
+      position: absolute;
+      top: ${DOT}px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 0px;
+      background: linear-gradient(to bottom, rgba(145,71,255,0.3), rgba(145,71,255,0.85));
+      transition: height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
     .lusion-sidebar-dot {
-      width: 10px;
-      height: 10px;
+      width: ${DOT}px;
+      height: ${DOT}px;
       border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.3);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.18);
       cursor: pointer;
       position: relative;
       z-index: 2;
+      display: block;
+      text-decoration: none;
+      box-sizing: border-box;
+      transition: background 0.4s ease,
+                  border-color 0.4s ease,
+                  transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.4s ease;
     }
-    
-    .lusion-sidebar-dot:hover,
     .lusion-sidebar-dot.active {
-      background-color: rgba(145, 71, 255, 0.9);
-      transform: scale(1.3);
+      background: rgba(145,71,255,0.95);
+      border-color: rgba(181,123,255,0.7);
+      transform: scale(1.9);
+      box-shadow: 0 0 12px rgba(145,71,255,0.6), 0 0 4px rgba(145,71,255,0.4);
     }
-    
-    .lusion-sidebar-label {
+    .lusion-sidebar-dot:hover:not(.active) {
+      background: rgba(255,255,255,0.4);
+      border-color: rgba(255,255,255,0.5);
+      transform: scale(1.4);
+    }
+    .lusion-sidebar-tooltip {
       position: absolute;
-      right: 30px;
-      padding: 5px 10px;
-      background-color: rgba(10, 10, 15, 0.8);
-      color: white;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%) translateX(6px);
+      background: rgba(8,4,20,0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.88);
+      padding: 5px 11px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      white-space: nowrap;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      border: 1px solid rgba(145,71,255,0.28);
     }
-    
-    /* Responsive adjustments */
+    .lusion-sidebar-dot:hover .lusion-sidebar-tooltip {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
     @media (max-width: 768px) {
-      .lusion-sidebar {
-        right: 15px;
-      }
-      
-      .lusion-sidebar-dot {
-        width: 8px;
-        height: 8px;
-      }
-      
-      .lusion-sidebar-dots {
-        gap: 20px;
-      }
+      .lusion-sidebar { right: 10px; }
     }
   `;
-  
-  document.head.appendChild(styleElement);
-};
+  document.head.appendChild(style);
 
-/**
- * VITALITY OPTIMIZATION - MODERN SIDEBAR IMPLEMENTATION
- * This script adds a Lusion-style sidebar for navigation dots
- * The hamburger menu (ImmersiveNavigation) remains functional
- */
-
-// Execute this immediately when the script loads
-(function() {
-  // Only remove old Lusion sidebars, NOT the hamburger menu
-  const oldLusionSidebars = document.querySelectorAll('.lusion-sidebar');
-  oldLusionSidebars.forEach(el => el.remove());
-  
-  // Create Lusion sidebar styles
-  addLusionSidebarStyles();
-  
-  // Initialize Lusion sidebar with page-specific sections
-  initializeLusionSidebar();
-  
-  // Function to create Lusion sidebar CSS
-  function addLusionSidebarStyles() {
-    // Check if styles already exist
-    if (document.querySelector('#lusion-sidebar-styles')) return;
-    
-    const styleElement = document.createElement('style');
-    styleElement.id = 'lusion-sidebar-styles';
-    styleElement.textContent = `
-      /* Lusion-style sidebar */
-      .lusion-sidebar {
-        position: fixed;
-        top: 50%;
-        right: 40px;
-        transform: translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 100;
-        transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      
-      .lusion-sidebar-progress {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 1px;
-        height: 0%;
-        background-color: rgba(145, 71, 255, 0.8);
-        transform: translateX(-50%);
-        z-index: 1;
-        transition: height 0.3s ease;
-      }
-      
-      .lusion-sidebar-dots {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 25px;
-        padding: 15px 0;
-      }
-      
-      .lusion-sidebar-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.3);
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        cursor: pointer;
-        position: relative;
-        z-index: 2;
-      }
-      
-      .lusion-sidebar-dot:hover,
-      .lusion-sidebar-dot.active {
-        background-color: rgba(145, 71, 255, 0.9);
-        transform: scale(1.3);
-      }
-      
-      .lusion-sidebar-label {
-        position: absolute;
-        right: 30px;
-        padding: 5px 10px;
-        background-color: rgba(10, 10, 15, 0.8);
-        color: white;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 500;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        white-space: nowrap;
-      }
-      
-      /* Responsive adjustments */
-      @media (max-width: 768px) {
-        .lusion-sidebar {
-          right: 15px;
-        }
-        
-        .lusion-sidebar-dot {
-          width: 8px;
-          height: 8px;
-        }
-        
-        .lusion-sidebar-dots {
-          gap: 20px;
-        }
-      }
-    `;
-    
-    document.head.appendChild(styleElement);
-  }
-  
-  // Function to initialize the LusionSidebar
-  function initializeLusionSidebar() {
-    // Define LusionSidebar class if not already defined
-    if (typeof window.LusionSidebar !== 'function') {
-      window.LusionSidebar = class LusionSidebar {
-        constructor(options = {}) {
-          this.options = {
-            fadeDelay: 5000,
-            fadeSpeed: 800,
-            initiallyVisible: true,
-            items: [],
-            ...options
-          };
-          
-          this.isVisible = this.options.initiallyVisible;
-          this.fadeTimeout = null;
-          this.scrolling = false;
-          this.scrollTimeout = null;
-          
-          // Initialize immediately
-          this.init();
-        }
-        
-        init() {
-          this.createSidebar();
-          this.initEventListeners();
-          
-          if (this.isVisible) {
-            this.resetFadeTimer();
-          }
-        }
-        
-        createSidebar() {
-          // Create sidebar container
-          this.sidebar = document.createElement('div');
-          this.sidebar.className = 'lusion-sidebar';
-          
-          // Create dots container
-          this.dotsContainer = document.createElement('div');
-          this.dotsContainer.className = 'lusion-sidebar-dots';
-          
-          // Create label container
-          this.labelContainer = document.createElement('div');
-          this.labelContainer.className = 'lusion-sidebar-label';
-          
-          // Create progress indicator
-          this.progressIndicator = document.createElement('div');
-          this.progressIndicator.className = 'lusion-sidebar-progress';
-          
-          // Add items
-          this.options.items.forEach((item, index) => {
-            const dot = document.createElement('a');
-            dot.className = 'lusion-sidebar-dot';
-            dot.href = item.link;
-            dot.setAttribute('data-index', index);
-            dot.setAttribute('data-label', item.label);
-            
-            dot.addEventListener('mouseenter', () => this.onDotHover(item.label, dot));
-            dot.addEventListener('mouseleave', () => this.onDotLeave());
-            dot.addEventListener('click', (e) => this.onDotClick(item, e));
-            
-            if (index === 0) {
-              dot.classList.add('active');
-            }
-            
-            this.dotsContainer.appendChild(dot);
-          });
-          
-          // Add containers to sidebar
-          this.sidebar.appendChild(this.progressIndicator);
-          this.sidebar.appendChild(this.dotsContainer);
-          this.sidebar.appendChild(this.labelContainer);
-          
-          // Add to DOM
-          document.body.appendChild(this.sidebar);
-          
-          // Update current dot based on scroll position
-          this.updateCurrentDot();
-        }
-        
-        // Basic event listeners
-        initEventListeners() {
-          window.addEventListener('scroll', () => this.onScroll());
-          document.addEventListener('visibilitychange', () => this.onVisibilityChange());
-        }
-        
-        // Handle dot hover
-        onDotHover(label, dot) {
-          this.labelContainer.textContent = label;
-          this.labelContainer.style.opacity = '1';
-          
-          const dotRect = dot.getBoundingClientRect();
-          const sidebarRect = this.sidebar.getBoundingClientRect();
-          this.labelContainer.style.top = `${dotRect.top - sidebarRect.top + dotRect.height/2 - 10}px`;
-        }
-        
-        onDotLeave() {
-          this.labelContainer.style.opacity = '0';
-        }
-        
-        onDotClick(item, e) {
-          e.preventDefault();
-          
-          if (item.link.includes('#')) {
-            const id = item.link.includes('#') ? item.link.split('#')[1] : '';
-            const targetElement = document.getElementById(id);
-            
-            if (targetElement) {
-              targetElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-              
-              if (window.history && window.history.pushState) {
-                window.history.pushState(null, null, item.link);
-              }
-            } else if (item.link.startsWith('#')) {
-              // If it's just an anchor but no matching element, try using querySelector instead
-              const selector = item.link;
-              const element = document.querySelector(selector);
-              if (element) {
-                element.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'start'
-                });
-              } else {
-                window.location.href = item.link;
-              }
-            } else {
-              window.location.href = item.link;
-            }
-          } else if (item.link.startsWith('.')) {
-            // For class selectors
-            const selector = item.link;
-            const element = document.querySelector(selector);
-            if (element) {
-              element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            } else {
-              window.location.href = item.link;
-            }
-          } else {
-            window.location.href = item.link;
-          }
-        }
-        
-        // Handle scroll events
-        onScroll() {
-          this.showSidebar();
-          this.updateCurrentDot();
-          this.updateProgressIndicator();
-          this.resetFadeTimer();
-          
-          this.scrolling = true;
-          clearTimeout(this.scrollTimeout);
-          this.scrollTimeout = setTimeout(() => {
-            this.scrolling = false;
-          }, 200);
-        }
-        
-        // Handle visibility changes
-        onVisibilityChange() {
-          if (document.hidden) {
-            clearTimeout(this.fadeTimeout);
-          } else if (this.isVisible) {
-            this.resetFadeTimer();
-          }
-        }
-        
-        // Update which dot is active based on scroll position
-        updateCurrentDot() {
-          // First check for elements with IDs
-          const sections = this.options.items
-            .map(item => {
-              if (item.link.includes('#')) {
-                const id = item.link.split('#').pop();
-                return document.getElementById(id);
-              } else if (item.link.startsWith('.')) {
-                // For class selectors
-                return document.querySelector(item.link);
-              }
-              return null;
-            })
-            .filter(Boolean);
-          
-          const scrollPosition = window.scrollY + window.innerHeight / 3;
-          let currentSectionIndex = 0;
-          
-          sections.forEach((section, index) => {
-            if (!section) return;
-            
-            const sectionTop = section.offsetTop;
-            const sectionBottom = sectionTop + section.offsetHeight;
-            
-            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-              currentSectionIndex = index;
-            }
-          });
-          
-          if (window.scrollY < 100) {
-            currentSectionIndex = 0;
-          }
-          
-          const dots = this.dotsContainer.querySelectorAll('.lusion-sidebar-dot');
-          
-          dots.forEach((dot, index) => {
-            if (index === currentSectionIndex) {
-              dot.classList.add('active');
-            } else {
-              dot.classList.remove('active');
-            }
-          });
-        }
-        
-        // Update the progress indicator based on scroll position
-        updateProgressIndicator() {
-          const scrollTop = window.scrollY;
-          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-          const scrollPercent = (scrollTop / docHeight) * 100;
-          
-          this.progressIndicator.style.height = `${scrollPercent}%`;
-        }
-        
-        // Reset the fade timer
-        resetFadeTimer() {
-          clearTimeout(this.fadeTimeout);
-          
-          this.fadeTimeout = setTimeout(() => {
-            this.hideSidebar();
-          }, this.options.fadeDelay);
-        }
-        
-        // Show the sidebar
-        showSidebar() {
-          if (!this.isVisible) {
-            this.sidebar.style.opacity = '1';
-            this.isVisible = true;
-          }
-        }
-        
-        // Hide the sidebar
-        hideSidebar() {
-          if (this.isVisible) {
-            this.sidebar.style.opacity = '0';
-            this.isVisible = false;
-          }
-        }
-      };
-    }
-    
-    // Get current page path
+  function getPageSections() {
     const path = window.location.pathname;
-    
-    // Default to empty array
-    let sections = [];
-    
-    // Define sections for each page
     if (path === '/' || path === '' || path.includes('index')) {
-      // Homepage
-      sections = [
-        { label: 'Features', link: '#features' },
-        { label: 'About', link: '#about-vitality' },
-        { label: 'Performance', link: '#performance-comparison' }
-      ];
-    } 
-    else if (path.includes('how-it-works')) {
-      // How It Works page
-      sections = [
-        { label: 'Process', link: '#process' },
-        { label: 'Video Tutorial', link: '#video-tutorial' },
-        { label: 'Use Cases', link: '#use-cases' },
-        { label: 'Key Features', link: '#key-features' },
-        { label: 'FAQ', link: '#faq-mini' },
-        { label: 'Get Started', link: '#cta' }
+      return [
+        { label: 'Hero',        id: 'main-content' },
+        { label: 'Features',    id: 'features' },
+        { label: 'About',       id: 'about-vitality' },
+        { label: 'Performance', id: 'performance-comparison' }
       ];
     }
-    else if (path.includes('documentation')) {
-      // Documentation page
-      sections = [
-        { label: 'Installation', link: '#installation' },
-        { label: 'Requirements', link: '#system-requirements' },
-        { label: 'Activation', link: '#license-activation' },
-        { label: 'Interface', link: '#user-interface' },
-        { label: 'Tweaks', link: '#performance-tweaks' },
-        { label: 'Misc', link: '#miscellaneous-tweaks' },
-        { label: 'Tools', link: '#tools' },
-        { label: 'Utilities', link: '#utilities' },
-        { label: 'Settings', link: '#settings' },
-        { label: 'Backup', link: '#backup-restore' },
-        { label: 'Games', link: '#optimizing-games' },
-        { label: 'Issues', link: '#common-issues' },
-        { label: 'Support', link: '#support' }
+    if (path.includes('how-it-works')) {
+      return [
+        { label: 'Process',   id: 'process' },
+        { label: 'Tutorial',  id: 'video-tutorial' },
+        { label: 'Use Cases', id: 'use-cases' },
+        { label: 'Features',  id: 'key-features' },
+        { label: 'FAQ',       id: 'faq-mini' }
       ];
     }
-    else if (path.includes('download')) {
-      // Download page
-      sections = [
-        { label: 'Options', link: '.download-options' },
-        { label: 'Installation', link: '.installation-guide' },
-        { label: 'What\'s New', link: '.changelog' }
+    if (path.includes('documentation')) {
+      return [
+        { label: 'Install',    id: 'installation' },
+        { label: 'System',     id: 'system-requirements' },
+        { label: 'Activation', id: 'license-activation' },
+        { label: 'Interface',  id: 'user-interface' },
+        { label: 'Tweaks',     id: 'performance-tweaks' },
+        { label: 'Tools',      id: 'tools' },
+        { label: 'Backup',     id: 'backup-restore' },
+        { label: 'Issues',     id: 'common-issues' },
+        { label: 'Support',    id: 'support' }
       ];
     }
-    else if (path.includes('faq')) {
-      // FAQ page sections
-      sections = [
-        { label: 'What Is Vitality', link: '.faq-content' },
-        { label: 'Installation', link: '.faq-item:nth-child(2)' },
-        { label: 'Game Compatibility', link: '.faq-item:nth-child(3)' },
-        { label: 'Premium Features', link: '.faq-item:nth-child(4)' },
-        { label: 'Updates', link: '.faq-item:nth-child(5)' },
-        { label: 'Support', link: '.faq-item:nth-child(6)' },
-        { label: 'Safety', link: '.faq-item:nth-child(7)' },
-        { label: 'Contact Us', link: '.faq-cta' }
+    if (path.includes('download')) {
+      return [
+        { label: 'Options',      id: 'download-section' },
+        { label: 'Installation', id: 'installation-guide' }
       ];
     }
-    else if (path.includes('purchase')) {
-      // Purchase page
-      sections = [
-        { label: 'Lifetime', link: '.pricing-grid' },
-        { label: 'BIOS Tweaker', link: '.pricing-grid-single' },
-        { label: 'FAQ', link: '/faq' }
+    if (path.includes('faq')) {
+      return [
+        { label: 'FAQ',     id: 'faq' },
+        { label: 'Contact', id: 'contact' }
       ];
     }
-    else if (path.includes('tos')) {
-      // Terms of Service page
-      sections = [
-        { label: 'Introduction', link: '.tos-section:nth-child(1)' },
-        { label: 'User Accounts', link: '.tos-section:nth-child(2)' },
-        { label: 'Acceptable Use', link: '.tos-section:nth-child(3)' },
-        { label: 'Intellectual Property', link: '.tos-section:nth-child(4)' },
-        { label: 'Termination', link: '.tos-section:nth-child(5)' },
-        { label: 'Disclaimers', link: '.tos-section:nth-child(6)' },
-        { label: 'Liability', link: '.tos-section:nth-child(7)' },
-        { label: 'Changes', link: '.tos-section:nth-child(8)' },
-        { label: 'Contact', link: '.tos-footer' }
+    if (path.includes('purchase')) {
+      return [
+        { label: 'Plans', id: 'pricing' },
+        { label: 'FAQ',   id: 'faq' }
       ];
     }
-    else if (path.includes('affiliate')) {
-      // Affiliate page
-      sections = [
-        { label: 'Introduction', link: '.affiliate-header' },
-        { label: 'Benefits', link: '.affiliate-section:nth-child(1)' },
-        { label: 'How It Works', link: '.affiliate-section:nth-child(2)' },
-        { label: 'Get Started', link: '.affiliate-section:nth-child(3)' }
+    if (path.includes('tos')) {
+      return [
+        { label: 'Terms',   id: 'tos' },
+        { label: 'Contact', id: 'contact' }
       ];
     }
-    
-    // Only create sidebar if we have sections
-    if (sections.length > 0) {
-      window.lusionSidebar = new LusionSidebar({
-        items: sections,
-        fadeDelay: 5000 // 5 seconds
+    if (path.includes('affiliate')) {
+      return [
+        { label: 'Program',  id: 'affiliate' },
+        { label: 'Benefits', id: 'benefits' }
+      ];
+    }
+    return [];
+  }
+
+  function init() {
+    const sections = getPageSections().filter(s => document.getElementById(s.id));
+    if (sections.length < 2) return;
+
+    const sidebar = document.createElement('div');
+    sidebar.className = 'lusion-sidebar';
+
+    const track = document.createElement('div');
+    track.className = 'lusion-sidebar-track';
+
+    // Progress fill line (separate element — no ::after weirdness)
+    const fill = document.createElement('div');
+    fill.className = 'lusion-sidebar-fill';
+    track.appendChild(fill);
+
+    const dotEls = [];
+    sections.forEach((section, i) => {
+      const dot = document.createElement('a');
+      dot.className = 'lusion-sidebar-dot' + (i === 0 ? ' active' : '');
+      dot.href = '#' + section.id;
+
+      const tip = document.createElement('span');
+      tip.className = 'lusion-sidebar-tooltip';
+      tip.textContent = section.label;
+      dot.appendChild(tip);
+
+      dot.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById(section.id)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
+
+      track.appendChild(dot);
+      dotEls.push(dot);
+    });
+
+    sidebar.appendChild(track);
+    document.body.appendChild(sidebar);
+
+    // Set active dot + animate fill line to reach that dot's center
+    function setActive(idx) {
+      dotEls.forEach((d, i) => d.classList.toggle('active', i === idx));
+      // Each step = DOT_SIZE + GAP. Fill reaches center of active dot.
+      const h = idx * (DOT + GAP) + DOT / 2;
+      fill.style.height = h + 'px';
     }
+
+    // IntersectionObserver — fires when section enters the top 60% of viewport
+    const visible = new Map(); // index → ratio
+    sections.forEach((section, i) => {
+      const el = document.getElementById(section.id);
+      if (!el) return;
+      new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) visible.set(i, e.intersectionRatio);
+          else visible.delete(i);
+          // Activate the topmost visible section
+          if (visible.size) setActive(Math.min(...visible.keys()));
+        });
+      }, {
+        threshold: [0, 0.1, 0.5],
+        rootMargin: '0px 0px -30% 0px'
+      }).observe(el);
+    });
+
+    // Fade in/out
+    let fadeTimer = null;
+    function show() {
+      sidebar.classList.add('visible');
+      clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(() => sidebar.classList.remove('visible'), 3500);
+    }
+    window.addEventListener('scroll', show, { passive: true });
+
+    // Initial reveal
+    setTimeout(() => { show(); setActive(0); }, 900);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 })();
 
@@ -3706,14 +3136,19 @@ class CleanAnimations {
     
     textElements.forEach(el => {
       // Skip if already processed, if it's empty, or if it's a gradient text element
-      if (el.querySelector('.text-char') || 
-          !el.textContent.trim() || 
+      // Also skip content section headings where text must always be visible
+      if (el.querySelector('.text-char') ||
+          !el.textContent.trim() ||
           el.classList.contains('hero-title') ||
           el.classList.contains('preloader-logo') ||
           el.classList.contains('navbar-logo') ||
           el.closest('.navbar-logo') ||
           el.closest('.navbar .logo') ||
-          el.closest('.sidebar-header .logo')) return;
+          el.closest('.sidebar-header .logo') ||
+          el.closest('.tos-section') ||
+          el.closest('.faq-item') ||
+          el.closest('.affiliate-section') ||
+          el.closest('.page-section')) return;
       
       // Wrap text in spans for character animation
       this.wrapTextInSpans(el);
