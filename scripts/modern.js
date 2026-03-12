@@ -1169,12 +1169,12 @@ class EnhancedScrollAnimations {
   }
   
   setupScrollTriggers() {
-    // Hero parallax effect
+    // Hero parallax effect — disabled on mobile to prevent scroll snapping
     const heroSection = document.querySelector('.hero-section');
-    
-    if (heroSection) {
+
+    if (heroSection && window.innerWidth > 768) {
       const heroContent = heroSection.querySelector('.hero-content');
-      
+
       if (heroContent) {
         ScrollTrigger.create({
           trigger: heroSection,
@@ -2407,28 +2407,28 @@ class ScrollProgressIndicator {
     this.indicator = document.createElement('div');
     this.indicator.className = 'scroll-indicator';
     this.indicator.innerHTML = '<div class="scroll-indicator-progress"></div>';
-    
+
     // Add to DOM
     document.body.appendChild(this.indicator);
-    
+
     // Store progress element
     this.progress = this.indicator.querySelector('.scroll-indicator-progress');
   }
-  
+
   addEventListeners() {
     // Update on scroll
     window.addEventListener('scroll', this.updateProgress.bind(this));
-    
+
     // Initial update
     this.updateProgress();
   }
-  
+
   updateProgress() {
     // Calculate scroll percentage
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const scrollPercent = (scrollTop / scrollHeight) * 100;
-    
+
     // Update progress bar
     this.progress.style.width = `${scrollPercent}%`;
   }

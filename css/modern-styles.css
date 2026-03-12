@@ -791,6 +791,8 @@ button,
 
 .sidebar-nav {
   flex: 1;
+  min-height: 0; /* allow flex item to shrink below content size */
+  overflow-y: auto; /* scroll nav items on small screens so footer stays pinned */
   padding: var(--space-2xl) var(--space-xl);
 }
 
@@ -1145,15 +1147,16 @@ body:not(.loaded) > *:not(.preloader) {
   left: 0;
   width: 100%;
   height: 3px;
-  background: var(--bg-light);
-  z-index: var(--z-fixed);
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 99999;
+  pointer-events: none;
 }
 
 .scroll-indicator-progress {
   height: 100%;
   background: linear-gradient(90deg, var(--primary), var(--accent));
   width: 0%;
-  transition: width var(--transition-fast);
+  transition: width 0.1s linear;
 }
 
 /* ============================================================
@@ -1710,20 +1713,7 @@ body:not(.loaded) > *:not(.preloader) {
 }
 
 .skip-link {
-  position: absolute;
-  top: -40px;
-  left: 6px;
-  background: var(--accent);
-  color: var(--text-light);
-  padding: 8px;
-  text-decoration: none;
-  border-radius: 4px;
-  z-index: 1001;
-  transition: top 0.3s ease;
-}
-
-.skip-link:focus {
-  top: 6px;
+  display: none;
 }
 
 @keyframes slideDown {
@@ -1888,6 +1878,24 @@ body:not(.loaded) > *:not(.preloader) {
    RESPONSIVE DESIGN ENHANCEMENTS
    ============================================================ */
 @media (max-width: 768px) {
+  /* Hide the legacy nav-toggle — sidebar (menu-toggle) handles mobile nav */
+  .nav-toggle {
+    display: none !important;
+  }
+
+  /* Smaller sidebar nav font on mobile so all items fit without pushing footer out */
+  .sidebar-nav a {
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+  }
+
+  .sidebar-nav ul {
+    gap: var(--space-md);
+  }
+
+  .sidebar-nav {
+    padding: var(--space-lg) var(--space-xl);
+  }
+
   .nav-menu {
     justify-content: center;
     padding-top: 0;

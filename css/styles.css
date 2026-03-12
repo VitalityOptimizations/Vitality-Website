@@ -141,7 +141,7 @@ body {
 
 /* Skip to main content - accessibility */
 .skip-link {
-  position: absolute;
+  position: fixed;
   top: -100%;
   left: var(--spacing-md);
   z-index: 9999;

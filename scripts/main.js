@@ -242,13 +242,35 @@ function initMobileMenu() {
 // SCROLL EFFECTS AND ANIMATIONS
 // ============================================================
 function initScrollEffects() {
-  // Parallax effect for hero section only (not the header/navbar)
+  // Scroll progress bar — create it here so it always exists regardless of modern.js timing
+  let progressEl = document.querySelector('.scroll-indicator-progress');
+  if (!progressEl) {
+    const track = document.createElement('div');
+    track.className = 'scroll-indicator';
+    track.innerHTML = '<div class="scroll-indicator-progress"></div>';
+    document.body.appendChild(track);
+    progressEl = track.querySelector('.scroll-indicator-progress');
+  }
+  const updateBar = function() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    progressEl.style.width = pct + '%';
+  };
+  window.addEventListener('scroll', updateBar, { passive: true });
+  updateBar();
+
+  // Parallax effect for hero section only — disabled on mobile to prevent scroll snapping
   const heroSection = document.querySelector('.hero-section.main-hero');
-  if (heroSection) {
+  if (heroSection && window.innerWidth > 768) {
     window.addEventListener('scroll', function() {
-      const scrolled = window.pageYOffset;
-      const rate = scrolled * -0.5;
-      heroSection.style.transform = `translateY(${rate}px)`;
+      if (window.innerWidth > 768) {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+        heroSection.style.transform = `translateY(${rate}px)`;
+      } else {
+        heroSection.style.transform = '';
+      }
     });
   }
   
