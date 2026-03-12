@@ -925,6 +925,11 @@ button,
   transform: translateY(0);
 }
 
+/* Hide legacy nav-toggle at all sizes — menu-toggle handles navigation */
+.nav-toggle {
+  display: none !important;
+}
+
 /* Menu Toggle Button */
 .menu-toggle {
   position: fixed;
@@ -952,8 +957,8 @@ button,
 
 /* Animated SVG menu toggle icon */
 .menu-toggle-svg {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   color: var(--text-light);
   transition: transform 500ms ease-in-out;
   display: block;

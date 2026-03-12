@@ -173,13 +173,10 @@ class AppController {
       }, 100);
     }
 
-    // Animate feature sections
+    // Animate feature sections — disabled on mobile to prevent scroll snapping
     const featureSections = document.querySelectorAll('.feature-item, .about-column');
-    if (featureSections.length && window.gsap) {
-      // Set initial state
+    if (featureSections.length && window.gsap && window.innerWidth > 768) {
       gsap.set(featureSections, { y: 30, opacity: 0 });
-      
-      // Create a delayed animation
       setTimeout(() => {
         gsap.to(featureSections, {
           y: 0,
@@ -188,7 +185,7 @@ class AppController {
           duration: 0.8,
           ease: "power3.out"
         });
-      }, 800); // Delay after hero animation
+      }, 800);
     }
   }
 }
@@ -1253,9 +1250,9 @@ class EnhancedScrollAnimations {
       }
     }
     
-    // Documentation specific animations
+    // Documentation specific animations — disabled on mobile to prevent scroll snapping
     const docSections = document.querySelectorAll('.doc-section');
-    if (docSections.length) {
+    if (docSections.length && window.innerWidth > 768) {
       docSections.forEach(section => {
         ScrollTrigger.create({
           trigger: section,
@@ -1271,9 +1268,9 @@ class EnhancedScrollAnimations {
       });
     }
     
-    // Step animations
+    // Step animations — disabled on mobile to prevent scroll snapping
     const steps = document.querySelectorAll('.step');
-    if (steps.length) {
+    if (steps.length && window.innerWidth > 768) {
       steps.forEach((step, index) => {
         ScrollTrigger.create({
           trigger: step,
@@ -1289,25 +1286,25 @@ class EnhancedScrollAnimations {
       });
     }
 
-    // Feature items staggered animation
+    // Feature items staggered animation — disabled on mobile to prevent scroll snapping
     const featureItems = document.querySelectorAll('.feature-item, .about-column');
-    if (featureItems.length) {
+    if (featureItems.length && window.innerWidth > 768) {
       ScrollTrigger.create({
         trigger: '.features, .about-section',
         start: 'top 80%',
         onEnter: () => {
-          gsap.fromTo(featureItems, 
+          gsap.fromTo(featureItems,
             { y: 50, opacity: 0 },
-            { 
-              y: 0, 
-              opacity: 1, 
-              stagger: 0.1, 
-              duration: 0.8, 
-              ease: "power3.out" 
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.1,
+              duration: 0.8,
+              ease: "power3.out"
             }
           );
         },
-        once: false // Make false to animate every time it comes into view
+        once: false
       });
     }
   }
@@ -2715,48 +2712,48 @@ class DocumentationEnhancements {
       '.documentation-content'
     ];
     
-    elements.forEach((selector, index) => {
-      const element = document.querySelector(selector);
-      
-      if (element) {
-        if (window.gsap) {
-          gsap.fromTo(
-            element,
-            { y: 30, opacity: 0 },
-            { 
-              y: 0, 
-              opacity: 1, 
-              duration: 0.8, 
-              delay: index * 0.2,
-              ease: "power3.out" 
-            }
-          );
-        } else {
-          setTimeout(() => {
-            element.style.transition = `opacity 0.8s ease, transform 0.8s ease`;
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-          }, index * 200);
+    // Only run y-transform animations on desktop to prevent mobile scroll snapping
+    if (window.innerWidth > 768) {
+      elements.forEach((selector, index) => {
+        const element = document.querySelector(selector);
+        if (element) {
+          if (window.gsap) {
+            gsap.fromTo(
+              element,
+              { y: 30, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                delay: index * 0.2,
+                ease: "power3.out"
+              }
+            );
+          } else {
+            setTimeout(() => {
+              element.style.transition = `opacity 0.8s ease, transform 0.8s ease`;
+              element.style.opacity = '1';
+              element.style.transform = 'translateY(0)';
+            }, index * 200);
+          }
         }
+      });
+
+      const sections = document.querySelectorAll('.doc-section');
+      if (sections.length && window.gsap) {
+        gsap.fromTo(
+          sections,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.15,
+            duration: 0.8,
+            delay: 0.6,
+            ease: "power3.out"
+          }
+        );
       }
-    });
-    
-    // Animate content sections sequentially
-    const sections = document.querySelectorAll('.doc-section');
-    
-    if (sections.length && window.gsap) {
-      gsap.fromTo(
-        sections,
-        { y: 30, opacity: 0 },
-        { 
-          y: 0, 
-          opacity: 1, 
-          stagger: 0.15,
-          duration: 0.8,
-          delay: 0.6,
-          ease: "power3.out" 
-        }
-      );
     }
   }
 }
@@ -3169,25 +3166,19 @@ class CleanAnimations {
   animateTextReveal(element) {
     const chars = element.querySelectorAll('.text-char');
     if (chars.length === 0) return;
-    
+
+    // Skip y/rotation transforms on mobile to prevent scroll snapping
+    if (window.innerWidth <= 768) {
+      chars.forEach(char => { char.style.opacity = '1'; });
+      return;
+    }
+
     if (typeof gsap !== 'undefined') {
-      gsap.fromTo(chars, 
-        { 
-          opacity: 0, 
-          y: 20,
-          rotationX: -90
-        },
-        { 
-          opacity: 1, 
-          y: 0,
-          rotationX: 0,
-          duration: 0.6,
-          stagger: 0.02,
-          ease: "power3.out"
-        }
+      gsap.fromTo(chars,
+        { opacity: 0, y: 20, rotationX: -90 },
+        { opacity: 1, y: 0, rotationX: 0, duration: 0.6, stagger: 0.02, ease: "power3.out" }
       );
     } else {
-      // Fallback without GSAP
       chars.forEach((char, index) => {
         setTimeout(() => {
           char.style.opacity = '1';
@@ -3276,8 +3267,11 @@ class CleanAnimations {
     requestAnimationFrame(animate);
   }
   
-  // Enhanced Card Animations - Smooth stagger with scale
+  // Enhanced Card Animations - Smooth stagger with scale — desktop only
   initCardAnimations() {
+    // Disabled on mobile to prevent scroll snapping
+    if (window.innerWidth <= 768) return;
+
     // Comprehensive selectors for all card containers across pages
     const cardContainers = document.querySelectorAll(
       '.feature-grid, .about-content, .steps-grid, .pricing-grid, ' +
