@@ -72,6 +72,7 @@
           <ul>
             <li><a href="#performance-tweaks">Performance Tweaks</a></li>
             <li><a href="#miscellaneous-tweaks">Miscellaneous Tweaks</a></li>
+            <li><a href="#install-hub">Install Hub</a></li>
             <li><a href="#tools">Tools</a></li>
             <li><a href="#utilities">System Utilities</a></li>
           </ul>
@@ -206,20 +207,20 @@
           <div class="cards-container">
             <div class="card">
               <h4>Lifetime</h4>
-              <p>One-time payment for permanent access to the current version of Vitality Optimization.</p>
+              <p>One-time payment for permanent access to the current version of Vitality Util.</p>
               <p class="price">£25.00</p>
             </div>
-            
+
             <div class="card">
-              <h4>Lifetime Updates</h4>
-              <p>One-time payment for permanent access including all future updates and features.</p>
+              <h4>Lifetime + Updates</h4>
+              <p>One-time payment for permanent access including all future updates and new features.</p>
               <p class="price">£55.00</p>
             </div>
-            
+
             <div class="card">
-              <h4>Game Mode</h4>
-              <p>Access to specialized game optimization features for enhanced gaming performance.</p>
-              <p class="price">£10.00</p>
+              <h4>BIOS Tweaker</h4>
+              <p>Standalone NVRAM/BIOS editor for hardware-level performance tuning. Purchased separately.</p>
+              <p class="price">£15.00</p>
             </div>
           </div>
         </section>
@@ -231,36 +232,39 @@
           
           <div class="interface-overview">
             <div class="interface-section">
-              <h3>Navigation Sidebar</h3>
-              <p>Located on the left side of the application, the navigation sidebar provides access to all major sections:</p>
+              <h3>Navigation Sidebar (8 Pages)</h3>
+              <p>The left sidebar gives access to all main sections of Vitality Util:</p>
               <ul>
-                <li><strong>Home</strong> - Dashboard with system information and quick actions</li>
-                <li><strong>Tweaks</strong> - Performance optimization settings</li>
-                <li><strong>Miscellaneous</strong> - Additional system tweaks and customizations</li>
-                <li><strong>Tools</strong> - Third-party utilities and performance tools</li>
-                <li><strong>Utilities</strong> - System maintenance and utility features</li>
-                <li><strong>Settings</strong> - Application configurations and preferences</li>
-                <li><strong>Help & Support</strong> - Support resources and community links</li>
+                <li><strong>Home</strong> — System specs dashboard (CPU, GPU, RAM, Storage, OS) with quick action cards</li>
+                <li><strong>Tweaks</strong> — Core performance optimization toggles (Network, AMD, NVIDIA, System)</li>
+                <li><strong>Miscellaneous</strong> — 30+ advanced tweaks: quick fixes, privacy, debloat, Windows 11 UI, power management</li>
+                <li><strong>Install</strong> — App Install Hub with 400+ curated apps across 14 categories via Winget</li>
+                <li><strong>Tools</strong> — Professional hardware and diagnostic tools (GPU, system, drivers, testing, display)</li>
+                <li><strong>Utilities</strong> — System maintenance: disk cleanup, restore points, real-time disk/memory monitoring</li>
+                <li><strong>Settings</strong> — Theme colors, language, dark mode, auto-start, notifications</li>
+                <li><strong>Help & Support</strong> — FAQ, Discord community, and Twitter/X links</li>
               </ul>
             </div>
-            
+
             <div class="interface-section">
               <h3>Content Area</h3>
-              <p>The main content area displays the selected section's features and options. Each page typically includes:</p>
+              <p>The main content area displays the selected section with:</p>
               <ul>
                 <li>Section header with title and description</li>
-                <li>Feature cards with toggle switches or buttons</li>
-                <li>Detailed descriptions of each feature</li>
-                <li>Action buttons for applying changes</li>
+                <li>Feature cards with toggle switches or action buttons</li>
+                <li>Category collapsing for advanced sections</li>
+                <li>Status indicators (Idle, Running, Done, Error)</li>
+                <li>Real-time feedback and progress tracking</li>
               </ul>
             </div>
-            
+
             <div class="interface-section">
-              <h3>User Profile</h3>
-              <p>At the bottom of the sidebar, you'll find your user profile information, including:</p>
+              <h3>Appearance & Language</h3>
+              <p>Vitality Util is fully customizable:</p>
               <ul>
-                <li>Username (your Windows username)</li>
-                <li>License status</li>
+                <li>6 accent color themes: Royal Purple, Ocean Blue, Forest Green, Sunset Orange, Neon Pink, Crystal Cyan</li>
+                <li>Dark and light mode toggle</li>
+                <li>19 supported languages including English, Spanish, French, German, Chinese, Japanese, Korean, Russian, Arabic, and more</li>
               </ul>
             </div>
           </div>
@@ -269,127 +273,119 @@
         <!-- Performance Tweaks Section -->
         <section id="performance-tweaks" class="doc-section">
           <h2>Performance Tweaks</h2>
-          <p>Performance tweaks are core optimizations designed to enhance your system's gaming performance by adjusting various Windows settings.</p>
-          
+          <p>The Tweaks tab contains four core optimization categories, each independently toggleable and fully reversible.</p>
+
           <div class="feature-list">
             <div class="feature">
               <h3>Network Optimization</h3>
-              <p>Optimizes network settings for reduced latency and improved connection stability. These tweaks stabilize connections, lower ping times, and enhance data transfer rates, especially useful for online gaming and video conferencing.</p>
+              <p>Optimizes the Windows network stack for reduced latency and improved connection stability. Adjusts Winsock settings, TCP parameters, and DNS configuration to lower ping and reduce packet processing delays — critical for competitive online gaming.</p>
               <div class="toggle-info">
                 <span class="toggle-label">Toggle:</span>
                 <span class="toggle-on">ON</span> for reduced latency in online games.
-                <span class="toggle-off">OFF</span> for standard network behavior.
+                <span class="toggle-off">OFF</span> to restore default network behavior.
               </div>
             </div>
-            
+
             <div class="feature">
-              <h3>CPU and GPU Performance AMD</h3>
-              <p>Runs Refyne to optimize AMD CPU and GPU settings for better performance. These tweaks unlock additional performance, enhance clock speed stability, and help reduce system bottlenecks, delivering a better gaming and multitasking experience.</p>
+              <h3>CPU and GPU Performance (AMD)</h3>
+              <p>Runs Refyne to apply AMD-specific CPU and GPU optimizations. Unlocks additional performance headroom, improves clock speed stability, and reduces system bottlenecks for AMD Ryzen processors and Radeon graphics cards.</p>
               <div class="toggle-info">
                 <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> for optimized AMD performance.
-                <span class="toggle-off">OFF</span> for default settings.
+                <span class="toggle-on">ON</span> for AMD-optimized performance.
+                <span class="toggle-off">OFF</span> to restore default AMD settings.
               </div>
             </div>
-            
+
             <div class="feature">
-              <h3>GPU Performance NVIDIA</h3>
-              <p>Optimizes NVIDIA GPU settings for maximum graphics performance. These tweaks improve frame rates, smooth visual output, and enhance resource management for demanding applications.</p>
+              <h3>GPU Performance (NVIDIA)</h3>
+              <p>Applies driver-level NVIDIA GPU optimizations for maximum frame rates and reduced render latency. Improves resource management and frame pacing for NVIDIA GeForce and RTX graphics cards across all supported titles.</p>
               <div class="toggle-info">
                 <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> for optimized NVIDIA performance.
-                <span class="toggle-off">OFF</span> for default GPU settings.
+                <span class="toggle-on">ON</span> for NVIDIA-optimized performance.
+                <span class="toggle-off">OFF</span> to restore default NVIDIA settings.
               </div>
             </div>
-            
+
             <div class="feature">
               <h3>System Tweaks</h3>
-              <p>Applies various performance-boosting optimizations to the Windows operating system. These tweaks enhance responsiveness, reduce background process load, and improve overall system efficiency, ideal for gaming or heavy multitasking.</p>
+              <p>A comprehensive suite of Windows-level optimizations that reduce background overhead, improve process scheduling, and free up system resources for your active game or application. Delivers broad performance improvements across all hardware configurations.</p>
               <div class="toggle-info">
                 <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> for enhanced system performance.
-                <span class="toggle-off">OFF</span> for default Windows behavior.
-              </div>
-            </div>
-            
-            <div class="feature">
-              <h3>Game Mode Optimization</h3>
-              <p>Optimizes system settings for maximum gaming performance by prioritizing gaming processes and reducing background system load.</p>
-              <div class="toggle-info">
-                <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> for enhanced gaming performance.
-                <span class="toggle-off">OFF</span> for default gaming settings.
+                <span class="toggle-on">ON</span> for enhanced system responsiveness.
+                <span class="toggle-off">OFF</span> to restore default Windows behavior.
               </div>
             </div>
           </div>
-          
+
           <div class="note-container">
             <div class="note">
-              <strong>Recommendation:</strong> For best results, enable all performance tweaks. You can use the "APPLY ALL OPTIMIZATIONS" button at the bottom of the Tweaks page to quickly enable all tweaks at once.
+              <strong>Recommendation:</strong> Always create a System Restore Point (available in the Utilities tab) before applying tweaks. For best results, enable all four Tweaks categories together.
             </div>
           </div>
         </section>
-        
+
         <!-- Miscellaneous Tweaks Section -->
         <section id="miscellaneous-tweaks" class="doc-section">
           <h2>Miscellaneous Tweaks</h2>
-          <p>The Miscellaneous section contains additional optimizations and customizations for enhanced performance and user experience.</p>
-          
+          <p>The Miscellaneous tab is the most powerful section of Vitality Util with 30+ individual controls organized into categories.</p>
+
           <div class="feature-list">
             <div class="feature">
-              <h3>Disable Telemetry</h3>
-              <p>Disable Windows telemetry and data collection for enhanced privacy and reduced background processes.</p>
-              <div class="toggle-info">
-                <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> to disable telemetry.
-                <span class="toggle-off">OFF</span> for default Windows telemetry.
-              </div>
+              <h3>Quick Fixes</h3>
+              <p>One-click system repair tools: <strong>Reset Network</strong> (resets Winsock, IP stack, flushes DNS), <strong>Reset Windows Update</strong> (repairs broken Windows Update), <strong>Set Up Autologin</strong> (configure automatic Windows login), <strong>System Corruption Scan</strong> (runs DISM and SFC to detect and fix corrupted files), <strong>WinGet Reinstall</strong> (repairs the Windows Package Manager).</p>
             </div>
-            
+
             <div class="feature">
-              <h3>CPU MSR</h3>
-              <p>Adjusts CPU Model Specific Registers for improved control and performance. RUN THIS EVERY TIME.</p>
-              <div class="toggle-info">
-                <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> to apply CPU MSR tweaks.
-                <span class="toggle-off">OFF</span> for default CPU settings.
-              </div>
+              <h3>Windows Update Management</h3>
+              <p>Three options: <strong>Default Settings</strong> (restore normal Windows Update), <strong>Security Settings</strong> (delay feature updates by 365 days, security updates after 4 days), <strong>Disable All Updates</strong> (completely disable Windows Update — use with caution).</p>
             </div>
-            
+
             <div class="feature">
-              <h3>IMOD</h3>
-              <p>Detects all USB hosts and disables IMOD and coalescing for better USB latency. RUN THIS EVERY TIME.</p>
-              <div class="toggle-info">
-                <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> for reduced USB latency.
-                <span class="toggle-off">OFF</span> for default USB behavior.
-              </div>
+              <h3>Legacy Misc Tweaks</h3>
+              <p><strong>IMOD</strong> — detects all USB host controllers and disables interrupt moderation and coalescing for lowest USB latency (run every session). <strong>Tweaked Windows Theme</strong> — applies a performance-optimized Windows theme. <strong>ChrisTitus Util</strong> — opens the Chris Titus Tech system utility. <strong>Fortnite Debloat/Strip</strong> — removes unnecessary Fortnite installation files to improve load times and performance.</p>
             </div>
-            
+
             <div class="feature">
-              <h3>Tweaked Windows Theme</h3>
-              <p>Applies a streamlined Windows theme for performance optimization.</p>
-              <div class="toggle-info">
-                <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> to apply optimized theme.
-                <span class="toggle-off">OFF</span> for default Windows theme.
-              </div>
+              <h3>Advanced Misc Tweaks</h3>
+              <p>Fine-grained system controls: <strong>CPU MSR</strong> (Model Specific Register adjustments for lower CPU latency), <strong>Polling Rate Test</strong> (verify your mouse's actual polling rate), <strong>Auto Tuning Level</strong>, <strong>Power Management</strong>, <strong>Disable/Enable Idle</strong> (CPU C-state control), <strong>Disable/Enable HAGS</strong> (Hardware-Accelerated GPU Scheduling), <strong>Disable/Enable Autotuning</strong>, <strong>Disable/Enable Nvcontainer</strong> (NVIDIA background services), <strong>Windows Services control</strong>, <strong>Device management</strong>, <strong>Power Saver</strong>, <strong>Power Throttle</strong>, <strong>SetBitMask</strong> (CPU thread handling), <strong>WriteCacheBufferSelector</strong>, and custom Vitality Power Plan.</p>
             </div>
-            
+
             <div class="feature">
-              <h3>Power Management</h3>
-              <p>Modifies power settings for balanced performance and efficiency.</p>
-              <div class="toggle-info">
-                <span class="toggle-label">Toggle:</span>
-                <span class="toggle-on">ON</span> for optimized power settings.
-                <span class="toggle-off">OFF</span> for default power settings.
-              </div>
+              <h3>Privacy & Telemetry</h3>
+              <p>Disable <strong>Telemetry</strong> (Windows diagnostic data collection), <strong>Activity History</strong> (app and file tracking), <strong>Location Tracking</strong> (GPS/location access), <strong>Bing Search in Start</strong> (remove web results from Start menu), and <strong>Widgets</strong> (News & Interests panel).</p>
+            </div>
+
+            <div class="feature">
+              <h3>Windows 11 UI Tweaks</h3>
+              <p>Restore a cleaner Windows experience: <strong>Classic Right-Click Menu</strong> (Windows 10-style context menu), <strong>Left-Align Taskbar</strong> (move taskbar icons to the left), <strong>Disable Microsoft Copilot</strong> (remove the Copilot AI button), <strong>Show File Extensions</strong>, <strong>Show Hidden Files</strong>, <strong>Disable Sticky Keys Prompt</strong>, <strong>Num Lock on Startup</strong>.</p>
+            </div>
+
+            <div class="feature">
+              <h3>Debloat</h3>
+              <p>Remove pre-installed Microsoft software that runs in the background: <strong>Remove OneDrive</strong> (fully uninstall Microsoft OneDrive), <strong>Remove Xbox Components</strong> (remove Xbox app and overlays), <strong>Remove Microsoft Teams (Personal)</strong> (remove the consumer Teams app).</p>
+            </div>
+
+            <div class="feature">
+              <h3>Other Tweaks</h3>
+              <p><strong>Disk Optimization</strong> (reduce fragmentation), <strong>Clean Temporary Files</strong> (remove temp files and cache), <strong>Optimize Visual Effects</strong> (reduce Windows animations and visual overhead), <strong>Vitality Custom Power Plan</strong> (download and apply the Vitality-optimized power plan for sustained high performance).</p>
             </div>
           </div>
-          
-          <div class="note-container">
-            <div class="note">
-              <strong>Note:</strong> The Miscellaneous section contains over 25 different tweaks including Privacy controls, Legacy Misc tweaks, Power Management, and advanced device controls. Only a subset is shown here. Each tweak can be individually enabled or disabled according to your needs.
+        </section>
+
+        <!-- Install Hub Section -->
+        <section id="install-hub" class="doc-section">
+          <h2>Install Hub</h2>
+          <p>The Install tab is a complete app deployment center with 400+ curated applications across 14 categories, installed via the Winget package manager.</p>
+
+          <div class="feature-list">
+            <div class="feature">
+              <h3>App Categories</h3>
+              <p><strong>AI Tools</strong> (13 apps) — ChatGPT, Claude, Ollama, LM Studio, GPT4All. <strong>Browsers</strong> (15) — Chrome, Firefox, Brave, Vivaldi, Tor. <strong>Communications</strong> (20) — Discord, Telegram, Signal, Teams, Slack. <strong>Development</strong> (45) — VS Code, Git, Docker, Python, Node.js, and more IDEs. <strong>Games</strong> (19) — Steam, Epic Games, GOG Galaxy, emulators. <strong>Multimedia</strong> (50) — OBS, DaVinci Resolve, Blender, VLC. <strong>Microsoft Tools</strong> (24) — PowerToys, .NET runtimes, SQL Server. <strong>Document</strong> (28) — LibreOffice, Obsidian, Joplin, GIMP. <strong>Utilities</strong> (150+) — password managers, file tools, system utilities. <strong>Pro Tools</strong> (17) — network scanners, VPNs, SSH clients.</p>
+            </div>
+
+            <div class="feature">
+              <h3>How to Use</h3>
+              <p>Select apps individually or use "Select All" for a category, then click Install. Winget handles downloading and installing everything automatically in the background. A status indicator shows Idle, Installing, Done, or Error for each app. Ideal for setting up a brand new PC or recovering from a fresh Windows install without manually hunting down every application.</p>
             </div>
           </div>
         </section>
@@ -397,61 +393,78 @@
         <!-- Tools Section -->
         <section id="tools" class="doc-section">
           <h2>Tools</h2>
-          <p>Vitality Optimization provides easy access to third-party utilities commonly used for system monitoring, diagnostics, and optimization.</p>
-          
+          <p>The Tools tab provides one-click download and launch for professional-grade utilities, organized into categories. All tools include version numbers, descriptions, and file sizes.</p>
+
           <div class="tools-grid">
             <div class="tool-card">
               <h3>MSI Afterburner</h3>
-              <p>Advanced graphics card overclocking and monitoring tool for performance tuning.</p>
-              <div class="tool-actions">
-                <button class="cta-button secondary">Download</button>
-              </div>
+              <p>Advanced GPU overclocking, fan curve control, and real-time monitoring. v4.6.6 — 45MB.</p>
             </div>
-            
             <div class="tool-card">
               <h3>GPU-Z</h3>
-              <p>Graphics card information utility to monitor GPU temperature, usage, and specifications.</p>
-              <div class="tool-actions">
-                <button class="cta-button secondary">Download</button>
-              </div>
+              <p>Detailed graphics card specs, temperature, clock speed, and VRAM monitoring. v2.68.0 — 10MB.</p>
             </div>
-            
             <div class="tool-card">
               <h3>CPU-Z</h3>
-              <p>System information tool that gathers information about your CPU and related components.</p>
-              <div class="tool-actions">
-                <button class="cta-button secondary">Download</button>
-              </div>
+              <p>CPU, memory, and motherboard hardware information and monitoring. v2.16 — 12MB.</p>
             </div>
-            
             <div class="tool-card">
               <h3>HWiNFO</h3>
-              <p>Comprehensive hardware analysis and monitoring for detailed system diagnostics.</p>
-              <div class="tool-actions">
-                <button class="cta-button secondary">Download</button>
-              </div>
+              <p>Comprehensive real-time hardware monitoring across all system components. v8.28 — 25MB.</p>
             </div>
-            
             <div class="tool-card">
               <h3>AIDA64</h3>
-              <p>System diagnostics and benchmarking suite for performance analysis.</p>
-              <div class="tool-actions">
-                <button class="cta-button secondary">Download</button>
-              </div>
+              <p>In-depth system diagnostics, benchmarking, and stress testing suite. v6.60 — 50MB.</p>
             </div>
-            
+            <div class="tool-card">
+              <h3>System Informer</h3>
+              <p>Advanced process management, kernel monitoring, and system analysis tool.</p>
+            </div>
+            <div class="tool-card">
+              <h3>Autoruns</h3>
+              <p>Official Microsoft Sysinternals tool to manage startup programs, drivers, and scheduled tasks.</p>
+            </div>
+            <div class="tool-card">
+              <h3>Prime95</h3>
+              <p>Industry-standard CPU stress testing and stability verification. v30.19 — 15MB.</p>
+            </div>
+            <div class="tool-card">
+              <h3>MemTest86</h3>
+              <p>Bootable RAM testing tool to detect memory errors and instability.</p>
+            </div>
+            <div class="tool-card">
+              <h3>CrystalDiskMark</h3>
+              <p>Storage performance benchmarking for SSD and HDD read/write speeds. v9.0.1 — 5MB.</p>
+            </div>
+            <div class="tool-card">
+              <h3>CRU (Custom Resolution Utility)</h3>
+              <p>Add custom display resolutions and adjust monitor timings for lower display latency. v1.5.3.</p>
+            </div>
+            <div class="tool-card">
+              <h3>FanCtrl</h3>
+              <p>Fine-grained fan speed control and temperature-based curves for case and CPU fans.</p>
+            </div>
+            <div class="tool-card">
+              <h3>DDU (Display Driver Uninstaller)</h3>
+              <p>Completely remove GPU drivers before a clean reinstall. v18.1.4.1 — rated ⭐4.9.</p>
+            </div>
+            <div class="tool-card">
+              <h3>NVCleanstall</h3>
+              <p>Install NVIDIA drivers without telemetry, HD audio, or unnecessary components. v1.19.0.</p>
+            </div>
+            <div class="tool-card">
+              <h3>Snappy Driver Updater</h3>
+              <p>Offline driver update tool that works without an internet connection.</p>
+            </div>
             <div class="tool-card">
               <h3>Revo Uninstaller</h3>
-              <p>Advanced program uninstaller with registry cleanup capabilities.</p>
-              <div class="tool-actions">
-                <button class="cta-button secondary">Download</button>
-              </div>
+              <p>Advanced uninstaller with deep registry and leftover file cleanup.</p>
             </div>
           </div>
-          
+
           <div class="note-container">
             <div class="note">
-              <strong>Note:</strong> These are third-party tools curated by Vitality Optimization to help you monitor and optimize your system. The Tools section includes additional utilities not shown here.
+              <strong>Note:</strong> All tools are downloaded to your system's Downloads/Vitality Tools folder and can be relaunched directly from the app after installation.
             </div>
           </div>
         </section>
@@ -507,23 +520,38 @@
         <!-- Settings Section -->
         <section id="settings" class="doc-section">
           <h2>Settings</h2>
-          <p>Customize your Vitality Optimization experience through the Settings section.</p>
-          
+          <p>The Settings page offers full customization of the Vitality Util experience across three categories.</p>
+
           <h3>Application Settings</h3>
-          <p>The Settings page allows you to personalize your Vitality Util experience:</p>
-          
           <ul>
-            <li><strong>Glass Effect:</strong> Toggle the transparency effect of the application window</li>
-            <li><strong>Theme:</strong> Switch between dark and light themes for the interface</li>
-            <li><strong>Version Information:</strong> View your current version and check for updates</li>
-            <li><strong>Reset Settings:</strong> Reset all application settings to their default values</li>
+            <li><strong>Auto Start:</strong> Launch Vitality automatically when Windows starts</li>
+            <li><strong>Auto Update:</strong> Enable or disable automatic updates</li>
+            <li><strong>Notifications:</strong> Toggle in-app notification system</li>
           </ul>
-          
-          <div class="note-container">
-            <div class="note">
-              <strong>Note:</strong> Resetting settings will revert all tweaks and configurations to their default states. It's recommended to create a system restore point before performing a settings reset.
-            </div>
-          </div>
+
+          <h3>Appearance Settings</h3>
+          <ul>
+            <li><strong>Dark Mode:</strong> Switch between dark and light interface themes</li>
+            <li><strong>Theme Color:</strong> Choose from 6 accent colors:
+              <ul>
+                <li>Royal Purple (default)</li>
+                <li>Ocean Blue</li>
+                <li>Forest Green</li>
+                <li>Sunset Orange</li>
+                <li>Neon Pink</li>
+                <li>Crystal Cyan</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h3>Language Settings</h3>
+          <p>Vitality Util supports 19 languages: English, Spanish, French, German, Italian, Portuguese, Russian, Chinese, Japanese, Korean, Arabic, Hindi, Turkish, Polish, Dutch, Swedish, Norwegian, Danish, and Finnish.</p>
+
+          <h3>Account</h3>
+          <ul>
+            <li><strong>Logout:</strong> Sign out of your Vitality account</li>
+            <li><strong>Reset Settings:</strong> Restore all settings to default values</li>
+          </ul>
         </section>
         
         <!-- Backup & Restore Section -->
