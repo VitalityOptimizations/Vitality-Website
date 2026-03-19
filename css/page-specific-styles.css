@@ -154,30 +154,8 @@
   grid-column: 2;
 }
 
-.sidebar-nav h3 {
-  color: var(--text-light);
-  font-size: 1.2rem;
-  margin: 20px 0 10px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.sidebar-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.sidebar-nav li {
-  margin-bottom: 5px;
-}
-
-.sidebar-nav {
-  max-height: calc(100vh - 280px);
-  overflow-y: visible;
-}
-
-.sidebar-nav h3 {
+/* ── Documentation in-page sidebar — scoped so it never bleeds into the hamburger menu ── */
+.documentation-sidebar .sidebar-nav h3 {
   color: var(--text-light);
   font-size: 0.75rem;
   font-weight: 700;
@@ -187,23 +165,30 @@
   margin-bottom: 12px;
   padding-left: 12px;
   opacity: 0.8;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 5px;
 }
 
-.sidebar-nav h3:first-child {
+.documentation-sidebar .sidebar-nav h3:first-child {
   margin-top: 0;
 }
 
-.sidebar-nav ul {
+.documentation-sidebar .sidebar-nav {
+  max-height: calc(100vh - 280px);
+  overflow-y: visible;
+}
+
+.documentation-sidebar .sidebar-nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.sidebar-nav li {
+.documentation-sidebar .sidebar-nav li {
   margin-bottom: 4px;
 }
 
-.sidebar-nav a {
+.documentation-sidebar .sidebar-nav a {
   display: block;
   padding: 10px 12px;
   color: var(--text-dim);
@@ -216,7 +201,7 @@
   border-left: 3px solid transparent;
 }
 
-.sidebar-nav a::before {
+.documentation-sidebar .sidebar-nav a::before {
   content: '';
   position: absolute;
   left: 0;
@@ -229,18 +214,18 @@
   transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar-nav a:hover {
+.documentation-sidebar .sidebar-nav a:hover {
   background: rgba(145, 71, 255, 0.08);
   color: var(--text-light);
   transform: translateX(4px);
   border-left-color: var(--primary);
 }
 
-.sidebar-nav a:hover::before {
+.documentation-sidebar .sidebar-nav a:hover::before {
   height: 60%;
 }
 
-.sidebar-nav a.active {
+.documentation-sidebar .sidebar-nav a.active {
   background: linear-gradient(90deg, rgba(145, 71, 255, 0.15), rgba(145, 71, 255, 0.05));
   color: var(--primary-light);
   font-weight: 600;
@@ -249,7 +234,7 @@
   box-shadow: 0 2px 8px rgba(145, 71, 255, 0.2);
 }
 
-.sidebar-nav a.active::before {
+.documentation-sidebar .sidebar-nav a.active::before {
   height: 100%;
   background: var(--primary-light);
 }

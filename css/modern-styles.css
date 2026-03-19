@@ -789,14 +789,16 @@ button,
   height: 32px;
 }
 
-.sidebar-nav {
+/* ── Hamburger menu sidebar nav — all rules scoped to .modern-sidebar
+   so page-specific-styles.css cannot override them ── */
+.modern-sidebar .sidebar-nav {
   flex: 1;
-  min-height: 0; /* allow flex item to shrink below content size */
-  overflow-y: auto; /* scroll nav items on small screens so footer stays pinned */
+  min-height: 0;
+  overflow-y: auto;
   padding: var(--space-2xl) var(--space-xl);
 }
 
-.sidebar-nav ul {
+.modern-sidebar .sidebar-nav ul {
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -804,35 +806,37 @@ button,
 }
 
 /* Each nav row — overflow:hidden clips the arrow sliding in */
-.sidebar-nav li {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateX(30px);
-  transition: opacity var(--transition-medium), transform var(--transition-medium);
+.modern-sidebar .sidebar-nav li {
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  opacity: 0 !important;
+  transform: translateX(30px) !important;
+  transition: opacity var(--transition-medium), transform var(--transition-medium) !important;
+  margin-bottom: 0 !important;
+  background: none !important;
 }
 
 .modern-sidebar.active .sidebar-nav li {
-  opacity: 1;
-  transform: translateX(0);
+  opacity: 1 !important;
+  transform: translateX(0) !important;
 }
 
 /* Staggered slide-in when sidebar opens */
-.sidebar-nav li:nth-child(1)  { transition-delay: 0.08s; }
-.sidebar-nav li:nth-child(2)  { transition-delay: 0.13s; }
-.sidebar-nav li:nth-child(3)  { transition-delay: 0.18s; }
-.sidebar-nav li:nth-child(4)  { transition-delay: 0.23s; }
-.sidebar-nav li:nth-child(5)  { transition-delay: 0.28s; }
-.sidebar-nav li:nth-child(6)  { transition-delay: 0.33s; }
-.sidebar-nav li:nth-child(7)  { transition-delay: 0.38s; }
-.sidebar-nav li:nth-child(8)  { transition-delay: 0.43s; }
-.sidebar-nav li:nth-child(9)  { transition-delay: 0.48s; }
-.sidebar-nav li:nth-child(10) { transition-delay: 0.53s; }
+.modern-sidebar .sidebar-nav li:nth-child(1)  { transition-delay: 0.08s; }
+.modern-sidebar .sidebar-nav li:nth-child(2)  { transition-delay: 0.13s; }
+.modern-sidebar .sidebar-nav li:nth-child(3)  { transition-delay: 0.18s; }
+.modern-sidebar .sidebar-nav li:nth-child(4)  { transition-delay: 0.23s; }
+.modern-sidebar .sidebar-nav li:nth-child(5)  { transition-delay: 0.28s; }
+.modern-sidebar .sidebar-nav li:nth-child(6)  { transition-delay: 0.33s; }
+.modern-sidebar .sidebar-nav li:nth-child(7)  { transition-delay: 0.38s; }
+.modern-sidebar .sidebar-nav li:nth-child(8)  { transition-delay: 0.43s; }
+.modern-sidebar .sidebar-nav li:nth-child(9)  { transition-delay: 0.48s; }
+.modern-sidebar .sidebar-nav li:nth-child(10) { transition-delay: 0.53s; }
 
 /* Arrow icon — starts translated left (hidden by overflow:hidden on li) */
-.sidebar-nav-arrow {
+.modern-sidebar .sidebar-nav-arrow {
   flex-shrink: 0;
   width: 28px;
   height: 28px;
@@ -843,30 +847,38 @@ button,
   margin-right: 10px;
 }
 
-.sidebar-nav li:hover .sidebar-nav-arrow {
+.modern-sidebar .sidebar-nav li:hover .sidebar-nav-arrow {
   transform: translateX(0);
   opacity: 1;
 }
 
-/* Nav link text */
-.sidebar-nav a {
-  display: block;
-  color: rgba(255, 255, 255, 0.65);
-  font-weight: 600;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  text-decoration: none;
-  transform: translateX(-28px);
-  transition: transform 0.3s ease-out, color 0.3s ease-out;
-  white-space: nowrap;
+/* Nav link text — scoped so page-specific-styles can never shrink the font */
+.modern-sidebar .sidebar-nav a {
+  display: block !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-weight: 600 !important;
+  font-size: clamp(1.5rem, 4vw, 2rem) !important;
+  text-decoration: none !important;
+  transform: translateX(-28px) !important;
+  transition: transform 0.3s ease-out, color 0.3s ease-out !important;
+  white-space: nowrap !important;
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
 }
 
-.sidebar-nav li:hover a {
-  transform: translateX(0);
-  color: #9147ff;
+.modern-sidebar .sidebar-nav li:hover a {
+  transform: translateX(0) !important;
+  color: #9147ff !important;
+  background: none !important;
 }
 
-.sidebar-nav a:active {
+.modern-sidebar .sidebar-nav a:active {
   opacity: 0.75;
+}
+
+.modern-sidebar .sidebar-nav a::before {
+  display: none !important;
 }
 
 .sidebar-footer {
@@ -1519,11 +1531,11 @@ body:not(.loaded) > *:not(.preloader) {
   }
   
   .sidebar-header,
-  .sidebar-nav,
+  .modern-sidebar .sidebar-nav,
   .sidebar-footer {
     padding: var(--space-lg);
   }
-  
+
   .sidebar-header {
     padding-top: var(--space-xl);
   }
