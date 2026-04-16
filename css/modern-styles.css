@@ -4,13 +4,6 @@
    ============================================================ */
 
 /* ============================================================
-   GOOGLE FONTS IMPORTS
-   ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
-/* ============================================================
    CSS VARIABLES & CUSTOM PROPERTIES
    ============================================================ */
 :root {
@@ -115,13 +108,6 @@
   --gradient-primary-hover: linear-gradient(135deg, var(--primary-light), var(--accent), var(--accent-light));
   --gradient-accent: linear-gradient(135deg, var(--accent), var(--accent-light));
 }
-
-/* ============================================================
-   TYPOGRAPHY IMPORTS
-   ============================================================ */
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ============================================================
    BASE STYLES & RESETS

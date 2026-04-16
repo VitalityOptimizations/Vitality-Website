@@ -1247,8 +1247,10 @@
 
 .featured-badge {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: -12px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
   background: rgba(145, 71, 255, 0.12);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);

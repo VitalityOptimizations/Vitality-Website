@@ -4,7 +4,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://vitalityoptimization.com/</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
   <!-- Download -->
   <url>
     <loc>https://vitalityoptimization.com/download</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
@@ -20,15 +20,23 @@
   <!-- Purchase -->
   <url>
     <loc>https://vitalityoptimization.com/purchase</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+
+  <!-- BIOS Tweaker -->
+  <url>
+    <loc>https://vitalityoptimization.com/bios-tweaker</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>
 
   <!-- How it works -->
   <url>
     <loc>https://vitalityoptimization.com/how-it-works</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -36,15 +44,7 @@
   <!-- Documentation -->
   <url>
     <loc>https://vitalityoptimization.com/documentation</loc>
-    <lastmod>2025-01-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- BIOS Tweaker -->
-  <url>
-    <loc>https://vitalityoptimization.com/bios-tweaker</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -52,7 +52,7 @@
   <!-- FAQ -->
   <url>
     <loc>https://vitalityoptimization.com/faq</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -60,7 +60,7 @@
   <!-- Affiliate -->
   <url>
     <loc>https://vitalityoptimization.com/affiliate</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -68,7 +68,7 @@
   <!-- Terms of Service -->
   <url>
     <loc>https://vitalityoptimization.com/tos</loc>
-    <lastmod>2025-01-28</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>

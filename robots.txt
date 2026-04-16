@@ -1,3 +1,5 @@
 User-agent: *
+Disallow: /manual_backups/
 Disallow: /hidden/
+
 Sitemap: https://vitalityoptimization.com/sitemap.xml
